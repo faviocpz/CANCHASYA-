@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="bg-login-page d-flex align-items-center justify-content-center min-vh-100">
+  <div class="container">
+    <div class="row shadow-cy rounded-4 overflow-hidden">
+
+      <!-- Lado izquierdo: fondo azul con red -->
+      <div class="col-md-6 d-none d-md-flex bg-login-left text-center p-5 align-items-center justify-content-center flex-column">
+        <img src="{{ url_for('static', filename='assets/img/logo-full.png') }}" alt="Logo Canchas Ya!" class="img-fluid mb-4" style="max-width: 200px;">
+        <h2 class="text-blancocy fw-bold fst-italic">¡Bienvenido a Canchas Ya!</h2>
+        <p class="text-blancocy mt-3">Encuentra, reserva o alquila canchas fácilmente desde cualquier dispositivo.</p>
+      </div>
+
+      <!-- Lado derecho: fondo blanco -->
+      <div class="col-md-6 bg-white p-5">
+        <h3 class="text-center text-azulcy fw-bold fst-italic mb-4">Iniciar sesión</h3>
+
+        <!-- Selector de tipo de usuario -->
+        <div class="mb-4 text-center">
+          <label class="me-3">
+            <input type="radio" name="tipo_usuario" value="deportista" checked> Deportista
+          </label>
+          <label>
+            <input type="radio" name="tipo_usuario" value="aliado"> Aliado
+          </label>
+        </div>
+
+        <form>
+          <div class="mb-3">
+            <label for="correo" class="form-label">Correo electrónico</label>
+            <input type="email" class="form-control" id="correo" placeholder="usuario@correo.com" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="clave" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="clave" placeholder="********" required>
+          </div>
+
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn bg-verdecy text-blancocy fw-bold">Ingresar</button>
+          </div>
+        </form>
+
+        <div class="text-center mt-4">
+          <p>¿No tienes una cuenta?</p>
+          <a href="/registro" class="btn btn-outline-success fw-bold">Registrarse</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

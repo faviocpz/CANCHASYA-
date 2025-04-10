@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero principal con imagen/logo + CTA -->
+<section class="hero-bg text-blancocy text-center py-4">
+  <div class="container">
+    <img src="{{ url_for('static', filename='assets/img/logo-full.png') }}" alt="Logo Canchas Ya" class="mb-4" style="max-width: 300px;">
+    <h1 class="display-4 fw-bold text-shadow-cy">¡Reserva tu cancha en segundos!</h1>
+    <p class="lead text-shadow-cy">Encuentra, compara y asegura tu cancha favorita sin complicaciones.</p>
+    <a href="/login" class="btn btn-lg bg-verdecy text-blancocy mt-3">Empieza Ahora</a>
+  </div>
+</section>
+
+<!-- Sección de beneficios con carrusel de tarjetas -->
+<section class="py-5 bg-blancocy">
+  <div class="container-fluid px-0">
+    <h2 class="text-center text-azulcy mb-4">¿Por qué usar Canchas Ya!?</h2>
+
+    <div class="swiper">
+      <div class="swiper-wrapper">
+
+        <!-- Tarjetas del carrusel -->
+
+        <div class="swiper-slide">
+          <div class="card shadow-cy benefit-card">
+            <img src="{{ url_for('static', filename='assets/img/carrusel1.png') }}" alt="Búsqueda rápida">
+            <h5 class="text-verdecy fw-bold fst-italic">Búsqueda rápida</h5>
+            <p>Filtra por ubicación, precio y tipo de cancha en segundos, y encuentra la opción perfecta cerca de ti.</p>
+          </div>
+        </div>
+
+        <div class="swiper-slide">
+          <div class="card shadow-cy benefit-card">
+            <img src="{{ url_for('static', filename='assets/img/carrusel2.png') }}" alt="Reservas seguras">
+            <h5 class="text-rojocy fw-bold fst-italic">Reservas seguras</h5>
+            <p>Haz tu reserva al instante con confirmación inmediata, sin intermediarios ni llamadas.</p>
+          </div>
+        </div>
+
+        <div class="swiper-slide">
+          <div class="card shadow-cy benefit-card">
+            <img src="{{ url_for('static', filename='assets/img/carrusel3.png') }}" alt="Variedad de canchas">
+            <h5 class="text-azulcy fw-bold fst-italic">Variedad de canchas</h5>
+            <p>Fútbol, vóley, fulbito y más. Todo tipo de canchas en un solo lugar para todos los gustos.</p>
+          </div>
+        </div>
+
+        <div class="swiper-slide">
+          <div class="card shadow-cy benefit-card">
+            <img src="{{ url_for('static', filename='assets/img/carrusel4.png') }}" alt="Puntúa tu cancha">
+            <h5 class="text-rojocy fw-bold fst-italic">Puntúa tu cancha</h5>
+            <p>Lee reseñas de otros jugadores y deja tu opinión para ayudar a mejorar el servicio.</p>
+          </div>
+        </div>
+
+        <div class="swiper-slide">
+          <div class="card shadow-cy benefit-card">
+            <img src="{{ url_for('static', filename='assets/img/carrusel5.png') }}" alt="Renta tu local">
+            <h5 class="text-azulcy fw-bold fst-italic">Renta tu local</h5>
+            <p>¿Tienes una cancha? Publícala en Canchas Ya! y empieza a ganar.</p>
+          </div>
+        </div>
+
+        <div class="swiper-slide">
+          <div class="card shadow-cy benefit-card">
+            <img src="{{ url_for('static', filename='assets/img/carrusel6.png') }}" alt="Impulsa tu negocio">
+            <h5 class="text-verdecy fw-bold fst-italic">Impulsa tu negocio</h5>
+            <p>Obtén visibilidad adicional con nuestras opciones de promoción.</p>
+          </div>
+        </div>
+
+        <div class="swiper-slide">
+          <div class="card shadow-cy benefit-card">
+            <img src="{{ url_for('static', filename='assets/img/carrusel7.png') }}" alt="Agenda tu juego">
+            <h5 class="text-rojocy fw-bold fst-italic">Agenda tu juego</h5>
+            <p>Elige fecha y hora con anticipación para asegurarte de que tu cancha esté libre cuando más la necesitas.</p>
+          </div>
+        </div>
+
+        <div class="swiper-slide">
+          <div class="card shadow-cy benefit-card">
+            <img src="{{ url_for('static', filename='assets/img/carrusel8.png') }}" alt="Favoritos a un clic">
+            <h5 class="text-azulcy fw-bold fst-italic">Favoritos a un clic</h5>
+            <p>Guarda tus canchas favoritas y accede rápidamente a ellas cuando quieras reservar.</p>
+          </div>
+        </div>
+
+        <div class="swiper-slide">
+          <div class="card shadow-cy benefit-card">
+            <img src="{{ url_for('static', filename='assets/img/carrusel9.png') }}" alt="Gestiona tus preferencias">
+            <h5 class="text-verdecy fw-bold fst-italic">Gestiona tus preferencias</h5>
+            <p>Administra tus datos, configuraciones y reservas desde tu perfil personal.</p>
+          </div>
+        </div>
+
+        <div class="swiper-slide">
+          <div class="card shadow-cy benefit-card">
+            <img src="{{ url_for('static', filename='assets/img/carrusel10.png') }}" alt="Confianza y seguridad">
+            <h5 class="text-rojocy fw-bold fst-italic">Producto 100% peruano</h5>
+            <p>Canchas Ya! nace en Perú y está hecho pensando en las necesidades reales de jugadores y dueños locales.</p>
+          </div>
+        </div>
+
+        <div class="swiper-slide">
+          <div class="card shadow-cy benefit-card">
+            <img src="{{ url_for('static', filename='assets/img/carrusel11.png') }}" alt="Producto 100% peruano">
+            <h5 class="text-azulcy fw-bold fst-italic">Confianza y seguridad</h5>
+            <p>Las canchas en nuestra plataforma son verificadas para garantizar una experiencia confiable y profesional.</p>
+          </div>
+        </div>
+
+        <div class="swiper-slide">
+          <div class="card shadow-cy benefit-card">
+            <img src="{{ url_for('static', filename='assets/img/carrusel12.png') }}" alt="Accede desde cualquier dispositivo">
+            <h5 class="text-verdecy fw-bold fst-italic">Accede desde cualquier dispositivo</h5>
+            <p>Usa la plataforma desde tu computadora, tablet o celular sin complicaciones.</p>
+          </div>
+        </div>
+
+        <div class="swiper-slide">
+          <div class="card shadow-cy benefit-card">
+            <img src="{{ url_for('static', filename='assets/img/carrusel13.png') }}" alt="Horarios libres">
+            <h5 class="text-verdecy fw-bold fst-italic">Horarios libres</h5>
+            <p>Consulta solo canchas que están disponibles en el horario que buscas.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA final -->
+<section class="bg-verdecy-grass text-blancocy py-4 text-center">
+  <div class="container">
+    <h2 class="fw-bold text-shadow-cy">¿Tienes una canchita?</h2>
+    <p class="text-shadow-cy">Regístrate ahora, coviérte en nuestro aliado y empieza a alquilarla mediante Canchas Ya!.</p>
+    <a href="/login" class="btn btn-light btn-lg text-verdecy fw-bold">Crear cuenta</a>
+  </div>
+</section>
+{% endblock %}

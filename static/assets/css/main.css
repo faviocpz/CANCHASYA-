@@ -1,0 +1,162 @@
+/* BASE */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,700&family=Open+Sans:wght@400;600&display=swap');
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #FFFFFF;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3, .titulo, .btn, nav {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.bg-verdecy    { background-color: #3C7F0B !important; }
+.bg-rojocy     { background-color: #D92110 !important; }
+.bg-blancocy   { background-color: #FFFFFF !important; }
+.bg-azulcy     { background-color: #0D192C !important; }
+.bg-negrocy    { background-color: #02020B !important; }
+
+.text-verdecy  { color: #3C7F0B !important; }
+.text-rojocy   { color: #D92110 !important; }
+.text-blancocy { color: #FFFFFF !important; }
+.text-azulcy   { color: #0D192C !important; }
+.text-negrocy  { color: #02020B !important; }
+
+.border-verdecy  { border-color: #3C7F0B !important; }
+.border-rojocy   { border-color: #D92110 !important; }
+.border-blancocy { border-color: #FFFFFF !important; }
+.border-azulcy   { border-color: #0D192C !important; }
+.border-negrocy  { border-color: #02020B !important; }
+
+.rounded-xl {
+    border-radius: 1rem;
+}
+
+.shadow-cy {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+/* INDEX */
+.hero-bg {
+    background-color: #0D192C;
+    background-image: url('../img/net.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-blend-mode: overlay;
+  }
+  
+  .bg-verdecy-grass {
+    background-color: #3C7F0B;
+    background-image: url('../img/grass.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-blend-mode: overlay;
+  }
+  
+  .text-shadow-cy {
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+  }
+  
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+  color: #FFFFFF !important;
+  transition: color 0.2s ease-in-out;
+}
+
+.navbar .nav-link.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF !important;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.2);
+}
+
+.swiper {
+    width: 100%;
+    padding-bottom: 2rem;
+    margin: 0 auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    box-sizing: border-box;
+}
+
+.swiper-wrapper {
+    padding: 0;
+}
+
+.swiper-slide .card {
+    background-color: #FFFFFF;
+    border-radius: 1rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 1rem;
+}
+
+.swiper-slide .card:hover {
+    transform: translateY(-4px);
+}
+
+.benefit-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.benefit-card img {
+    max-width: 100%;
+    height: 200px;
+    object-fit: contain;
+    margin-bottom: 0.75rem;
+}
+
+/* LOGIN */
+/* Fondo general del login con grass semitransparente */
+.bg-login-page {
+    position: relative;
+    background-color: white;
+    z-index: 1;
+  }
+  
+  .bg-login-page::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url('../img/grass.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.9; /* Transparencia */
+    z-index: 0;
+  }
+  
+  /* Asegura que el contenido esté por encima de la imagen */
+  .bg-login-page > * {
+    position: relative;
+    z-index: 2;
+  }
+  
+  /* Fondo azul con red para panel izquierdo */
+  .bg-login-left {
+    background-color: #0D192C;
+    background-image: url('../img/net.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-blend-mode: overlay;
+    color: white;
+  }
+  
+  
