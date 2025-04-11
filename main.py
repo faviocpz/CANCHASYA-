@@ -1,4 +1,7 @@
 from flask import Flask, render_template
+from conexion import obtener_conexion
+
+conn = obtener_conexion()
 
 app = Flask(__name__)
 
@@ -8,4 +11,6 @@ def home():
 
 if __name__ == '__main__':
     app.run()
+
+
 

@@ -1,92 +1,6 @@
-CREATE TABLE usuario (
-  dni            int(8) NOT NULL AUTO_INCREMENT, 
-  apellidos      varchar(100) NOT NULL, 
-  nombres        varchar(100) NOT NULL, 
-  correo         varchar(100) NOT NULL UNIQUE, 
-  telefono       char(9), 
-  contraseña     varchar(255) NOT NULL, 
-  token          varchar(255) NOT NULL, 
-  fecha_registro date, 
-  estado_usuario char(1) NOT NULL comment 'A = "Activo" //pago suscripcion
-I = "Inactivo" //no pago suscripcion
-V = "Vetado" // algo hizo mal', 
-  fotoDoc1       varchar(100), 
-  fotoDoc2       varchar(100), 
-  id_tipousuario int(10) NOT NULL, 
-  `Column`       int(10), 
-  PRIMARY KEY (dni));
-CREATE TABLE tipo_usuario (
-  id_tipousuario int(10) NOT NULL AUTO_INCREMENT, 
-  nombre         char(2) NOT NULL comment 'A = "Administrador"
-V = "Vendedor"
-U = "Usuario"', 
-  PRIMARY KEY (id_tipousuario));
-CREATE TABLE negocio (
-  id_negocio       int(10) NOT NULL AUTO_INCREMENT, 
-  nombre           varchar(50) NOT NULL, 
-  telefono_negocio char(9) NOT NULL, 
-  ruc              char(14) NOT NULL, 
-  ubicacion        varchar(255) NOT NULL, 
-  enlace_ftnegocio varchar(255) NOT NULL, 
-  id_usuario       int(8) NOT NULL, 
-  usuarionombres   varchar(100) NOT NULL, 
-  usuarionombres2  varchar(100) NOT NULL, 
-  PRIMARY KEY (id_negocio));
-CREATE TABLE horario_atencion (
-  id_horario int(10) NOT NULL AUTO_INCREMENT, 
-  turno      char(1) NOT NULL comment 'M = "Mañana"
-T = "Tarde-noche"', 
-  PRIMARY KEY (id_horario));
-CREATE TABLE horario_atencion_negocio (
-  id_horario  int(10) NOT NULL, 
-  id_negocio  int(10) NOT NULL, 
-  hora_inicio time(7) NOT NULL, 
-  hora_fin    time(7) NOT NULL, 
-  PRIMARY KEY (id_horario, 
-  id_negocio));
-CREATE TABLE cancha (
-  id_cancha       int(10) NOT NULL AUTO_INCREMENT, 
-  descripcion     varchar(255) NOT NULL, 
-  precio_hora     numeric(9, 2) NOT NULL, 
-  enlace_ftcancha varchar(255) NOT NULL, 
-  id_negocio      int(10) NOT NULL, 
-  id_tipocancha   int(10) NOT NULL, 
-  PRIMARY KEY (id_cancha));
-CREATE TABLE tipo_cancha (
-  id_tipocancha int(10) NOT NULL AUTO_INCREMENT, 
-  tipo_deporte  varchar(50) NOT NULL, 
-  PRIMARY KEY (id_tipocancha));
-CREATE TABLE suscripcion (
-  id_suscripcion     int(10) NOT NULL AUTO_INCREMENT, 
-  nombre_suscripcion varchar(50) NOT NULL, 
-  precio_suscripcion numeric(9, 2) NOT NULL, 
-  PRIMARY KEY (id_suscripcion));
-CREATE TABLE detalle_suscripcion (
-  id_detallesuscripcion int(10) NOT NULL AUTO_INCREMENT, 
-  id_usuario            int(8) NOT NULL, 
-  id_suscripcion        int(10) NOT NULL, 
-  fecha_suscripcion     date NOT NULL, 
-  fin_suscripcion       date NOT NULL, 
-  fecha_pago            date NOT NULL, 
-  precio_suscripcion    numeric(9, 2) NOT NULL, 
-  usuarionombres        varchar(100) NOT NULL, 
-  usuarionombres2       varchar(100) NOT NULL, 
-  PRIMARY KEY (id_detallesuscripcion));
-CREATE TABLE comprobante_pago (
-  id_comprobante        int(10) NOT NULL AUTO_INCREMENT, 
-  igv                   numeric(9, 2) NOT NULL, 
-  precio_sinigv         numeric(9, 2) NOT NULL, 
-  total                 numeric(9, 2) NOT NULL, 
-  tipo_comprobante      char(1) NOT NULL comment 'F = "Factura"
-B = "Boleta"', 
-  id_formapago          int(10) NOT NULL, 
-  id_detallesuscripcion int(10) NOT NULL, 
-  PRIMARY KEY (id_comprobante));
-CREATE TABLE forma_pago (
-  id_formapago int(10) NOT NULL AUTO_INCREMENT, 
-  nombre       varchar(50) NOT NULL comment 'Y = "Yape"
-T = "Tarjeta"', 
-  PRIMARY KEY (id_formapago));
+DROP DATABASE IF EXISTS CanchasYa;
+CREATE DATABASE CanchasYa;
+USE CanchasYa;
 CREATE TABLE TIPO_USUARIO (
   idTipoUsuario int(10) NOT NULL AUTO_INCREMENT, 
   nombre        char(3), 
@@ -207,16 +121,6 @@ CREATE TABLE CANCHA_CARACTERISTICA (
   puntaje          numeric(4, 2), 
   PRIMARY KEY (idCancha, 
   idCaracteristica));
-ALTER TABLE usuario ADD CONSTRAINT FKusuario749490 FOREIGN KEY (id_tipousuario) REFERENCES tipo_usuario (id_tipousuario);
-ALTER TABLE negocio ADD CONSTRAINT FKnegocio995409 FOREIGN KEY (id_usuario) REFERENCES usuario (dni);
-ALTER TABLE horario_atencion_negocio ADD CONSTRAINT FKhorario_at842385 FOREIGN KEY (id_horario) REFERENCES horario_atencion (id_horario);
-ALTER TABLE horario_atencion_negocio ADD CONSTRAINT FKhorario_at892204 FOREIGN KEY (id_negocio) REFERENCES negocio (id_negocio);
-ALTER TABLE cancha ADD CONSTRAINT FKcancha676582 FOREIGN KEY (id_negocio) REFERENCES negocio (id_negocio);
-ALTER TABLE cancha ADD CONSTRAINT FKcancha205820 FOREIGN KEY (id_tipocancha) REFERENCES tipo_cancha (id_tipocancha);
-ALTER TABLE detalle_suscripcion ADD CONSTRAINT FKdetalle_su97979 FOREIGN KEY (id_usuario) REFERENCES usuario (dni);
-ALTER TABLE detalle_suscripcion ADD CONSTRAINT FKdetalle_su249090 FOREIGN KEY (id_suscripcion) REFERENCES suscripcion (id_suscripcion);
-ALTER TABLE comprobante_pago ADD CONSTRAINT FKcomprobant87721 FOREIGN KEY (id_detallesuscripcion) REFERENCES detalle_suscripcion (id_detallesuscripcion);
-ALTER TABLE comprobante_pago ADD CONSTRAINT FKcomprobant453742 FOREIGN KEY (id_formapago) REFERENCES forma_pago (id_formapago);
 ALTER TABLE USUARIO ADD CONSTRAINT FKUSUARIO875353 FOREIGN KEY (idTipoUsuario) REFERENCES TIPO_USUARIO (idTipoUsuario);
 ALTER TABLE PERSONA ADD CONSTRAINT FKPERSONA271369 FOREIGN KEY (idUsuario) REFERENCES USUARIO (idUsuario);
 ALTER TABLE LOCAL ADD CONSTRAINT FKLOCAL975666 FOREIGN KEY (idPersona) REFERENCES PERSONA (idPersona);
