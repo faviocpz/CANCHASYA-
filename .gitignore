@@ -1,1 +1,2 @@
 echo .env >> .gitignore
+__pycache__/

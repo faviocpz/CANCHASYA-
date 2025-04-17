@@ -49,45 +49,53 @@
       </div>
     </div>
   </nav>
+
+  <div class="d-flex">
   <!-- Menu izquierdo -->
   <div class="menu">
-      <div class="d-flex">
-        <img src="/static/assets/img/red.png" alt="" class="circulo ms-2  mt-2">
-        <div class="col-6 mt-2 ms-2">
-          <div class="nombre_usuario azul_color">Erick carlos Julon Saldaña</div>
-          <h6 class="gris_color text-center">Administrador</h6>
-        </div>
+    <div class="d-flex">
+      <img src="/static/assets/img/red.png" alt="" class="circulo ms-2  mt-2">
+      <div class="col-6 mt-2 ms-2">
+        <div class="nombre_usuario azul_color">Erick carlos Julon Saldaña</div>
+        <h6 class="gris_color text-center">Administrador</h6>
       </div>
-      <hr>
-      <!-- Seccion de menus -->
-      <div class="">
-          <div>
-            <button href="" class="btn btn-light w-100 btn_estilo_hover">
-              Solicitudes
-            </button>
-              <div class="ms-2 submenus d-none">
-                <a href="" class="btn btn-light w-100 mt-2 btn_estilo_hover">
-                  <i class="bi bi-arrow-return-right"></i> Solicitudes
-                </a>
-              </div>
-          </div>
-
-          <button href="" class="btn btn-light w-100 mt-2 btn_estilo_hover">
+    </div>
+    <hr>
+    <!-- Seccion de menus -->
+    <div class="">
+        <div>
+          <button href="" class="btn btn-light w-100 btn_estilo_hover">
             Solicitudes
           </button>
-      </div>
+            <div class="ms-2 submenus d-none">
+              <a href="{{ url_for('solicitudes') }}" class="btn btn-light w-100 mt-2 btn_estilo_hover">
+                <i class="bi bi-arrow-return-right" ></i> Solicitudes
+              </a>
+            </div>
+        </div>
+
+        <button href="" class="btn btn-light w-100 mt-2 btn_estilo_hover">
+          Solicitudes
+        </button>
+    </div>
+
+  </div>
+  <!-- Contenido dinámico -->
+  <main class="ps-4 pt-2">
+    <h5 class="titulo_pagina"> 
+      {% block titulo_pagina %}
+        
+      {% endblock %}
+    </h5>
+    {% block contenido %}
+        
+    {% endblock %}
+  </main>
   </div>
 
 
 
-  <!-- Contenido dinámico -->
-  <main>
-    {% block content %}
 
-    
-    
-    {% endblock %}
-  </main>
 
 
   <!-- Bootstrap JS (con popper) -->

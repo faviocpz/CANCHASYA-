@@ -31,8 +31,9 @@ def maestra_interna():
     return render_template('base_interna.html')
 
 
-
-
+@app.route('/solicitudes')
+def solicitudes():
+    return render_template('pages/administrador/solicitudes.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
