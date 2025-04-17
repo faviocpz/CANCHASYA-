@@ -13,7 +13,9 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Hoja de estilos principal -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/main.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/main.css') }}">  
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/interna.css') }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <!-- SwiperJS CSS -->
   <link
     rel="stylesheet"
@@ -21,7 +23,7 @@
   />
 </head>
 <body>
-
+  <!-- Header -->
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg bg-azulcy navbar-dark shadow-cy">
     <div class="container">
@@ -47,19 +49,46 @@
       </div>
     </div>
   </nav>
+  <!-- Menu izquierdo -->
+  <div class="menu">
+      <div class="d-flex">
+        <img src="/static/assets/img/red.png" alt="" class="circulo ms-2  mt-2">
+        <div class="col-6 mt-2 ms-2">
+          <div class="nombre_usuario azul_color">Erick carlos Julon Saldaña</div>
+          <h6 class="gris_color text-center">Administrador</h6>
+        </div>
+      </div>
+      <hr>
+      <!-- Seccion de menus -->
+      <div class="">
+          <div>
+            <button href="" class="btn btn-light w-100 btn_estilo_hover">
+              Solicitudes
+            </button>
+              <div class="ms-2 submenus d-none">
+                <a href="" class="btn btn-light w-100 mt-2 btn_estilo_hover">
+                  <i class="bi bi-arrow-return-right"></i> Solicitudes
+                </a>
+              </div>
+          </div>
+
+          <button href="" class="btn btn-light w-100 mt-2 btn_estilo_hover">
+            Solicitudes
+          </button>
+      </div>
+  </div>
+
+
 
   <!-- Contenido dinámico -->
   <main>
-    {% block content %}{% endblock %}
+    {% block content %}
+
+    
+    
+    {% endblock %}
   </main>
 
-  <!-- Footer -->
-  <footer class="bg-negrocy text-blancocy py-4 mt-5">
-    <div class="container text-center">
-      <p class="mb-0">&copy; 2025 Canchas Ya!. Todos los derechos reservados.</p>
-      <small>Hecho con ❤️ en Chiclayo</small>
-    </div>
-  </footer>
 
   <!-- Bootstrap JS (con popper) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -87,5 +116,6 @@
       }
     });
   </script>
+  <script src="/static/assets/js/interna.js"></script>
 </body>
 </html>

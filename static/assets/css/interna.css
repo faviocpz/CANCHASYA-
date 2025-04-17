@@ -1,0 +1,40 @@
+.menu{
+    width: 250px;
+    height: 92.5vh;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.circulo{
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+}
+
+.nombre_usuario {
+    width: 120%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.gris_color{
+    color: rgb(142, 143, 143);
+}
+
+.azul_color{
+    color: #0D192C;
+}
+
+.btn_estilo_hover {
+    border-radius: 0 !important;
+    border: none !important;
+    color: black;
+}
+
+
+.btn_estilo_hover:hover{
+    background-color: #0D192C;
+    color:white
+}

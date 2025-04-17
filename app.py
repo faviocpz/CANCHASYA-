@@ -26,5 +26,13 @@ def carrito():
 def panel():
     return render_template('pages/panel.html')
 
+@app.route('/maestra_interna')
+def maestra_interna():
+    return render_template('base_interna.html')
+
+
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
