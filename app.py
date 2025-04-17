@@ -35,5 +35,9 @@ def maestra_interna():
 def solicitudes():
     return render_template('pages/administrador/solicitudes.html')
 
+@app.route('/registro')
+def registro():
+    return render_template('pages/registro.html')
+
 if __name__ == '__main__':
     app.run(debug=True)

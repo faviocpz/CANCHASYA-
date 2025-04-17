@@ -14,7 +14,11 @@
 
       <!-- Lado derecho: fondo blanco -->
       <div class="col-md-6 bg-white p-5">
-        <h3 class="text-center text-azulcy fw-bold fst-italic mb-4">Iniciar sesión</h3>
+        <h3 class="text-center text-azulcy fw-bold fst-italic mb-4">
+          {% block titulo_login %}
+              Iniciar sesión
+          {% endblock %}
+        </h3>
 
         <!-- Selector de tipo de usuario -->
         <div class="mb-4 text-center">
@@ -25,7 +29,7 @@
             <input type="radio" name="tipo_usuario" value="aliado"> Aliado
           </label>
         </div>
-
+        {% block formulario  %}
         <form>
           <div class="mb-3">
             <label for="correo" class="form-label">Correo electrónico</label>
@@ -41,10 +45,17 @@
             <button type="submit" class="btn bg-verdecy text-blancocy fw-bold">Ingresar</button>
           </div>
         </form>
+        {% endblock %}
 
         <div class="text-center mt-4">
-          <p>¿No tienes una cuenta?</p>
-          <a href="/registro" class="btn btn-outline-success fw-bold">Registrarse</a>
+          <p>
+            {% block texto_cuenta %}
+              ¿No tienes una cuenta?
+            {% endblock %}
+          </p>
+          {% block button_cuenta %}
+            <a href="/registro" class="btn btn-outline-success fw-bold">Registrarse</a>
+          {% endblock %}
         </div>
       </div>
     </div>
