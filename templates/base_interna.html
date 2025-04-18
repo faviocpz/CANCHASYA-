@@ -56,8 +56,9 @@
     <div class="d-flex">
       <img src="/static/assets/img/red.png" alt="" class="circulo ms-2  mt-2">
       <div class="col-6 mt-2 ms-2">
-        <div class="nombre_usuario azul_color">Erick carlos Julon Saldaña</div>
-        <h6 class="gris_color text-center">Administrador</h6>
+        <div class="nombre_usuario azul_color">{{ session.get('nombre') }}</div>
+        
+        <h6 class="gris_color text-center">{{ session.get('tipo') }}</h6>
       </div>
     </div>
     <hr>

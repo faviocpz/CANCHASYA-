@@ -7,13 +7,21 @@ def verificar_cuenta(correo, contraseña, tipo):
     conexion = obtener_conexion()
     try:
         with conexion.cursor() as cursor:
-            query = ''' 
-                        select count(*), us.verificacion_cuenta
-	                            from usuario as us where us.correo = %s
-                                and contraseña = %s
-                                and id_tipousuario = %s and estado_cuenta = 1;
+            if tipo == 2:
+                query = ''' 
+                            select count(*), us.verificacion_cuenta, us.id_tipousuario, us.nombre, us.token
+                            from usuario as us where us.correo = %s
+                            and contraseña = %s
+                            and (id_tipousuario = 1 or id_tipousuario = 2) and estado_cuenta = 1;
                         '''
-            cursor.execute(query, (correo, contraseña, tipo))
+            else:
+                query = ''' 
+                            select count(*), us.verificacion_cuenta, us.id_tipousuario, us.nombre, us.token
+                            from usuario as us where us.correo = %s
+                            and contraseña = %s
+                            and id_tipousuario = 3 and estado_cuenta = 1;
+                        '''
+            cursor.execute(query, (correo, contraseña))
             result = cursor.fetchone()
         return result if result[0] > 0 else [0]
     finally:

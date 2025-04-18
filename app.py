@@ -1,7 +1,11 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, session
 from controladores.usuario import controlador_usuario as cuser
 from hashlib import sha256
+
+
+
 app = Flask(__name__)
+app.secret_key = 'clavesegura'
 
 @app.route('/')
 def index():
@@ -87,6 +91,16 @@ def inicio_sesion():
             rpt['codigo'] = 1
             rpt['ruta'] = '/'
         elif(tipo == 'aliado'):
+            if(respuesta[2] == 1):
+                session['tipo'] = "Administrador"
+                session['nombre'] = respuesta[3]
+                session['token'] = 'x'
+            else:
+                session['nombre'] = respuesta[3]
+                session['vc'] = respuesta[1]
+                session['tipo'] = "Alquilador"
+                session['token'] = 'x'
+
             rpt['codigo'] = 1
             rpt['ruta'] = '/maestra_interna'
         else:
