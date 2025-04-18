@@ -9,17 +9,17 @@ def verificar_cuenta(correo, contraseña, tipo):
         with conexion.cursor() as cursor:
             if tipo == 2:
                 query = ''' 
-                            select count(*), us.verificacion_cuenta, us.id_tipousuario, us.nombre, us.token
+                            select count(*), us.verificacion_cuenta, us.idTipoUsuario, us.nombre, us.token
                             from usuario as us where us.correo = %s
                             and contraseña = %s
-                            and (id_tipousuario = 1 or id_tipousuario = 2) and estado_cuenta = 1;
+                            and (idTipoUsuario = 1 or idTipoUsuario = 2) and estado_cuenta = 1;
                         '''
             else:
                 query = ''' 
-                            select count(*), us.verificacion_cuenta, us.id_tipousuario, us.nombre, us.token
+                            select count(*), us.verificacion_cuenta, us.idTipoUsuario, us.nombre, us.token
                             from usuario as us where us.correo = %s
                             and contraseña = %s
-                            and id_tipousuario = 3 and estado_cuenta = 1;
+                            and idTipoUsuario = 3 and estado_cuenta = 1;
                         '''
             cursor.execute(query, (correo, contraseña))
             result = cursor.fetchone()
@@ -64,7 +64,7 @@ def crear_usuario_alquilador(data):
     try:
         print("entro")
         with conexion.cursor() as cursor:
-            query = '''INSERT INTO usuario (nombre, dni, correo, telefono, foto_verificacion, contraseña, token, estado_cuenta, verificacion_cuenta, id_tipousuario)
+            query = '''INSERT INTO usuario (nombre, dni, correo, telefono, foto_verificacion, contraseña, token, estado_cuenta, verificacion_cuenta, idTipoUsuario)
                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'''
             cursor.execute(query, (data['nombre'], data['dni'], data['correo'], data['telefono'],
                                    data['foto'], data['password'], creador_token(), True, 'E', 2))
