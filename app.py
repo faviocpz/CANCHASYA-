@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request
-
+from controladores.usuario import controlador_usuario as cuser
 app = Flask(__name__)
 
 @app.route('/')
@@ -51,8 +51,15 @@ def registrar_alquilador():
             'telefono': request.form['telefono']
         }
 
-        print(data)
-        return jsonify({'codigo': 1, 'mensaje': 'Se registro correctamente'})
+        respuesta = cuser.crear_usuario(data)
+        mensaje = ""
+        if(respuesta == 1):
+            mensaje = "Se registro correctamente el alquilador"
+        elif(respuesta == 2):
+            mensaje = "El correo ya existe"
+        else:
+            return 2
+        return jsonify({'codigo': respuesta, 'mensaje': 'Se registro correctamente'})
     except Exception as e:
         return jsonify({'codigo': 0, 'mensaje': f'Error al procesar la solicitud: {str(e)}'}), 500
     

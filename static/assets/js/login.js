@@ -90,7 +90,7 @@ async function enviar(){
     var form_data = new FormData(document.getElementById('formulario_registro'));
 
     if (radio_seleccionado === 'deportista') {
-
+        
     } else {
         try{
             const response = await fetch('/registrar_alquilador',{

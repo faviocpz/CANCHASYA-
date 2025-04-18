@@ -1,18 +1,52 @@
 from conexion import obtener_conexion
 
-def crear_usuario(username, contraseña, estado, idTipoUsuario):
-    if verificar_usuario_existe(username):
-        print("El usuario ya existe.")
-        return
-
+def verificar_dni(dni):
     conexion = obtener_conexion()
     try:
         with conexion.cursor() as cursor:
-            query = """INSERT INTO USUARIO (username, contraseña, estado, idTipoUsuario)
-                       VALUES (%s, %s, %s, %s)"""
-            cursor.execute(query, (username, contraseña, estado, idTipoUsuario))
+            query = ''' 
+                        select id from usuario as us where us.dni = %s 
+                        '''
+            cursor.execute(query, (dni,))
+            result = cursor.fetchone()
+        return result[0] > 0
+    finally:
+        conexion.close()
+
+def verificar_correo(correo):
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            query = ''' 
+                        select id from usuario as us where us.correo = %s 
+                        '''
+            cursor.execute(query, (correo,))
+            result = cursor.fetchone()
+        return result[0] > 0
+    finally:
+        conexion.close()
+
+def crear_usuario_alquilador(data):
+    existe_usuario = verificar_dni(data['dni'])
+    existe_correo = verificar_correo(data['correo'])
+    conexion = obtener_conexion()
+    
+    existe = list()
+    if(existe_correo or existe_usuario):
+        if (existe_usuario):
+            existe.append(2)
+        if(existe_correo):
+            existe.append(3)
+        return existe
+    try:
+        with conexion.cursor() as cursor:
+            query = ''''INSERT INTO usuario (nombre, dni, correo, telefono, foto_verificacion, contraseña, token, estado_cuenta, verificacion_cuenta)
+                       VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'''
+            cursor.execute(query, ())
         conexion.commit()
-        print("Usuario creado con éxito.")
+        return 1
+    except:
+        return 3
     finally:
         conexion.close()
 
