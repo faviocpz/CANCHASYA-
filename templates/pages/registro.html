@@ -1,16 +1,36 @@
 {% extends "pages/login.html" %}
+{% block contenido_formulario %}
+<div class="col-md-6 bg-white p-5">
+  <h3 class="text-center text-azulcy fw-bold fst-italic mb-4">
+        Registrate
+  </h3>
 
-{% block titulo_login %}
-    Registrate
-{% endblock %}
+  <!-- Selector de tipo de usuario -->
+  <div class="mb-4 text-center">
+    <label class="me-3">
+      <input class="input_registro" type="radio" name="tipo_usuario" value="deportista" checked> Deportista
+    </label>
+    <label>
+      <input class="input_registro" type="radio" name="tipo_usuario" value="aliado"> Aliado
+    </label>
+  </div>
 
-{% block texto_cuenta %}
-¿Tienes cuenta?
-{% endblock %}
-{% block formulario  %}
-    
-{% endblock %}
+  <form id="formulario_registro">
 
-{% block button_cuenta %}
-<a href="/login" class="btn btn-outline-success fw-bold">inicia sesión</a>
-{% endblock %}
+  </form>
+
+
+  <div class="text-center mt-4">
+    <p>
+        ¿Tienes cuenta?
+    </p>
+      <a href="/login" class="btn btn-outline-success fw-bold">inicia sesión</a>
+  </div>
+</div>
+
+
+{% endblock  %}
+
+{% block scripts%}
+  <script src="/static/assets/js/login.js"></script>
+{% endblock%}

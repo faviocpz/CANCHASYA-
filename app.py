@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify, request
 
 app = Flask(__name__)
 
@@ -38,6 +38,26 @@ def solicitudes():
 @app.route('/registro')
 def registro():
     return render_template('pages/registro.html')
+
+
+@app.route('/registrar_alquilador', methods=['POST'])
+def registrar_alquilador():
+    try:
+        data = {
+            'foto': request.files['foto_r'].filename,
+            'nombres': request.form['nombres'],
+            'dni': request.form['dni'],
+            'correo': request.form['correo'],
+            'telefono': request.form['telefono']
+        }
+
+        print(data)
+        return jsonify({'codigo': 1, 'mensaje': 'Se registro correctamente'})
+    except Exception as e:
+        return jsonify({'codigo': 0, 'mensaje': f'Error al procesar la solicitud: {str(e)}'}), 500
+    
+
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
