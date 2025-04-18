@@ -74,5 +74,27 @@ def registrar_alquilador():
         return jsonify({'codigo_rpt': 0, 'mensaje': f'Error al procesar la solicitud: {str(e)}'}), 500
 
 
+@app.route('/inicio_sesion', methods=['POST'])
+def inicio_sesion():
+    correo = request.form['correo']
+    password = sha256(str(request.form['password']).encode('utf-8')).hexdigest()
+    tipo = request.form.get('tipo')
+    id_tipo = 3 if tipo == 'deportista' else 2
+    respuesta = cuser.verificar_cuenta(correo,password, id_tipo)
+    rpt = {}
+    if (respuesta[0] > 0):
+        if(tipo == 'deportista'):
+            rpt['codigo'] = 1
+            rpt['ruta'] = '/'
+        elif(tipo == 'aliado'):
+            rpt['codigo'] = 1
+            rpt['ruta'] = '/maestra_interna'
+        else:
+            rpt['codigo'] = 0
+    else:
+        rpt['codigo'] = 0
+
+    return jsonify(rpt)
+
 if __name__ == '__main__':
     app.run(debug=True)

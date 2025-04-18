@@ -3,6 +3,22 @@ import random
 from hashlib import sha256
 
 
+def verificar_cuenta(correo, contraseña, tipo):
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            query = ''' 
+                        select count(*), us.verificacion_cuenta
+	                            from usuario as us where us.correo = %s
+                                and contraseña = %s
+                                and id_tipousuario = %s and estado_cuenta = 1;
+                        '''
+            cursor.execute(query, (correo, contraseña, tipo))
+            result = cursor.fetchone()
+        return result if result[0] > 0 else [0]
+    finally:
+        conexion.close()
+
 def verificar_dni(dni):
     conexion = obtener_conexion()
     try:

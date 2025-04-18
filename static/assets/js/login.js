@@ -125,3 +125,27 @@ async function enviar(){
         }
     }
 }
+
+
+
+async function iniciar_sesion(){
+    const radio_seleccionado = document.querySelector('input[name="tipo_usuario"]:checked').value;
+    var form_data = new FormData(document.getElementById('frm_iniciosesion'));
+    form_data.append('tipo', radio_seleccionado);
+    try{
+        const response = await fetch('/inicio_sesion',{
+            method:"POST",
+            body: form_data 
+        });
+        const data = await response.json();
+        console.log(data);
+        if(data.codigo == 1){
+            location.href = data.ruta;
+        }else {
+            alert("Error verifique su contraseña o correo");
+        }
+    }catch {
+        console.log("No hay conexión");
+    }
+    
+}
