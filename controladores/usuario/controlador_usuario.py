@@ -70,7 +70,7 @@ def crear_usuario_alquilador(data):
                                    data['foto'], data['password'], creador_token(), True, 'E', 2))
         
         conexion.commit()
-        return 1
+        return cursor.lastrowid
     except Exception as e:
         print(e)  # Mostrar error real
         return 0

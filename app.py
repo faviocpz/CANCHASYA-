@@ -1,7 +1,7 @@
 from flask import Flask, render_template, jsonify, request, session
 from controladores.usuario import controlador_usuario as cuser
 from hashlib import sha256
-
+import os
 
 
 app = Flask(__name__)
@@ -51,8 +51,9 @@ def registrar_alquilador():
         dni = request.form['dni']
         correo = request.form['correo']
         codigos = []
+        foto = request.files['foto_r']
         data = {
-            'foto': request.files['foto_r'].filename,
+            'foto': foto.filename,
             'nombre': request.form['nombres'],
             'dni': dni,
             'correo': correo,
@@ -70,7 +71,13 @@ def registrar_alquilador():
                 codigos.append('dni')
             codigo = 2
         else:
-            cuser.crear_usuario_alquilador(data)
+            id_carpeta = cuser.crear_usuario_alquilador(data)
+            carpeta = f"/static/assets/img_usuario/alquilador/{id_carpeta})"
+            carpeta = os.path.join(f"static/assets/img_usuario/alquilador/{id_carpeta}")
+            if not os.path.exists(carpeta):
+                os.makedirs(carpeta)
+            foto_path = os.path.join(carpeta, 'verificar_img_' + foto.filename)
+            foto.save(foto_path)
             codigo = 1
         print({'codigo_rpt': codigo, 'rpt_duplicados' : codigos}) 
         return jsonify({'codigo_rpt': codigo, 'rpt_duplicados' : codigos})
