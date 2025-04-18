@@ -57,7 +57,7 @@ def registrar_alquilador():
             'nombre': request.form['nombres'],
             'dni': dni,
             'correo': correo,
-            'telefono': request.form['telefono'],
+            'tel': request.form['tel'],
             'password': sha256(str(request.form['password']).encode('utf-8')).hexdigest()
         }
 

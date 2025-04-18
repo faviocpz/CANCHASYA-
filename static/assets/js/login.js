@@ -31,8 +31,8 @@ var formulario_alquiler = `
         <input type="email" name="correo" class="form-control" id="correo" placeholder="usuario@correo.com" required>
     </div>
     <div class="mb-3">
-        <label for="telefono" class="form-label">Teléfono:</label>
-        <input type="text" name="telefono" class="form-control" id="telefono" required>
+        <label for="tel" class="form-label">Teléfono:</label>
+        <input type="text" name="tel" class="form-control" id="tel" required>
     </div>
     <div class="mb-3">
         <label for="password" class="form-label">Contraseña:</label>
