@@ -17,13 +17,7 @@ var formulario_deportista = `
 `;
 
 var formulario_alquiler = `
-    <div class="mb-3">
-        <label for="foto" class="form-label">Sube tu Foto:</label>
-        <div class="d-flex">
-            <input type="file" name="foto_r" class="form-control me-2" id="foto" accept="image/*" required>
-            <button onclick="mostrar_imagen(this)"  type="button" class="btn btn-success"><i class="bi bi-eye-fill"></i> </button>
-        </div>
-    </div>
+
     <div class="mb-3">
         <label for="nombre" class="form-label">Nombre completo:</label>
         <input type="text" name="nombres" class="form-control" id="nombre" required>
@@ -40,6 +34,17 @@ var formulario_alquiler = `
         <label for="telefono" class="form-label">Teléfono:</label>
         <input type="text" name="telefono" class="form-control" id="telefono" required>
     </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Contraseña:</label>
+        <input type="password" name="password" class="form-control" id="password" required>
+    </div>
+    <div class="mb-3">
+        <label for="foto" class="form-label">Sube tu Foto:</label>
+        <div class="d-flex">
+            <input type="file" name="foto_r" class="form-control me-2" id="foto" accept="image/*" required>
+            <button onclick="mostrar_imagen(this)"  type="button" class="btn btn-success"><i class="bi bi-eye-fill"></i> </button>
+        </div>
+    </div>
     <div class="d-grid gap-2">
         <button type="button" class="btn bg-verdecy text-blancocy fw-bold" onclick="enviar()">Registrar</button>
     </div>
@@ -49,6 +54,7 @@ var formulario_registro = document.getElementById('formulario_registro');
 
 
 window.onload = function() {
+    document.getElementById('ch_deporte').checked = true;
     var formulario_registro = document.getElementById('formulario_registro');
     formulario_registro.innerHTML = formulario_deportista;
 };
@@ -98,11 +104,21 @@ async function enviar(){
                 body: form_data 
             });
             const data = await response.json();
-    
-            if(data.codigo == 1){
-                alert('Se registro correctamente el alquilador')
+            console.log(data);
+            if(data.codigo_rpt == 1){
+                location.href = "/maestra_interna";
             }else{
-                alert("Hubo un error al registrart el alquilador");
+                const rpt_duplicados = data.rpt_duplicados;
+
+                if(rpt_duplicados.length > 0){
+                    alert('el correo y dni ya existe');
+                }else{
+                    if (rpt_duplicados[0] == 'correo' || rpt_duplicados[1] == 'correo' ){
+                        alert('el correo ya existe');
+                    }else{
+                        alert('el dni ya existe');
+                    }
+                }
             }
         }catch {
             alert("No hay conexión");

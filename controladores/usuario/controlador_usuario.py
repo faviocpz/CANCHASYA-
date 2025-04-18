@@ -1,11 +1,14 @@
 from conexion import obtener_conexion
+import random
+from hashlib import sha256
+
 
 def verificar_dni(dni):
     conexion = obtener_conexion()
     try:
         with conexion.cursor() as cursor:
             query = ''' 
-                        select id from usuario as us where us.dni = %s 
+                        select count(*) from usuario as us where us.dni = %s 
                         '''
             cursor.execute(query, (dni,))
             result = cursor.fetchone()
@@ -18,7 +21,7 @@ def verificar_correo(correo):
     try:
         with conexion.cursor() as cursor:
             query = ''' 
-                        select id from usuario as us where us.correo = %s 
+                        select count(*) from usuario as us where us.correo = %s 
                         '''
             cursor.execute(query, (correo,))
             result = cursor.fetchone()
@@ -26,29 +29,31 @@ def verificar_correo(correo):
     finally:
         conexion.close()
 
+def creador_token():
+    numero = str(random.randint(1,1024))
+    token = sha256(numero.encode('utf-8')).hexdigest()
+    return token
+
+
 def crear_usuario_alquilador(data):
-    existe_usuario = verificar_dni(data['dni'])
-    existe_correo = verificar_correo(data['correo'])
     conexion = obtener_conexion()
-    
-    existe = list()
-    if(existe_correo or existe_usuario):
-        if (existe_usuario):
-            existe.append(2)
-        if(existe_correo):
-            existe.append(3)
-        return existe
     try:
+        print("entro")
         with conexion.cursor() as cursor:
-            query = ''''INSERT INTO usuario (nombre, dni, correo, telefono, foto_verificacion, contraseña, token, estado_cuenta, verificacion_cuenta)
-                       VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'''
-            cursor.execute(query, ())
+            query = '''INSERT INTO usuario (nombre, dni, correo, telefono, foto_verificacion, contraseña, token, estado_cuenta, verificacion_cuenta, id_tipousuario)
+                       VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'''
+            cursor.execute(query, (data['nombre'], data['dni'], data['correo'], data['telefono'],
+                                   data['foto'], data['password'], creador_token(), True, 'E', 2))
+        
         conexion.commit()
         return 1
-    except:
-        return 3
+    except Exception as e:
+        print(e)  # Mostrar error real
+        return 0
     finally:
         conexion.close()
+
+
 
 def obtener_usuario_por_id(idUsuario):
     conexion = obtener_conexion()
