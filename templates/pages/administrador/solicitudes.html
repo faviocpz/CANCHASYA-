@@ -1,6 +1,6 @@
 {% extends 'base_interna.html' %}
 {% block titulo_pagina %}
-        Solicitudes para aceptar vendedores
+        Aliados por Aprobar
 {% endblock %}
 
 {%  block contenido %}
@@ -41,7 +41,7 @@
     <div class="extensiones mt-3">
         <div>
             <div class="input-group">
-                <input type="search" oninput="buscar(this)" class="form-control" id="buscar" placeholder="Buscar..." aria-label="Buscar" aria-describedby="button-addon2">
+                <input type="search" oninput="buscar(this)" class="form-control buscador-cy" placeholder="Buscar aliados...">
             </div>
         </div>
     </div>
@@ -65,7 +65,7 @@
               <td>
                 <button class="btn btn-verde-verificar"
                         onclick="mostrar_modal('{{ solicitud[5] }}', '{{ solicitud[2] }}','{{ solicitud[0] }}','{{ solicitud[1] }}','{{ solicitud[3] }}')">
-                  <i class="bi bi-check-circle"></i> Verificar usuario
+                  <i class="bi bi-check-circle"></i> Verificar
                 </button>
               </td>
             </tr>

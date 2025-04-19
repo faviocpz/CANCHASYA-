@@ -1,4 +1,6 @@
-/* BASE */
+/* --------------------------------------------- */
+/* 1. TIPOGRAFÍAS Y ESTILOS BASE */
+/* --------------------------------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,700&family=Open+Sans:wght@400;600&display=swap');
 
 body {
@@ -14,7 +16,9 @@ h1, h2, h3, .titulo, .btn, nav {
   font-style: italic;
 }
 
-/* COLORES PRINCIPALES */
+/* --------------------------------------------- */
+/* 2. PALETA DE COLORES PERSONALIZADA */
+/* --------------------------------------------- */
 .bg-verdecy    { background-color: #3C7F0B !important; }
 .bg-rojocy     { background-color: #D92110 !important; }
 .bg-blancocy   { background-color: #FFFFFF !important; }
@@ -33,6 +37,9 @@ h1, h2, h3, .titulo, .btn, nav {
 .border-azulcy   { border-color: #0D192C !important; }
 .border-negrocy  { border-color: #02020B !important; }
 
+/* --------------------------------------------- */
+/* 3. UTILITARIOS GENERALES */
+/* --------------------------------------------- */
 .rounded-xl {
   border-radius: 1rem;
 }
@@ -41,7 +48,13 @@ h1, h2, h3, .titulo, .btn, nav {
   box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
 
-/* NAVBAR */
+.text-shadow-cy {
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* --------------------------------------------- */
+/* 4. NAVBAR */
+/* --------------------------------------------- */
 .navbar .nav-link:hover,
 .navbar .nav-link:focus {
   color: #FFFFFF !important;
@@ -56,12 +69,15 @@ h1, h2, h3, .titulo, .btn, nav {
   box-shadow: 0 2px 6px rgba(255, 255, 255, 0.2);
 }
 
-/* LOGIN */
+/* --------------------------------------------- */
+/* 5. LOGIN PAGE */
+/* --------------------------------------------- */
 .bg-login-page {
   position: relative;
   background-color: white;
   z-index: 1;
 }
+
 .bg-login-page::before {
   content: "";
   position: absolute;
@@ -73,6 +89,7 @@ h1, h2, h3, .titulo, .btn, nav {
   opacity: 0.9;
   z-index: 0;
 }
+
 .bg-login-page > * {
   position: relative;
   z-index: 2;
@@ -88,7 +105,9 @@ h1, h2, h3, .titulo, .btn, nav {
   color: white;
 }
 
-/* BOTÓN DE MENÚ */
+/* --------------------------------------------- */
+/* 6. BOTONES PERSONALIZADOS */
+/* --------------------------------------------- */
 .btn_estilo_hover {
   background-color: #f8f9fa;
   color: #000;
@@ -97,35 +116,110 @@ h1, h2, h3, .titulo, .btn, nav {
   transition: background-color 0.3s;
   border: none;
 }
+
 .btn_estilo_hover:hover {
   background-color: #0d1b2a;
   color: #fff;
 }
 
-/* ESTILO DE FILAS "GRAMADO" PARA TABLAS */
-.tr-grama-oscura {
-  background-color: #3C7F0B !important;
-  color: #FFFFFF !important;
-}
-.tr-grama-clara {
-  background-color: #5CA826 !important;
-  color: #FFFFFF !important;
-}
-
-/* BOTÓN DE VERIFICAR */
 .btn-verde-verificar {
   background-color: #FFFFFF;
-  color: #3C7F0B;
+  color: #D92110;
   font-weight: bold;
-  border: 2px solid #3C7F0B;
+  border: 2px solid #D92110;
   transition: 0.3s;
 }
+
 .btn-verde-verificar:hover {
-  background-color: #3C7F0B;
+  background-color: #D92110;
   color: #FFFFFF;
 }
 
-/* INDEX */
+/* --------------------------------------------- */
+/* 7. VERIFICACION DE USUARIOS */
+/* --------------------------------------------- */
+table tr.tr-grama-oscura td {
+  background-color: #176115 !important;
+  color: #FFFFFF !important;
+}
+
+table tr.tr-grama-clara td {
+  background-color: #3aad4d !important;
+  color: #FFFFFF !important;
+}
+
+.titulo-pagina-cy {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  font-style: italic;
+  color: #0D192C;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.sidebar-admin {
+  background-color: #161620f2; /* negro #02020B con transparencia */
+  color: white;
+}
+
+.buscador-cy {
+  border: 2px solid #0D192C;
+  border-radius: 8px;
+  padding-left: 2.5rem;
+  background-color: #F0F3F8;
+  background-image: url('../img/icon-search.svg');
+  background-position: 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1rem;
+}
+
+.table {
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.btn_sidebar {
+  background-color: transparent;
+  color: white;
+  font-weight: bold;
+  font-style: italic;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+  text-align: left; /* justifica a la izquierda */
+  padding-left: 1rem; /* opcional, mejora la alineación visual */
+}
+
+.btn_sidebar:hover {
+  background-color: white;
+  color: #161620f2; /* gris oscuro */
+}
+
+.buscador-cy {
+  border: 2px solid #0D192C;
+  border-radius: 8px;
+  padding-left: 2.5rem;
+  background-color: #F8F9FA;
+  background-image: url('/static/assets/img/icon-lupa.svg'); /* coloca aquí tu ícono */
+  background-position: 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1.2rem;
+  font-style: italic;
+  font-weight: 600;
+  color: #0D192C;
+}
+
+.buscador-cy::placeholder {
+  color: #6c757d;
+  font-style: italic;
+}
+
+
+/* --------------------------------------------- */
+/* 8. INDEX / PÁGINA PRINCIPAL */
+/* --------------------------------------------- */
 .hero-bg {
   background-color: #0D192C;
   background-image: url('../img/net.png');
@@ -144,11 +238,9 @@ h1, h2, h3, .titulo, .btn, nav {
   background-blend-mode: overlay;
 }
 
-.text-shadow-cy {
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
-}
-
-/* SWIPER CARDS */
+/* --------------------------------------------- */
+/* 9. SWIPER SLIDER */
+/* --------------------------------------------- */
 .swiper {
   width: 100%;
   padding-bottom: 2rem;
@@ -157,9 +249,11 @@ h1, h2, h3, .titulo, .btn, nav {
   padding-right: 1rem;
   box-sizing: border-box;
 }
+
 .swiper-wrapper {
   padding: 0;
 }
+
 .swiper-slide .card {
   background-color: #FFFFFF;
   border-radius: 1rem;
@@ -171,9 +265,11 @@ h1, h2, h3, .titulo, .btn, nav {
   justify-content: flex-start;
   padding: 1rem;
 }
+
 .swiper-slide .card:hover {
   transform: translateY(-4px);
 }
+
 .benefit-card {
   height: 100%;
   display: flex;
@@ -181,6 +277,7 @@ h1, h2, h3, .titulo, .btn, nav {
   justify-content: flex-start;
   text-align: left;
 }
+
 .benefit-card img {
   max-width: 100%;
   height: 200px;
