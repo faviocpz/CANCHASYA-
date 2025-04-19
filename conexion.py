@@ -7,7 +7,7 @@ def obtener_conexion():
             port=48036,
             user="root",
             password="eIBwKZTAxcXWewZFzNAfIgmgFAUjRBGN",
-            db="PRUEBA"
+            db="CanchasYa"
         )
         return conexion
     except pymysql.MySQLError as e:
