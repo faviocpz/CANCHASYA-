@@ -1,2 +1,4 @@
 echo .env >> .gitignore
 __pycache__/
+myvirtualenv/
+controladores/__pycache__
