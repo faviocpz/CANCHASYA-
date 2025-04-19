@@ -46,7 +46,6 @@ def maestra_interna():
 @app.route('/solicitudes')
 def solicitudes():
     solicitudes = cuser.retornar_usuario()
-    print(solicitudes)
     return render_template('pages/administrador/solicitudes.html', solicitudes = solicitudes)
 
 @app.route('/registro')

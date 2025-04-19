@@ -55,18 +55,14 @@ h1, h2, h3, .titulo, .btn, nav {
 /* --------------------------------------------- */
 /* 4. NAVBAR */
 /* --------------------------------------------- */
-.navbar .nav-link:hover,
-.navbar .nav-link:focus {
-  color: #FFFFFF !important;
+.navbar .nav-link {
+  color: rgba(255, 255, 255, 0.65) !important;
   transition: color 0.2s ease-in-out;
 }
 
-.navbar .nav-link.active {
-  background-color: rgba(255, 255, 255, 0.1);
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
   color: #FFFFFF !important;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.2);
 }
 
 /* --------------------------------------------- */
@@ -158,8 +154,10 @@ table tr.tr-grama-clara td {
 }
 
 .sidebar-admin {
-  background-color: #161620f2; /* negro #02020B con transparencia */
+  background-color: #161620f2;
   color: white;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
 }
 
 .buscador-cy {
@@ -216,6 +214,14 @@ table tr.tr-grama-clara td {
   font-style: italic;
 }
 
+.object-fit-cover {
+  object-fit: cover;
+}
+
+.modal-xl {
+  max-width: 1000px;
+}
+
 
 /* --------------------------------------------- */
 /* 8. INDEX / PÁGINA PRINCIPAL */
@@ -237,6 +243,12 @@ table tr.tr-grama-clara td {
   background-repeat: no-repeat;
   background-blend-mode: overlay;
 }
+
+.offcanvas-body.sidebar-admin {
+  height: 100%;
+  overflow-y: auto;
+}
+
 
 /* --------------------------------------------- */
 /* 9. SWIPER SLIDER */

@@ -5,38 +5,56 @@
 
 {%  block contenido %}
     <!-- Modal -->
-    <div class="modal fade" id="modal_verificacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered"  style="max-width: 80%; margin: auto;">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Verificación de Usuario</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal fade" id="modal_verificacion" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+          <div class="modal-content rounded-4 overflow-hidden">
+      
+            <!-- Header azul con título y X -->
+            <div class="modal-header bg-azulcy text-blancocy border-0">
+              <h5 class="modal-title fw-bold fst-italic">Aliado por Verificar</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="flex-shrink-0 me-3 col-7">
-                        <img id="foto_usuario" src="" alt="Foto del usuario" class="img-fluid" style="max-height: 400px; max-width: 100%;">
-                    </div>
-                    <div class="flex-grow-1 col-3">
-                        <div class="mb-3">
-                            <label for="nombre_user" class="form-label">Nombre del usuario</label>
-                            <input type="text" class="form-control" id="nombre_user" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="dni_usuario" class="form-label">DNI del Usuario</label>
-                            <input type="text" class="form-control" id="dni_usuario" readonly>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" id="foto_v">Foto verificada</button>
-                <button type="button" class="btn btn-danger" id="foto_r">Foto rechazada</button>
-            </div>
-            </div>
-        </div>
-    </div>
+      
+            <!-- Cuerpo del modal con imagen y formulario -->
+            <div class="modal-body p-0">
+            <div class="row g-0">
+                <!-- Imagen del usuario -->
+                <div class="col-md-7 bg-black" style="max-height: 500px; overflow-y: auto;">
+                    <img id="foto_usuario" src="" alt="Foto del usuario" style="width: 100%; display: block;" />
+                </div>                
+                <!-- Formulario -->
+                <div class="col-md-5 bg-white d-flex flex-column justify-content-center p-4">
 
+                    <div class="mb-3">
+                        <label for="nombre_user" class="form-label fw-bold fst-italic text-azulcy">
+                            Nombre del usuario
+                        </label>
+                        <input type="text" class="form-control" id="nombre_user" readonly>
+                    </div>
+
+                    <div>
+                        <label for="dni_usuario" class="form-label fw-bold fst-italic text-azulcy">
+                            DNI del Usuario
+                        </label>
+                        <input type="text" class="form-control" id="dni_usuario" readonly>
+                    </div>
+
+                </div>
+
+            </div>
+            </div>
+
+      
+            <!-- Footer con fondo azul y botones -->
+            <div class="modal-footer justify-content-end bg-azulcy border-0">
+              <button type="button" class="btn btn-success fw-bold fst-italic px-4" id="foto_v">Foto verificada</button>
+              <button type="button" class="btn btn-danger fw-bold fst-italic px-4" id="foto_r">Foto rechazada</button>
+            </div>
+      
+          </div>
+        </div>
+      </div>
+      
 
     <div class="extensiones mt-3">
         <div>
@@ -45,34 +63,35 @@
             </div>
         </div>
     </div>
-    <table class="table mt-3 rounded-xl overflow-hidden">
-        <thead class="bg-azulcy text-blancocy">
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>DNI</th>
-            <th>Correo</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="datos_solicitud">
-            {% for solicitud in solicitudes %}
-            <tr class="{{ 'tr-grama-oscura' if loop.index0 % 2 == 0 else 'tr-grama-clara' }}">
-              <td>{{ solicitud[0] }}</td>
-              <td>{{ solicitud[1] }}</td>
-              <td>{{ solicitud[2] }}</td>
-              <td>{{ solicitud[3] }}</td>
-              <td>
-                <button class="btn btn-verde-verificar"
-                        onclick="mostrar_modal('{{ solicitud[5] }}', '{{ solicitud[2] }}','{{ solicitud[0] }}','{{ solicitud[1] }}','{{ solicitud[3] }}')">
-                  <i class="bi bi-check-circle"></i> Verificar
-                </button>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>          
-      </table>
-      
+    <div class="table-responsive mt-3">
+        <table class="table mt-3 rounded-xl overflow-hidden">
+            <thead class="bg-azulcy text-blancocy">
+                <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>DNI</th>
+                <th>Correo</th>
+                <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="datos_solicitud">
+                {% for solicitud in solicitudes %}
+                <tr class="{{ 'tr-grama-oscura' if loop.index0 % 2 == 0 else 'tr-grama-clara' }}">
+                    <td>{{ solicitud[0] }}</td>
+                    <td>{{ solicitud[1] }}</td>
+                    <td>{{ solicitud[2] }}</td>
+                    <td>{{ solicitud[3] }}</td>
+                    <td>
+                    <button class="btn btn-verde-verificar"
+                            onclick="mostrar_modal('{{ solicitud[5] }}', '{{ solicitud[2] }}','{{ solicitud[0] }}','{{ solicitud[1] }}','{{ solicitud[3] }}')">
+                        <i class="bi bi-check-circle"></i> Verificar
+                    </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>          
+        </table>
+    </div>
 
 {% endblock %} 
 {% block scripts %}
