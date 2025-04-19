@@ -4,8 +4,71 @@
 {% endblock %}
 
 {%  block contenido %}
+    <!-- Modal -->
+    <div class="modal fade" id="modal_verificacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered"  style="max-width: 80%; margin: auto;">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Verificación de Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="flex-shrink-0 me-3 col-7">
+                        <img id="foto_usuario" src="" alt="Foto del usuario" class="img-fluid" style="max-height: 400px; max-width: 100%;">
+                    </div>
+                    <div class="flex-grow-1 col-3">
+                        <div class="mb-3">
+                            <label for="nombre_user" class="form-label">Nombre del usuario</label>
+                            <input type="text" class="form-control" id="nombre_user" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="dni_usuario" class="form-label">DNI del Usuario</label>
+                            <input type="text" class="form-control" id="dni_usuario" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="foto_v">Foto verificada</button>
+                <button type="button" class="btn btn-danger" id="foto_r">Foto rechazada</button>
+            </div>
+            </div>
+        </div>
+    </div>
 
-    GAAAA
 
+    <div class="extensiones mt-3">
+        <div>
+            <div class="input-group">
+                <input type="search" oninput="buscar(this)" class="form-control" id="buscar" placeholder="Buscar..." aria-label="Buscar" aria-describedby="button-addon2">
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>DNI</th>
+                <th>Correo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="datos_solicitud">
+            {% for solicitud in solicitudes %}
+            <tr>
+                <td>{{ solicitud[0] }}</td>
+                <td>{{ solicitud[1] }}</td>
+                <td>{{ solicitud[2] }}</td>
+                <td>{{ solicitud[3] }}</td>
+                <td><button class="btn btn-secondary" onclick="mostrar_modal('{{ solicitud[5] }}', '{{ solicitud[2] }}','{{ solicitud[0] }}','{{ solicitud[1] }}','{{ solicitud[3] }}' )" > Verificar usuario </button> </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-{% endblock %}
+{% endblock %} 
+{% block scripts %}
+    <script src="/static/assets/js/verificar_usuarios.js"> </script>
+{% endblock%}

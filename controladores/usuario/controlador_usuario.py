@@ -27,6 +27,25 @@ def verificar_cuenta(correo, contraseña, tipo):
     finally:
         conexion.close()
 
+
+def actualizar_estado_verificacion(id_usuario, nuevo_estado):
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            query = '''UPDATE usuario 
+                       SET verificacion_cuenta = %s 
+                       WHERE id = %s'''
+            cursor.execute(query, (nuevo_estado, id_usuario))
+        conexion.commit()
+        return 1
+    except Exception as e:
+        print("Error al actualizar verificación:", e)
+        return 0
+    finally:
+        conexion.close()
+
+
+
 def verificar_dni(dni):
     conexion = obtener_conexion()
     try:
@@ -77,7 +96,17 @@ def crear_usuario_alquilador(data):
     finally:
         conexion.close()
 
-
+def retornar_usuario():
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            query = '''  
+                    select * from usuario where id_tipousuario = 2 and verificacion_cuenta = 'E' 
+                        '''
+            cursor.execute(query, ())
+        return cursor.fetchall()
+    finally:
+        conexion.close()
 
 def obtener_usuario_por_id(idUsuario):
     conexion = obtener_conexion()
@@ -184,6 +213,8 @@ def deshabilitar_usuario(idUsuario):
         conexion.commit()
     finally:
         conexion.close()
+
+
 
 def obtener_tipo_usuario(idUsuario):
     conexion = obtener_conexion()

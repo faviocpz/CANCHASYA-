@@ -2,10 +2,12 @@ from flask import Flask, render_template, jsonify, request, session
 from controladores.usuario import controlador_usuario as cuser
 from hashlib import sha256
 import os
-
+from enviar_correos import enviar_mensajecorreo
 
 app = Flask(__name__)
 app.secret_key = 'clavesegura'
+
+
 
 @app.route('/')
 def index():
@@ -38,7 +40,9 @@ def maestra_interna():
 
 @app.route('/solicitudes')
 def solicitudes():
-    return render_template('pages/administrador/solicitudes.html')
+    solicitudes = cuser.retornar_usuario()
+    print(solicitudes)
+    return render_template('pages/administrador/solicitudes.html', solicitudes = solicitudes)
 
 @app.route('/registro')
 def registro():
@@ -116,6 +120,30 @@ def inicio_sesion():
         rpt['codigo'] = 0
 
     return jsonify(rpt)
+
+
+@app.route('/enviar_correo', methods=['POST'])
+def enviar_correo():
+    data = request.get_json()
+   
+    destinatario = data['email_f']
+    asunto = data['asunto_f']
+    cuerpo = data['cuerpo_f']
+
+    codigo = enviar_mensajecorreo(destinatario, asunto, cuerpo)
+
+    return jsonify({'codigo': codigo})
+
+@app.route('/cambiar_estado_usuario/<string:estado>/<int:id>')
+def cambiar_estado_usuario(estado, id):
+    try:
+        resultado = cuser.actualizar_estado_verificacion(id, estado)
+        if resultado:
+            return jsonify({'codigo': 1, 'mensaje': 'Estado del usuario actualizado correctamente'})
+        else:
+            return jsonify({'codigo': 0, 'mensaje': 'No se pudo actualizar el estado del usuario'})
+    except Exception as e:
+        return jsonify({'codigo': 0, 'mensaje': f'Error al procesar la solicitud: {str(e)}'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

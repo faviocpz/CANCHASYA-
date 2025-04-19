@@ -50,9 +50,9 @@
     </div>
   </nav>
 
-  <div class="d-flex">
+  <div class="d-flex row g-0">
   <!-- Menu izquierdo -->
-  <div class="menu">
+  <div class="menu col-2">
     <div class="d-flex">
       <img src="/static/assets/img/red.png" alt="" class="circulo ms-2  mt-2">
       <div class="col-6 mt-2 ms-2">
@@ -82,7 +82,7 @@
 
   </div>
   <!-- Contenido dinámico -->
-  <main class="ps-4 pt-2">
+  <main class="ps-4 pt-2 col-10 pe-4">
     <h5 class="titulo_pagina"> 
       {% block titulo_pagina %}
         
@@ -93,10 +93,6 @@
     {% endblock %}
   </main>
   </div>
-
-
-
-
 
 
   <!-- Bootstrap JS (con popper) -->
@@ -126,5 +122,8 @@
     });
   </script>
   <script src="/static/assets/js/interna.js"></script>
+  {% block scripts %}
+
+  {% endblock %}
 </body>
 </html>
