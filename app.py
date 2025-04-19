@@ -17,6 +17,11 @@ def index():
 def login():
     return render_template('pages/login.html')
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    return render_template('pages/login.html')
+
 @app.route('/canchas')
 def canchas():
     return render_template('pages/canchas.html')
@@ -98,6 +103,7 @@ def inicio_sesion():
     respuesta = cuser.verificar_cuenta(correo,password, id_tipo)
     rpt = {}
     if (respuesta[0] > 0):
+        session['usuario'] = correo
         if(tipo == 'deportista'):
             rpt['codigo'] = 1
             rpt['ruta'] = '/'

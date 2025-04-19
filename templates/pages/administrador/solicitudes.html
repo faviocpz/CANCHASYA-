@@ -45,28 +45,34 @@
             </div>
         </div>
     </div>
-    <table class="table table-striped mt-3">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>DNI</th>
-                <th>Correo</th>
-                <th>Acciones</th>
-            </tr>
+    <table class="table mt-3 rounded-xl overflow-hidden">
+        <thead class="bg-azulcy text-blancocy">
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>DNI</th>
+            <th>Correo</th>
+            <th>Acciones</th>
+          </tr>
         </thead>
         <tbody id="datos_solicitud">
             {% for solicitud in solicitudes %}
-            <tr>
-                <td>{{ solicitud[0] }}</td>
-                <td>{{ solicitud[1] }}</td>
-                <td>{{ solicitud[2] }}</td>
-                <td>{{ solicitud[3] }}</td>
-                <td><button class="btn btn-secondary" onclick="mostrar_modal('{{ solicitud[5] }}', '{{ solicitud[2] }}','{{ solicitud[0] }}','{{ solicitud[1] }}','{{ solicitud[3] }}' )" > Verificar usuario </button> </td>
+            <tr class="{{ 'tr-grama-oscura' if loop.index0 % 2 == 0 else 'tr-grama-clara' }}">
+              <td>{{ solicitud[0] }}</td>
+              <td>{{ solicitud[1] }}</td>
+              <td>{{ solicitud[2] }}</td>
+              <td>{{ solicitud[3] }}</td>
+              <td>
+                <button class="btn btn-verde-verificar"
+                        onclick="mostrar_modal('{{ solicitud[5] }}', '{{ solicitud[2] }}','{{ solicitud[0] }}','{{ solicitud[1] }}','{{ solicitud[3] }}')">
+                  <i class="bi bi-check-circle"></i> Verificar usuario
+                </button>
+              </td>
             </tr>
             {% endfor %}
-        </tbody>
-    </table>
+          </tbody>          
+      </table>
+      
 
 {% endblock %} 
 {% block scripts %}

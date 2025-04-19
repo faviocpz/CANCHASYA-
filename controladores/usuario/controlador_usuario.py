@@ -101,7 +101,7 @@ def retornar_usuario():
     try:
         with conexion.cursor() as cursor:
             query = '''  
-                    select * from usuario where id_tipousuario = 2 and verificacion_cuenta = 'E' 
+                    select * from usuario where idTipoUsuario = 2 and verificacion_cuenta = 'E' 
                         '''
             cursor.execute(query, ())
         return cursor.fetchall()
