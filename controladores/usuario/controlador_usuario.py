@@ -253,6 +253,31 @@ def verificar_usuario_existe(username):
     finally:
         conexion.close()
 
+def obtener_datos_usuario_por_correo(correo):
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            query = """
+                SELECT nombre, dni, correo, telefono, verificacion_cuenta, idTipoUsuario
+                FROM usuario
+                WHERE correo = %s
+            """
+            cursor.execute(query, (correo,))
+            resultado = cursor.fetchone()
+
+        if resultado:
+            return {
+                'nombre': resultado[0],
+                'dni': resultado[1],
+                'correo': resultado[2],
+                'telefono': resultado[3],
+                'verificacion_cuenta': resultado[4],
+                'idTipoUsuario': resultado[5]
+            }
+        else:
+            return None
+    finally:
+        conexion.close()
 
 
 

@@ -1,0 +1,49 @@
+{% extends "base_interna.html" %}
+
+{% block titulo_pagina %}
+    Mi Perfil
+{% endblock %}
+
+{% block contenido %}
+<div class="container bg-white rounded shadow p-4">
+  <form id="form_perfil">
+    <div class="mb-3">
+      <label class="form-label fw-bold text-azulcy fst-italic">Nombre</label>
+      <input type="text" class="form-control" id="nombre" readonly>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-bold text-azulcy fst-italic">DNI</label>
+      <input type="text" class="form-control" id="dni" readonly>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-bold text-azulcy fst-italic">Correo</label>
+      <input type="email" class="form-control" id="correo" readonly>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-bold text-azulcy fst-italic">Teléfono</label>
+      <input type="text" class="form-control" id="telefono">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-bold text-azulcy fst-italic">Nueva Contraseña</label>
+      <input type="password" class="form-control" id="nueva_contrasena" placeholder="Opcional">
+    </div>
+
+    <!-- Sección solo para Aliado -->
+    <div id="estado_verificacion_aliado" class="mt-4 p-3 border rounded d-none">
+      <label class="form-label fw-bold text-azulcy fst-italic">Estado de verificación</label>
+      <div id="texto_estado" class="mb-2"></div>
+      <button type="button" id="btn_nuevo_intento" class="btn btn-outline-danger d-none">
+        Nuevo intento
+      </button>
+    </div>
+
+    <div class="mt-4 text-end">
+      <button type="submit" class="btn btn-primary fw-bold fst-italic">Guardar Cambios</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

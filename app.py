@@ -38,10 +38,23 @@ def carrito():
 def panel():
     return render_template('pages/panel.html')
 
+@app.route('/perfil')
+def perfil():
+    if 'usuario' not in session:
+        return render_template('pages/login.html')
+
+    correo = session['usuario']
+    datos = cuser.obtener_datos_usuario_por_correo(correo)
+
+    if datos:
+        return render_template('pages/perfil.html', usuario=datos)
+    else:
+        return "Usuario no encontrado", 404
+
+
 @app.route('/maestra_interna')
 def maestra_interna():
     return render_template('base_interna.html')
-
 
 @app.route('/solicitudes')
 def solicitudes():
