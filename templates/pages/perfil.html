@@ -6,44 +6,56 @@
 
 {% block contenido %}
 <div class="container bg-white rounded shadow p-4">
-  <form id="form_perfil">
+  <form id="form_perfil" method="POST" action="/actualizar_perfil">
     <div class="mb-3">
       <label class="form-label fw-bold text-azulcy fst-italic">Nombre</label>
-      <input type="text" class="form-control" id="nombre" readonly>
+      <input type="text" class="form-control" id="nombre" name="nombre" value="{{ usuario.nombre }}" readonly>
     </div>
 
     <div class="mb-3">
       <label class="form-label fw-bold text-azulcy fst-italic">DNI</label>
-      <input type="text" class="form-control" id="dni" readonly>
+      <input type="text" class="form-control" id="dni" name="dni" value="{{ usuario.dni }}" readonly>
     </div>
 
     <div class="mb-3">
       <label class="form-label fw-bold text-azulcy fst-italic">Correo</label>
-      <input type="email" class="form-control" id="correo" readonly>
+      <input type="email" class="form-control" id="correo" name="correo" value="{{ usuario.correo }}" readonly>
     </div>
 
     <div class="mb-3">
       <label class="form-label fw-bold text-azulcy fst-italic">Teléfono</label>
-      <input type="text" class="form-control" id="telefono">
+      <input type="text" class="form-control" id="telefono" name="telefono" value="{{ usuario.telefono }}" readonly>
     </div>
 
     <div class="mb-3">
       <label class="form-label fw-bold text-azulcy fst-italic">Nueva Contraseña</label>
-      <input type="password" class="form-control" id="nueva_contrasena" placeholder="Opcional">
+      <input type="password" class="form-control" id="nueva_contrasena" name="nueva_contrasena" placeholder="Opcional">
     </div>
 
-    <!-- Sección solo para Aliado -->
-    <div id="estado_verificacion_aliado" class="mt-4 p-3 border rounded d-none">
+    {% if usuario.verificacion_cuenta in ['R', 'E', 'V'] %}
+    <div id="estado_verificacion_aliado" class="mt-4 p-3 border rounded">
       <label class="form-label fw-bold text-azulcy fst-italic">Estado de verificación</label>
-      <div id="texto_estado" class="mb-2"></div>
-      <button type="button" id="btn_nuevo_intento" class="btn btn-outline-danger d-none">
-        Nuevo intento
-      </button>
+
+      <div id="texto_estado" class="mb-2">
+        {% if usuario.verificacion_cuenta == 'R' %}
+          <span class="text-danger">Foto rechazada.</span>
+          <button type="button" id="btn_nuevo_intento" class="btn btn-outline-danger btn-sm mt-2">Nuevo intento</button>
+        {% elif usuario.verificacion_cuenta == 'E' %}
+          <span class="text-warning">Aprobación pendiente.</span>
+        {% elif usuario.verificacion_cuenta == 'V' %}
+          <span class="text-success">Aliado autorizado.</span>
+        {% endif %}
+      </div>
     </div>
+    {% endif %}
 
     <div class="mt-4 text-end">
       <button type="submit" class="btn btn-primary fw-bold fst-italic">Guardar Cambios</button>
     </div>
   </form>
 </div>
+{% endblock %}
+
+{% block scripts %}
+
 {% endblock %}
