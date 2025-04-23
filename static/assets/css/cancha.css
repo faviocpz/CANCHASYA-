@@ -1,0 +1,157 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #f2f6fc, #dbe9f4);
+  }
+
+  .header {
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+
+  .header h1 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 2.8rem;
+    color: #1a1a1a;
+  }
+
+  .header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (min-width: 768px) {
+    .header-content {
+      flex-direction: row;
+      gap: 2rem;
+    }
+  }
+
+  .logo-box img {
+    max-height: 100px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  .local-info {
+    background-color: #ffffff;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+  }
+
+  .local-info p {
+    margin: 0.25rem 0;
+    font-size: 1rem;
+  }
+
+  .turno-box {
+    background-color: #f0f4fa;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-top: 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .turno-box p {
+    margin: 0.2rem 0;
+  }
+
+  .card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s;
+    margin-bottom: 2rem;
+    
+  }
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Esto ayuda a que el contenido se distribuya uniformemente */
+    min-height: 380px; /* Altura mínima ajustable */
+  }
+  
+
+  .card:hover {
+    transform: translateY(-5px);
+  }
+
+  .card-img-top {
+    height: 200px;
+    object-fit: cover;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+
+  .btn-whatsapp {
+    background-color: #25D366;
+    color: white;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+  }
+
+  .btn-whatsapp:hover {
+    background-color: #1da851;
+    transform: scale(1.03);
+  }
+  .btn {
+    transition: transform 0.2s ease;
+  }
+  
+  .btn:hover {
+    transform: scale(1.03);
+  }
+  
+  .caracteristicas {
+    margin-top: 1rem;
+    background-color: #fff;
+    padding: 0.75rem 1rem;
+    border-left: 4px solid #0d6efd;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+
+  .caracteristicas p {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    max-height: 120px;
+  }
+  .header h1, .header img, .local-info {
+  opacity: 0;
+  animation: fadeInHeader 0.8s ease forwards;
+}
+.caracteristicas li {
+    opacity: 0;
+    animation: fadeInList 0.4s ease forwards;
+  }
+  
+  .caracteristicas li:nth-child(1) { animation-delay: 0.1s; }
+  .caracteristicas li:nth-child(2) { animation-delay: 0.2s; }
+  .caracteristicas li:nth-child(3) { animation-delay: 0.3s; }
+  
+  @keyframes fadeInList {
+    to {
+      opacity: 1;
+    }
+  }
+  
+
+
+@keyframes fadeSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInHeader {
+  to {
+    opacity: 1;
+  }
+}
