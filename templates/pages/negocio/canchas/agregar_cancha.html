@@ -1,0 +1,123 @@
+{% extends 'base_negocio.html' %}
+
+{% block titulo_pagina %}
+    Agregar Cancha
+{% endblock %}
+
+{% block contenido %}
+    <div class="container mt-5">
+        <form action="/agregar_cancha" method="POST" enctype="multipart/form-data">
+            <!-- Card para Descripción -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    Descripción de la cancha
+                </div>
+                <div class="card-body">
+                    <textarea class="form-control" id="descripcion_cancha" name="descripcion_cancha" rows="3" required></textarea>
+                </div>
+            </div>
+
+            <!-- Card para Tipo de cancha -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    Tipo de cancha
+                </div>
+                <div class="card-body">
+                    <select class="form-select" id="tipo_cancha" name="tipo_cancha" required>
+                        <option value="" disabled selected>Seleccione el tipo de cancha</option>
+                        <option value="Futbol">Fútbol</option>
+                        <option value="Basquetbol">Básquetbol</option>
+                        <option value="Tenis">Tenis</option>
+                        <option value="Voleibol">Voleibol</option>
+                        <option value="Otros">Otros</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Card para Precio -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    Precio por hora
+                </div>
+                <div class="card-body">
+                    <input type="number" class="form-control" id="precio_cancha" name="precio_cancha" required>
+                </div>
+            </div>
+
+            <!-- Card para Horarios -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    Horario de disponibilidad
+                </div>
+                <div class="card-body">
+                    <input type="text" class="form-control" id="horario_cancha" name="horario_cancha" required>
+                </div>
+            </div>
+
+            <!-- Card para Fotos -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    Fotos de la cancha
+                </div>
+                <div class="card-body">
+                    <div id="imagesContainer" class="d-flex align-items-start">
+                        <!-- Primer cuadro de carga -->
+                        <div class="image-upload me-3" id="imageUpload1">
+                            <input type="file" accept="image/*" id="foto_cancha_1" name="foto_cancha" onchange="previewImage(1)" hidden required>
+                            <label for="foto_cancha_1" class="d-flex justify-content-center align-items-center border rounded" style="width:100px; height:100px; cursor:pointer;">
+                                <span class="text-muted">+</span>
+                            </label>
+                            <div id="foto_preview_1" class="mt-2"></div>
+                        </div>
+                        <!-- Botón para agregar más imágenes -->
+                        <button type="button" id="addImageBtn" class="btn btn-secondary align-self-start" onclick="addMoreImages()">
+                            Agregar imagen
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botón de Enviar -->
+            <button type="submit" class="btn btn-primary">Agregar cancha</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        let imageCount = 1;
+
+        function previewImage(index) {
+            const input = document.getElementById(`foto_cancha_${index}`);
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const wrapper = document.getElementById(`imageUpload${index}`);
+                    wrapper.querySelector('label').innerHTML = `<img src="${e.target.result}" class="img-fluid" style="max-width:100px; max-height:100px; object-fit:cover;">`;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function addMoreImages() {
+            if (imageCount >= 3) {
+                alert('No se pueden agregar más de 3 imágenes.');
+                return;
+            }
+            imageCount++;
+            const container = document.getElementById('imagesContainer');
+            const uploadDiv = document.createElement('div');
+            uploadDiv.className = 'image-upload me-3';
+            uploadDiv.id = `imageUpload${imageCount}`;
+            uploadDiv.innerHTML = `
+                <input type="file" accept="image/*" id="foto_cancha_${imageCount}" name="foto_cancha" onchange="previewImage(${imageCount})" hidden>
+                <label for="foto_cancha_${imageCount}" class="d-flex justify-content-center align-items-center border rounded" style="width:100px; height:100px; cursor:pointer;">
+                    <span class="text-muted">+</span>
+                </label>
+                <div id="foto_preview_${imageCount}" class="mt-2"></div>
+            `;
+            const addBtn = document.getElementById('addImageBtn');
+            container.insertBefore(uploadDiv, addBtn);
+        }
+    </script>
+{% endblock %}

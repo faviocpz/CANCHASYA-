@@ -1,0 +1,43 @@
+{% extends 'base_negocio.html' %}
+{% block titulo_pagina %}
+        Canchas disponibles
+{% endblock %}
+
+{%  block contenido %}
+    
+
+    
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+            {% for i in range(1, 4) %}  <!-- Puedes ajustar el rango según el número de tarjetas -->
+                <div class="col">
+                    <div class="card" style="width: 18rem;">
+                        <img src="/static/assets/img/cancha{{ i }}.jpg" class="card-img-top" alt="..." style="height: 150px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Cancha N° {{ i }}</h5>
+                            <p class="card-text">Esta cancha fue agregada el (fechas y hora)</p>
+                            <a href="#" class="btn btn-primary">Ver cancha</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="col">
+                <button class="card" style="width: 18rem; height: 315px;">
+                    <img src="/static/assets/img/agregar_cancha.png" class="card-img-top" style="height: 100px; width: 100px; text-align: center; margin: auto; margin-top: 20px;" alt="..."
+                        onclick="location.href='/agregar_cancha'"
+                    >
+                    <div class="card-body">
+                        <h5 class="card-title">Agregar una nueva cancha</h5>
+                        
+                        
+                    </button>
+                </div>
+            </div>
+        </div>
+    
+    
+
+    
+{% endblock %} 
+{% block scripts %}
+    <script src="/static/assets/js/verificar_usuarios.js"> </script>
+{% endblock%}

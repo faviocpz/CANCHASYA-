@@ -163,5 +163,24 @@ def cambiar_estado_usuario(estado, id):
     except Exception as e:
         return jsonify({'codigo': 0, 'mensaje': f'Error al procesar la solicitud: {str(e)}'}), 500
 
+
+@app.route('/canchass')
+def canchass():
+    return render_template('pages/negocio/canchas/cancha.html')
+
+@app.route('/agregar_cancha')
+def agregar_cancha():
+    return render_template('pages/negocio/canchas/agregar_cancha.html')
+
+@app.route('/negocio')
+def negocio():
+    return render_template('pages/negocio/negocio.html')
+
+@app.route('/negocio/agregar_negocio')
+def agregar_negocio():
+    return render_template('pages/negocio/agregar_negocio.html')
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
