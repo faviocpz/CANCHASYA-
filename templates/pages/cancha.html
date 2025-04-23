@@ -1,0 +1,372 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #f2f6fc, #dbe9f4);
+  }
+
+  .header {
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+
+  .header h1 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 2.8rem;
+    color: #1a1a1a;
+  }
+
+  .header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (min-width: 768px) {
+    .header-content {
+      flex-direction: row;
+      gap: 2rem;
+    }
+  }
+
+  .logo-box img {
+    max-height: 100px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  .local-info {
+    background-color: #ffffff;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+  }
+
+  .local-info p {
+    margin: 0.25rem 0;
+    font-size: 1rem;
+  }
+
+  .turno-box {
+    background-color: #f0f4fa;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-top: 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .turno-box p {
+    margin: 0.2rem 0;
+  }
+
+  .card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s;
+    margin-bottom: 2rem;
+    
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+  }
+
+  .card-img-top {
+    height: 200px;
+    object-fit: cover;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+
+  .btn-whatsapp {
+    background-color: #25D366;
+    color: white;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+  }
+
+  .btn-whatsapp:hover {
+    background-color: #1da851;
+    transform: scale(1.03);
+  }
+  btn btn-warning:hover{
+    transform: scale(1.03);
+  }
+  .caracteristicas {
+    margin-top: 1rem;
+    background-color: #fff;
+    padding: 0.75rem 1rem;
+    border-left: 4px solid #0d6efd;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+
+  .caracteristicas p {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    max-height: 120px;
+  }
+  .header h1, .header img, .local-info {
+  opacity: 0;
+  animation: fadeInHeader 0.8s ease forwards;
+}
+
+
+@keyframes fadeSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInHeader {
+  to {
+    opacity: 1;
+  }
+}
+</style>
+
+<div class="container">
+  <div class="header">
+    <h1 class="fw-bold">El Esférico</h1>
+    <div class="header-content">
+      <div class="logo-box">
+        <img src="{{ url_for('static', filename='assets/img/log6.jpeg') }}" alt="Logo de la Empresa" class="img-fluid">
+      </div>
+      <div class="local-info">
+        <p><strong>Dirección:</strong> Av. Siempre Viva 123, Chiclayo</p>
+        <div class="turno-box">
+          <p><strong>Turnos:</strong></p>
+          <p><strong>Mañana:</strong> 10:00 AM - 01:59 PM</p>
+          <p><strong>Tarde:</strong> 02:00 PM - 05:59 PM</p>
+          <p><strong>Noche:</strong> 06:00 PM - 10:00 PM</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mb-4">
+    <h2 class="text-primary fw-bold">Canchas Disponibles</h2>
+  </div>
+
+  <div class="row g-4 pb-5">
+    <div class="col-sm-12 col-md-4">
+      <div class="card">
+        <img src="{{ url_for('static', filename='assets/img/cancha1.jpg') }}" class="card-img-top img-fluid" alt="Imagen de la cancha">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">Cancha Sintética El Golazo</h5>
+          <blockquote style="font-style: italic; color: #2c3e50; border-left: 4px solid #2980b9; padding-left: 10px;">
+            Cancha con buena iluminación nocturna. Excelente para partidos en la noche o en días lluviosos, con tribunas para espectadores.
+         </blockquote>
+       <!--<p style="background-color: #e0f7fa; padding: 0.5rem; border-radius: 8px;">
+        Cancha con buena iluminación nocturna. Excelente para partidos en la noche o en días lluviosos, con tribunas para espectadores.
+     </p>-->
+            
+
+          <p><strong>Puntuación:</strong> 
+            <i class="bi bi-star-fill text-warning"></i>
+            <i class="bi bi-star-fill text-warning"></i>
+            <i class="bi bi-star-fill text-warning"></i>
+            <i class="bi bi-star text-warning"></i>
+            <i class="bi bi-star text-warning"></i>
+          </p>
+          <p><strong>Precio por hora:</strong> S/. 40.00</p>
+          <!--<p><strong>Horario de atención:</strong> 10:00 AM - 22:00 PM</p>-->
+          <p><strong>Seleccione el Horario de Reserva:</strong>
+          <div class="form-group">
+            <label>Hora de inicio:</label>
+            <input type="time" class="form-control">
+          </div>
+          <div class="form-group mt-2">
+            <label>Hora de fin:</label>
+            <input type="time" class="form-control">
+          </div>
+
+          <div class="caracteristicas">
+            <p>Cuenta con:</p>
+            <ul class="mb-0">
+              <li>Tribuna</li>
+              <li>Iluminación Nocturna</li>
+              <li>Baños</li>
+            </ul>
+          </div>
+
+          <div class="mt-auto pt-3 d-grid gap-2">
+            <a href="https://wa.me/123456789" class="btn btn-whatsapp">
+              <i class="bi bi-whatsapp me-1"></i> Contactar por WhatsApp
+            </a>
+            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#puntuacionModal3">
+              <i class="bi bi-star me-1"></i> Añadir Puntuación
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Repite otras canchas aquí -->
+    <div class="col-md-4">
+      <div class="card">
+        <img src="{{ url_for('static', filename='assets/img/cancha2.jpg') }}" class="card-img-top img-fluid" alt="Imagen de la cancha">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">La Canchita Libre</h5>
+          <blockquote style="font-style: italic; color: #2c3e50; border-left: 4px solid #2980b9; padding-left: 10px;">
+          Ideal para partidos rápidos con amigos. Superficie sintética bien cuidada, perfecta para jugar sin importar el clima
+       </blockquote>
+    <!--<p style="background-color: #e0f7fa; padding: 0.5rem; border-radius: 8px; font-size: 1.1rem; font-weight: 600; color: #333;">
+      Ideal para partidos rápidos con amigos. Superficie sintética bien cuidada, perfecta para jugar sin importar el clima
+   </p> -->
+         <p><strong>Puntuación:</strong> 
+           <i class="bi bi-star-fill text-warning"></i>
+           <i class="bi bi-star-fill text-warning"></i>
+           <i class="bi bi-star-fill text-warning"></i>
+           <i class="bi bi-star text-warning"></i>
+           <i class="bi bi-star text-warning"></i>
+         </p>
+          <p><strong>Precio por hora:</strong> S/. 30.00</p>
+             <!--<p><strong>Horario de atención:</strong> 10:00 AM - 22:00 PM</p>-->
+             <p><strong>Seleccione el Horario de Reserva:</strong>
+
+         <!-- Selector de horario -->
+         <div class="form-group">
+           <label>Hora de inicio:</label>
+           <input type="time" class="form-control">
+         </div>
+         <div class="form-group mt-2">
+           <label>Hora de fin:</label>
+           <input type="time" class="form-control">
+         </div>
+
+         <div class="caracteristicas">
+          <p>Cuenta con:</p>
+          <ul class="mb-0">
+            <li>Tribuna</li>
+            <li>Bar</li>
+            <li>Baños</li>
+          </ul>
+        </div>
+          <div class="mt-auto pt-3 d-grid gap-2">
+           <a href="https://wa.me/123456789" class="btn btn-whatsapp">
+             <i class="bi bi-whatsapp me-1"></i> Contactar por WhatsApp
+           </a>
+        
+           <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#puntuacionModal3">
+             <i class="bi bi-star me-1"></i> Añadir Puntuación
+           </button>     
+         </div>
+        </div>
+      </div>
+    </div>
+    
+    <!--<div class="col-md-4">
+      <div class="card">
+        <img src="{{ url_for('static', filename='assets/img/cancha3.jpg') }}" class="card-img-top" alt="Imagen de la cancha">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">Cancha 3</h5>
+          <p class="card-text">Descripción breve de la cancha.</p>
+          <p><strong>Puntuación:</strong> <i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i></p>
+          <p><strong>Precio por hora:</strong> S/. 70.00</p>
+          <a href="https://wa.me/123456789" class="btn btn-whatsapp mt-auto">
+            <i class="bi bi-whatsapp me-1"></i> Contactar por WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>-->
+    <div class="col-md-4">
+     <div class="card">
+       <img src="{{ url_for('static', filename='assets/img/cancha3.jpg') }}" class="card-img-top img-fluid" alt="Imagen de la cancha">
+       <div class="card-body d-flex flex-column">
+         
+         <h5 class="card-title">Sol y Gol</h5>
+         <blockquote style="font-style: italic; color: #2c3e50; border-left: 4px solid #2980b9; padding-left: 10px;">
+          Espacio amplio para sesiones de entranmeinto y partidos de fútbol. Cuenta con servicios higiénicos y zona de hidratación.
+       </blockquote>
+         <p><strong>Puntuación:</strong> 
+           <i class="bi bi-star-fill text-warning"></i>
+           <i class="bi bi-star-fill text-warning"></i>
+           <i class="bi bi-star-fill text-warning"></i>
+           <i class="bi bi-star text-warning"></i>
+           <i class="bi bi-star text-warning"></i>
+         </p>
+         <p><strong>Precio por hora:</strong> S/. 70.00</p>
+            <!--<p><strong>Horario de atención:</strong> 10:00 AM - 22:00 PM</p>-->
+            <p><strong>Seleccione el Horario de Reserva:</strong>
+
+         <!-- Selector de horario -->
+         <div class="form-group">
+           <label>Hora de inicio:</label>
+           <input type="time" class="form-control">
+         </div>
+         <div class="form-group mt-2">
+           <label>Hora de fin:</label>
+           <input type="time" class="form-control">
+         </div>
+         <div class="caracteristicas">
+          <p>Cuenta con:</p>
+          <ul class="mb-0">
+            <li>Tribuna</li>
+            <li>Estacionamiento</li>
+            <li>Baños</li>
+          </ul>
+        </div>
+         <div class="mt-auto pt-3 d-grid gap-2">
+           <a href="https://wa.me/123456789" class="btn btn-whatsapp">
+             <i class="bi bi-whatsapp me-1"></i> Contactar por WhatsApp
+           </a>
+           <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#puntuacionModal3">
+             <i class="bi bi-star me-1"></i> Añadir Puntuación
+           </button>                
+           
+         </div>
+       </div>
+     </div>
+   </div>
+  </div>
+</div>
+<div class="modal fade" id="puntuacionModal3" tabindex="-1" aria-labelledby="puntuacionModalLabel" aria-hidden="true">
+ <div class="modal-dialog">
+   <div class="modal-content">
+     <form method="POST" > 
+       <div class="modal-header">
+         <h5 class="modal-title" id="puntuacionModalLabel1">Puntuar Cancha</h5>
+         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+       </div>
+       <div class="modal-body">
+         <label for="puntuacion" class="form-label">Elige tu puntuación</label>
+         <select class="form-select" name="puntuacion" id="puntuacion">
+           <option value="1">⭐</option>
+           <option value="2">⭐⭐</option>
+           <option value="3">⭐⭐⭐</option>
+           <option value="4">⭐⭐⭐⭐</option>
+           <option value="5">⭐⭐⭐⭐⭐</option>
+         </select>
+       </div>
+       <div class="modal-footer">
+         <button type="submit" class="btn btn-primary">Enviar</button>
+       </div>
+     </form>
+   </div>
+ </div>
+</div>
+
+  </div>
+
+  <div class="text-center my-4">
+    <button class="btn btn-outline-primary mt-2" onclick="window.history.back();">← Regresar</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block scripts%}
+<script src="/static/assets/js/login.js"></script>
+{% endblock%}
