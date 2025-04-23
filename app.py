@@ -106,6 +106,38 @@ def registrar_alquilador():
         return jsonify({'codigo_rpt': 0, 'mensaje': f'Error al procesar la solicitud: {str(e)}'}), 500
 
 
+from werkzeug.utils import secure_filename
+import os
+@app.route('/actualizar_foto_verificacion', methods=['POST'])
+def actualizar_foto_verificacion():
+    if 'usuario' not in session:
+        return jsonify({'codigo': 0, 'mensaje': 'Sesión no válida'}), 401
+
+    try:
+        correo = session['usuario']
+        id_usuario = session.get('id_usuario')
+        foto = request.files.get('foto_r')
+
+        if not foto or foto.filename == '':
+            return jsonify({'codigo': 0, 'mensaje': 'No se recibió ninguna imagen válida'}), 400
+
+        # Guardar archivo
+        filename = secure_filename(foto.filename)
+        carpeta = os.path.join('static/assets/img_usuario/alquilador', str(id_usuario))
+        if not os.path.exists(carpeta):
+            os.makedirs(carpeta)
+        ruta_completa = os.path.join(carpeta, 'verificar_img_' + filename)
+        foto.save(ruta_completa)
+
+        # Actualizar en la BD
+        if cuser.actualizar_foto_verificacion(id_usuario, filename):
+            return jsonify({'codigo': 1, 'mensaje': 'Foto actualizada correctamente'})
+        else:
+            return jsonify({'codigo': 0, 'mensaje': 'Error al actualizar en la base de datos'})
+    except Exception as e:
+        return jsonify({'codigo': 0, 'mensaje': f'Error interno: {str(e)}'}), 500
+
+
 @app.route('/inicio_sesion', methods=['POST'])
 def inicio_sesion():
     correo = request.form['correo']

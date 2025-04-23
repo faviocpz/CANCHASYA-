@@ -279,9 +279,24 @@ def obtener_datos_usuario_por_correo(correo):
     finally:
         conexion.close()
 
-
-
-
+def actualizar_foto_verificacion(id_usuario, nombre_foto):
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            query = '''
+                UPDATE usuario
+                SET foto_verificacion = %s,
+                    verificacion_cuenta = 'E'
+                WHERE id = %s
+            '''
+            cursor.execute(query, (nombre_foto, id_usuario))
+        conexion.commit()
+        return True
+    except Exception as e:
+        print("Error al actualizar la foto de verificación:", e)
+        return False
+    finally:
+        conexion.close()
 
 
 
