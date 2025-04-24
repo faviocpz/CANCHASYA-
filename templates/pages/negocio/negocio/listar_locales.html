@@ -1,0 +1,47 @@
+{% extends 'base_negocio.html' %}
+
+{% block titulo_pagina %}
+    Listado de Locales
+{% endblock %}
+
+{% block contenido %}
+    <div class="container mt-5">
+        <h2>Locales Registrados</h2>
+        
+        <!-- Tabla para mostrar los locales -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>Correo</th>
+                    <th>Puntuación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for local in locales %}
+                    <tr>
+                        <td>{{ local.idLocal }}</td>
+                        <td>{{ local.nombre }}</td>
+                        <td>{{ local.direccion }}</td>
+                        <td>{{ local.tel }}</td>
+                        <td>{{ local.correo }}</td>
+                        <td>{{ local.puntuacion }}</td>
+                        <td>
+                            <a href="/local/{{ local.idLocal }}" class="btn btn-info btn-sm">Ver</a>
+                            <a href="/editar_local/{{ local.idLocal }}" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="/eliminar_local/{{ local.idLocal }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar este local?')">Eliminar</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center">No hay locales registrados.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

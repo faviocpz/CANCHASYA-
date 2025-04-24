@@ -77,7 +77,6 @@ def creador_token():
     token = sha256(numero.encode('utf-8')).hexdigest()
     return token
 
-
 def crear_usuario_alquilador(data):
     conexion = obtener_conexion()
     try:
@@ -213,8 +212,6 @@ def deshabilitar_usuario(idUsuario):
         conexion.commit()
     finally:
         conexion.close()
-
-
 
 def obtener_tipo_usuario(idUsuario):
     conexion = obtener_conexion()

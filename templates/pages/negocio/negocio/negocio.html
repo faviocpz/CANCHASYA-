@@ -1,43 +1,77 @@
 {% extends 'base_negocio.html' %}
+
 {% block titulo_pagina %}
-        Canchas disponibles
+    Registrar Nueva Cancha Deportiva
 {% endblock %}
 
-{%  block contenido %}
-    
+{% block contenido %}
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Registrar Nueva Cancha Deportiva</h2>
 
-    
-        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-            {% for i in range(1, 4) %}  <!-- Puedes ajustar el rango según el número de tarjetas -->
-                <div class="col">
-                    <div class="card" style="width: 18rem;">
-                        <img src="/static/assets/img/cancha{{ i }}.jpg" class="card-img-top" alt="..." style="height: 150px;">
-                        <div class="card-body">
-                            <h5 class="card-title">Cancha N° {{ i }}</h5>
-                            <p class="card-text">Esta cancha fue agregada el (fechas y hora)</p>
-                            <a href="#" class="btn btn-primary">Ver cancha</a>
-                        </div>
+        <form action="/registrar_local" method="POST" enctype="multipart/form-data">
+            <!-- Información Básica -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <i class="bi bi-building"></i> Información Básica
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre del Local</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del local" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="direccion" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Dirección del local" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tel" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="tel" name="tel" placeholder="Número de teléfono" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="correo" class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo electrónico" required>
                     </div>
                 </div>
-            {% endfor %}
-            <div class="col">
-                <button class="card" style="width: 18rem; height: 315px;">
-                    <img src="/static/assets/img/agregar_cancha.png" class="card-img-top" style="height: 100px; width: 100px; text-align: center; margin: auto; margin-top: 20px;" alt="..."
-                        onclick="location.href='/agregar_cancha'"
-                    >
-                    <div class="card-body">
-                        <h5 class="card-title">Agregar una nueva cancha</h5>
-                        
-                        
-                    </button>
+            </div>
+
+            <!-- Redes Sociales -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <i class="bi bi-facebook"></i> Redes Sociales
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="facebook" class="form-label">Facebook</label>
+                        <input type="text" class="form-control" id="facebook" name="facebook" placeholder="Facebook del local">
+                    </div>
+                    <div class="mb-3">
+                        <label for="instagram" class="form-label">Instagram</label>
+                        <input type="text" class="form-control" id="instagram" name="instagram" placeholder="Instagram del local">
+                    </div>
                 </div>
             </div>
-        </div>
-    
-    
 
-    
-{% endblock %} 
-{% block scripts %}
-    <script src="/static/assets/js/verificar_usuarios.js"> </script>
-{% endblock%}
+            <!-- Imágenes -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <i class="bi bi-image"></i> Imágenes del Local
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="banner" class="form-label">Banner</label>
+                        <input type="file" class="form-control" id="banner" name="banner" accept="image/*" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="logo" class="form-label">Logo</label>
+                        <input type="file" class="form-control" id="logo" name="logo" accept="image/*" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botón de Enviar -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg">Registrar Local</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

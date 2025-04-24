@@ -1,5 +1,6 @@
-from flask import Flask, render_template, jsonify, request, session
+from flask import Flask, flash, redirect, render_template, jsonify, request, session, url_for
 from controladores.usuario import controlador_usuario as cuser
+from controladores.local import controlador_local 
 from hashlib import sha256
 import os
 from enviar_correos import enviar_mensajecorreo
@@ -204,14 +205,37 @@ def canchass():
 def agregar_cancha():
     return render_template('pages/negocio/canchas/agregar_cancha.html')
 
-@app.route('/negocio')
-def negocio():
-    return render_template('pages/negocio/negocio.html')
+@app.route('/registrar_local', methods=['GET', 'POST'])
+def registrar_local_view():
+    if request.method == 'POST':
+        datos_formulario = {
+            'nombre': request.form['nombre'],
+            'direccion': request.form['direccion'],
+            'tel': request.form['tel'],
+            'correo': request.form['correo'],
+            'facebook': request.form.get('facebook', None),  
+            'instagram': request.form.get('instagram', None),
+            'idUsuario': 3, 
+            'logo': request.files['logo'].filename if 'logo' in request.files else None,
+            'banner': request.files['banner'].filename if 'banner' in request.files else None  
+        }
 
-@app.route('/negocio/agregar_negocio')
-def agregar_negocio():
-    return render_template('pages/negocio/agregar_negocio.html')
+        
+        local_id = controlador_local.registrar_local(datos_formulario)
+        
+        if local_id:
+            flash('Local registrado exitosamente', 'success')
+            return redirect(url_for('listar_locales'))  
+        else:
+            flash('Error al registrar el local', 'danger')
 
+    return render_template('pages/negocio/negocio/negocio.html') 
+
+
+@app.route('/locales', methods=['GET'])
+def listar_locales():    
+    locales = controlador_local.obtener_locales()
+    return render_template('pages/negocio/negocio/listar_locales.html', locales=locales)
 
 
 if __name__ == '__main__':
