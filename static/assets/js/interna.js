@@ -15,3 +15,8 @@ function mostrar_submenus(elemento){
         submenus.classList.remove('d-none');
     }
 }
+
+
+function salir(){
+    location.href = "/";
+}

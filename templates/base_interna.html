@@ -9,7 +9,7 @@
 
   <div class="row g-0">
     <!-- Sidebar fijo en pantallas grandes -->
-    <div class="col-lg-2 d-none d-lg-block sidebar-admin vh-100">
+    <div class="col-lg-2 d-none d-lg-block sidebar-admin">
       <div class="d-flex align-items-center mt-3">
         <img src="/static/assets/img/red.png" alt="Perfil" class="rounded-circle ms-2" width="48" height="48">
         <div class="ms-2">
@@ -19,10 +19,23 @@
       </div>
       <hr class="mx-2">
 
+
       <div class="px-2">
-        <a href="{{ url_for('solicitudes') }}" class="btn w-100 btn_sidebar">Solicitudes</a>
-        <a href="" class="btn w-100 btn_sidebar">Otra opción</a>
+        {% if session.get('tipo') == 'Alquilador' %}
+       
+        {% elif (session.get('tipo') == 'Administrador' ) %}
+          <a href="{{ url_for('solicitudes') }}" class="btn w-100 btn_sidebar">Solicitudes</a>
+          <a href="" class="btn w-100 btn_sidebar">Otra opción</a>
+        {% endif %}
+
       </div>
+
+
+   
+        <a  class="btn btn-danger boton_salir footer_menu  w-100 " onclick="salir()">
+          <i class="bi bi-box-arrow-right "></i> Salir
+        </a>
+   
     </div>
 
     <!-- Offcanvas sidebar para pantallas pequeñas -->
@@ -40,8 +53,9 @@
           </div>
         </div>
         <hr>
-        <a href="{{ url_for('solicitudes') }}" class="btn w-100 btn_sidebar">Solicitudes</a>
-        <a href="" class="btn w-100 btn_sidebar">Otra opción</a>
+        <!--  Opciones si es administrador o alquilador  -->
+
+   
       </div>
     </div>
 
@@ -61,4 +75,7 @@
 
 {% block scripts %}
 <script src="/static/assets/js/interna.js"></script>
+{% endblock %}
+{% block foot %}
+
 {% endblock %}
