@@ -154,10 +154,13 @@ table tr.tr-grama-clara td {
 }
 
 .sidebar-admin {
+  height: calc(100vh - 67px); /* Ajusta el cálculo según el tamaño del otro div */
+  position: relative;
   background-color: #161620f2;
   color: white;
   padding-left: 0 !important;
   margin-left: 0 !important;
+  overflow-y: auto; /* Permite desplazamiento si el contenido excede */
 }
 
 .buscador-cy {
@@ -295,4 +298,25 @@ table tr.tr-grama-clara td {
   height: 200px;
   object-fit: contain;
   margin-bottom: 0.75rem;
+}
+
+.footer_menu {
+  position: absolute;
+  display: flex;
+  flex-direction: row; /* Ensure horizontal alignment */
+  bottom: 0;
+  width: 100%;
+  padding-bottom: 1rem;
+  justify-content: center;
+}
+
+html, body {
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+}
+.boton_salir {
+  border-radius: 0 !important;
+  height: 3rem;
+  font-size: large;
 }
