@@ -154,12 +154,12 @@ def inicio_sesion():
             rpt['ruta'] = '/'
         elif(tipo == 'aliado'):
             if(respuesta[2] == 1):
-                session['id'] = respuesta[4]
+                session['id'] = respuesta[5]
                 session['tipo'] = "Administrador"
                 session['nombre'] = respuesta[3]
                 session['token'] = 'x'
             else:
-                session['id'] = respuesta[4]
+                session['id'] = respuesta[5]
                 session['nombre'] = respuesta[3]
                 session['vc'] = respuesta[1]
                 session['tipo'] = "Alquilador"
@@ -207,7 +207,15 @@ def canchass():
 def agregar_cancha():
     return render_template('pages/negocio/canchas/agregar_cancha.html')
 
-@app.route('/registrar_local', methods=['GET', 'POST'])
+@app.route('/pagina_registrar')
+def pagina_registrar():
+    id = session.get('id')
+    datos = controlador_local.verificarregistrollocal(id)
+    return render_template('pages/negocio/negocio/negocio.html', datos = datos) 
+
+
+
+@app.route('/registrar_local', methods=['POST'])
 def registrar_local_view():
     if request.method == 'POST':
         datos_formulario = {
@@ -217,7 +225,7 @@ def registrar_local_view():
             'correo': request.form['correo'],
             'facebook': request.form.get('facebook', None),  
             'instagram': request.form.get('instagram', None),
-            'idUsuario': 3, 
+            'idUsuario': session.get('id'), 
             'logo': request.files['logo'].filename if 'logo' in request.files else None,
             'banner': request.files['banner'].filename if 'banner' in request.files else None  
         }

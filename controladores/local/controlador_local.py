@@ -67,3 +67,20 @@ def obtener_locales():
         return []  
     finally:
         conexion.close()
+
+def verificarregistrollocal(id_usuario):
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            query = '''
+                SELECT idLocal, nombre, direccion, tel, correo, facebook, instagram, puntuacion, estado, idUsuario, logo, banner
+                FROM LOCAL WHERE idUsuario = %s
+            '''
+            cursor.execute(query, (id_usuario))
+            result = cursor.fetchall()
+            return result if result else []
+    except Exception as e:
+        print(f"Error al obtener los locales: {e}")
+        return []  
+    finally:
+        conexion.close()
