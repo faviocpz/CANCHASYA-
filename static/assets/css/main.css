@@ -310,11 +310,7 @@ table tr.tr-grama-clara td {
   justify-content: center;
 }
 
-html, body {
-  height: 100vh;
-  margin: 0;
-  overflow: hidden;
-}
+
 .boton_salir {
   border-radius: 0 !important;
   height: 3rem;
