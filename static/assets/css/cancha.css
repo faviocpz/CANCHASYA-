@@ -262,3 +262,8 @@ html, body {
   margin-right: 0.5rem; /* Espacio entre el icono y el texto */
   font-size: 1.5rem;  /* Tamaño de los íconos */
 }
+body {
+  overflow-y: scroll; /* Activar el scroll cuando el contenido sea más grande que la altura de la ventana */
+  height: 100vh; /* Usamos la altura completa de la pantalla */
+  padding: 0;
+}
