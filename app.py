@@ -2,6 +2,7 @@ from flask import Flask, flash, redirect, render_template, jsonify, request, ses
 from controladores.usuario import controlador_usuario as cuser
 from controladores.local import controlador_local
 from controladores.locales import controlador_locales as local
+from controladores.canchas import cancha as controlador_cancha_admin
 from hashlib import sha256
 import os
 from enviar_correos import enviar_mensajecorreo
@@ -183,7 +184,7 @@ def inicio_sesion():
                 session['token'] = 'x'
 
             rpt['codigo'] = 1
-            rpt['ruta'] = '/maestra_interna'
+            rpt['ruta'] = '/canchass'
         else:
             rpt['codigo'] = 0
     else:
@@ -223,6 +224,14 @@ def canchass():
 @app.route('/agregar_cancha')
 def agregar_cancha():
     return render_template('pages/negocio/canchas/agregar_cancha.html')
+
+
+@app.route('/agregar_horario_cancha/<id>')
+def agregar_horario_cancha(id):
+    datos = controlador_cancha_admin.consultar_cancha(id)
+    return render_template('pages/negocio/canchas/agregar_horario_cancha.html', id=id, datos=datos)
+
+
 
 @app.route('/pagina_registrar')
 def pagina_registrar():

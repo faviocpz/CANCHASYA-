@@ -1,0 +1,46 @@
+{% extends 'base_negocio.html' %}
+
+{% block titulo_pagina %}
+    Agregar Horario Cancha
+{% endblock %}
+
+{% block contenido %}
+    <div class="container mt-5">
+        <!-- Mostramos la descripción de la cancha guardada -->
+        <div class="card mb-4">
+            <div class="card-header">
+                Descripción de la Cancha
+            </div>
+            <div class="card-body">
+                <p><strong>Descripción:</strong> {{ datos.descripcion }}</p>
+                <p><strong>Precio por Hora:</strong> S/ {{ datos.precio }}</p>
+                <p><strong>Tipo de Cancha:</strong> {{ datos.tipo }}</p>
+                <img src="{{ url_for('static', filename='assets/img/' + datos.foto) }}" alt="Imagen de la cancha" class="img-fluid">
+
+            </div>
+        </div>
+
+        <!-- Formulario para agregar el horario -->
+        <form action="/agregar_horario_cancha/{{ id }}" method="POST">
+            <!-- Card para Horarios -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    Horarios de Disponibilidad
+                </div>
+                <div class="card-body">
+                    <label for="horarios_cancha" class="form-label">Horarios disponibles:</label>
+                    <input type="text" class="form-control" id="horarios_cancha" name="horarios_cancha" placeholder="Ej: Lunes a Viernes 8:00 AM - 6:00 PM" required>
+                </div>
+            </div>
+
+            <!-- Botón de Enviar -->
+            <button type="submit" class="btn btn-primary">Agregar horario</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        // Aquí puedes agregar cualquier script si necesitas interacción adicional en el frontend
+    </script>
+{% endblock %}
