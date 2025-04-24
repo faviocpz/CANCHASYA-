@@ -92,4 +92,21 @@ def verificarregistrollocal(id_usuario):
     finally:
         conexion.close()
 
+def obtener_informacion_local(id_local):
+    conexion = obtener_conexion()
+    cursor = conexion.cursor()
 
+    # Consulta de la información del local y las canchas asociadas
+    cursor.execute("""
+        SELECT l.nombre, l.direccion, l. correo, l.tel, l.facebook, l.instagram, l.banner
+        FROM LOCAL l
+        
+     
+        WHERE l.idLocal = %s
+    """, (id_local,))
+    local_info = cursor.fetchall()
+
+    cursor.close()
+    conexion.close()
+
+    return local_info
