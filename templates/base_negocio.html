@@ -9,7 +9,7 @@
 
   <div class="row g-0">
     <!-- Sidebar fijo en pantallas grandes -->
-    <div class="col-lg-2 d-none d-lg-block sidebar-admin vh-100">
+    <div class="col-lg-2 d-none d-lg-block sidebar-admin">
       <div class="d-flex align-items-center mt-3">
         <img src="/static/assets/img/red.png" alt="Perfil" class="rounded-circle ms-2" width="48" height="48">
         <div class="ms-2">
@@ -19,19 +19,27 @@
       </div>
       <hr class="mx-2">
 
+
       <div class="px-2">
-        <button class="btn w-100 btn_sidebar" onclick="window.location = '/negocio' ">Negocio</button>
-        <div class="ms-2 submenus d-none">
-          <a href="{{ url_for('solicitudes') }}" class="btn btn-light w-100 mt-2 text-start btn_estilo_hover">
-            <i class="bi bi-arrow-return-right"></i> Ver Solicitudes
-          </a>
-        </div>
-        <button class="btn w-100 btn_sidebar" onclick="window.location = '/canchass' "  >Canchas</button>
+        {% if session.get('tipo') == 'Alquilador' %}
+       
+        {% elif (session.get('tipo') == 'Administrador' ) %}
+          <a href="{{ url_for('solicitudes') }}" class="btn w-100 btn_sidebar">Solicitudes</a>
+          <a href="" class="btn w-100 btn_sidebar">Otra opción</a>
+        {% endif %}
+
       </div>
+
+
+   
+        <a  class="btn btn-danger boton_salir footer_menu  w-100 " onclick="salir()">
+          <i class="bi bi-box-arrow-right "></i> Salir
+        </a>
+   
     </div>
 
     <!-- Offcanvas sidebar para pantallas pequeñas -->
-    <div class="offcanvas offcanvas-start sidebar-admin" tabindex="-1" id="sidebarAdmin">
+    <!-- <div class="offcanvas offcanvas-start sidebar-admin" tabindex="-1" id="sidebarAdmin">
       <div class="offcanvas-header">
         <h5 class="offcanvas-title fw-bold text-white">Canchas Ya!</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
@@ -45,15 +53,11 @@
           </div>
         </div>
         <hr>
-        <button class="btn w-100 btn_sidebar">Negocio</button>
-        <div class="ms-2 submenus d-none">
-          <a href="{{ url_for('solicitudes') }}" class="btn btn-light w-100 mt-2 text-start btn_estilo_hover">
-            <i class="bi bi-arrow-return-right"></i> Ver Solicitudes
-          </a>
-        </div>
-        <button class="btn w-100 btn_sidebar">Canchas</button>
+        
+
+   
       </div>
-    </div>
+    </div> -->
 
     <!-- Contenido principal -->
     <main class="col-12 col-lg-10 pt-3 px-3 px-lg-4">
@@ -71,4 +75,7 @@
 
 {% block scripts %}
 <script src="/static/assets/js/interna.js"></script>
+{% endblock %}
+{% block foot %}
+
 {% endblock %}
