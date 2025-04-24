@@ -4,27 +4,53 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/cancha.css') }}">
 
 <div class="container">
+  <!-- Cabecera mejorada -->
   <div class="header">
-    <h1 class="fw-bold">El Esférico</h1>
-    <div class="header-content">
-      <div class="logo-box">
-        <img src="{{ url_for('static', filename='assets/img/log6.jpeg') }}" alt="Logo de la Empresa" class="img-fluid">
-      </div>
-      <div class="local-info">
-        <p><strong>Dirección:</strong> Av. Siempre Viva 123, Chiclayo</p>
-        <div class="turno-box">
-          <p><strong>Turnos:</strong></p>
-          <p><strong>Mañana:</strong> 10:00 AM - 01:59 PM</p>
-          <p><strong>Tarde:</strong> 02:00 PM - 05:59 PM</p>
-          <p><strong>Noche:</strong> 06:00 PM - 10:00 PM</p>
-        </div>
-      </div>
+    <h1 class="fw-bold text-center">El Esférico</h1>
+
+    <!-- Card con imagen y datos del local, ahora con clase 'header-card' -->
+    <!-- Card con imagen y datos del local, ahora con clase 'header-card' -->
+<div class="info-container shadow p-3 mb-4">
+  
+    <!-- Imagen Banner al costado izquierdo -->
+    <div class="banner-box">
+      <img src="{{ url_for('static', filename='assets/img/log6.jpeg') }}" alt="Banner del Local" class="banner-img">
     </div>
+    
+    <!-- Información del local al costado derecho -->
+    <div class="local-info ms-4">
+      <p><strong>Dirección:</strong> Av. Siempre Viva 123, Chiclayo</p>
+      <p><strong>Correo Electrónico:</strong> contacto@elesferico.com</p>
+      <p><strong>Teléfono:</strong> +51 987 654 321</p>
+      <!--<div class="social-links">
+        <p><strong>Redes Sociales:</strong></p>
+        <p><strong>Facebook:</strong> ElEsfericoFutbol</p>
+        <p><strong>Instagram:</strong> @elesfericofutbol</p>
+      </div>-->
+      <div class="social-buttons">
+        <a href="https://facebook.com/ElEsferico" class="facebook" target="_blank">
+          <i class="bi bi-facebook"></i> Facebook
+        </a>
+        <a href="https://instagram.com/elesfericofutbol" class="instagram" target="_blank">
+          <i class="bi bi-instagram"></i> Instagram
+        </a>
+      </div>
+      <div class="turno-box">
+        <h5>Turnos:</h5>
+        <p><strong>Mañana:</strong> 10:00 AM - 01:59 PM</p>
+        <p><strong>Tarde:</strong> 02:00 PM - 05:59 PM</p>
+        <p><strong>Noche:</strong> 06:00 PM - 10:00 PM</p>
+      </div>
+   
   </div>
 
+</div>
+
+  </div>
   <div class="text-center mb-4">
     <h2 class="text-primary fw-bold">Canchas Disponibles</h2>
   </div>
+
 
   <div class="row g-4 pb-5">
     <div class="col-sm-12 col-md-4">
