@@ -52,6 +52,8 @@ h1, h2, h3, .titulo, .btn, nav {
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
 }
 
+
+
 /* --------------------------------------------- */
 /* 4. NAVBAR */
 /* --------------------------------------------- */
@@ -313,8 +315,3 @@ table tr.tr-grama-clara td {
   justify-content: center;
 }
 
-html, body {
-  height: 100vh;
-  margin: 0;
-  overflow: hidden;
-}
