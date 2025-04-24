@@ -1,66 +1,116 @@
 html, body {
-    height: 100%;
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #f2f6fc, #dbe9f4);
-  }
+  height: 100%;
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #f2f6fc, #dbe9f4);
+}
 
-  .header {
-    padding: 2rem 1rem;
-    text-align: center;
-  }
+.header {
+  padding: 3rem 1rem; /* Espaciado mejorado */
+  text-align: center;
+}
 
-  .header h1 {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 700;
-    font-size: 2.8rem;
-    color: #1a1a1a;
-  }
+.header h1 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 3rem;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+}
 
+.banner-box {
+  width: 400px; /* El tamaño de la imagen de banner */
+  height: auto;
+}
+
+.banner-img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+/*.header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem; 
+}*/
+
+@media (min-width: 768px) {
   .header-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  @media (min-width: 768px) {
-    .header-content {
       flex-direction: row;
-      gap: 2rem;
-    }
   }
+}
 
-  .logo-box img {
-    max-height: 100px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  }
+.info-container {
+  display: flex;
+  background-color: #f8f9fa; /* Gris suave */
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
 
-  .local-info {
-    background-color: #ffffff;
-    padding: 1rem 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-  }
+.logo-box img {
+  max-height: 00px; /* Tamaño ajustado para que no sobrepase el espacio */
+  width: auto;
+  object-fit: cover;
+}
 
-  .local-info p {
-    margin: 0.25rem 0;
-    font-size: 1rem;
-  }
+.local-info {
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  width: 55%;  /* Ajusta el tamaño de la caja de información */
+  height: auto;  /* No fijamos la altura, ya que la imagen no siempre será igual */
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1rem;
+  gap: 0.5rem;
+  text-align: left;  /* Alinea el texto a la izquierda */
+  margin-top: 1rem;
+}
 
-  .turno-box {
-    background-color: #f0f4fa;
-    padding: 1rem;
-    border-radius: 10px;
-    margin-top: 0.75rem;
-    font-size: 0.95rem;
-  }
+.local-info p {
+  margin: 0.25rem 0;
+  font-size: 1.2rem;
+}
 
-  .turno-box p {
+/*.social-links {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  color: #2c3e50;
+}*/
+
+.social-links p {
+  margin: 0.5rem 0;
+  font-size: 1.2rem;
+  color: #333; /* Color azul para las redes */
+}
+.social-links a {
+  color: #2980b9; /* Resaltamos solo los enlaces de Facebook e Instagram */
+  text-decoration: none;
+}
+.turno-box {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-top: 1rem;
+  font-size: 1.2rem;
+}
+.turno-box h5 {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.turno-box p {
     margin: 0.2rem 0;
-  }
+}
+  
 
   .card {
     border: none;
@@ -154,4 +204,61 @@ html, body {
   to {
     opacity: 1;
   }
+}
+.info-container .banner-box {
+  width: 400px;
+}
+
+.info-container .local-info {
+  width: 500px;
+  margin-top: 0;
+}
+@media (max-width: 768px) {
+  .info-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .local-info {
+    width: 90%;
+    margin-top: 1rem;
+  }
+}
+.social-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;  /* Centra los botones */
+  margin-top: 1rem;
+}
+
+.social-buttons a {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1.2rem;
+  color: white;
+  border-radius: 50px;  /* Botones con bordes redondeados */
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;  /* Transición para el efecto hover */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.social-buttons .facebook {
+  background-color: #3b5998; /* Color de fondo de Facebook */
+}
+
+.social-buttons .instagram {
+  background-color: #e4405f; /* Color de fondo de Instagram */
+}
+
+.social-buttons .facebook:hover,
+.social-buttons .instagram:hover {
+  transform: scale(1.1); /* Aumenta el tamaño cuando se pasa el ratón */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);  /* Sombra más pronunciada en hover */
+}
+
+.social-buttons i {
+  margin-right: 0.5rem; /* Espacio entre el icono y el texto */
+  font-size: 1.5rem;  /* Tamaño de los íconos */
 }
