@@ -1,47 +1,94 @@
 {% extends 'base_negocio.html' %}
 
 {% block titulo_pagina %}
-    Listado de Locales
+    Detalles del Local
 {% endblock %}
 
 {% block contenido %}
     <div class="container mt-5">
-        <h2>Locales Registrados</h2>
         
-        <!-- Tabla para mostrar los locales -->
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Dirección</th>
-                    <th>Teléfono</th>
-                    <th>Correo</th>
-                    <th>Puntuación</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for local in locales %}
-                    <tr>
-                        <td>{{ local.idLocal }}</td>
-                        <td>{{ local.nombre }}</td>
-                        <td>{{ local.direccion }}</td>
-                        <td>{{ local.tel }}</td>
-                        <td>{{ local.correo }}</td>
-                        <td>{{ local.puntuacion }}</td>
-                        <td>
-                            <a href="/local/{{ local.idLocal }}" class="btn btn-info btn-sm">Ver</a>
-                            <a href="/editar_local/{{ local.idLocal }}" class="btn btn-warning btn-sm">Editar</a>
-                            <a href="/eliminar_local/{{ local.idLocal }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar este local?')">Eliminar</a>
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="7" class="text-center">No hay locales registrados.</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="row">
+            <!-- Datos Básicos -->
+            <div class="col-12 col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <i class="bi bi-building"></i> Información Básica
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <strong>Nombre:</strong> {{ local['nombre'] }}
+                        </div>
+                        <div class="mb-3">
+                            <strong>Dirección:</strong> {{ local['direccion'] }}
+                        </div>
+                        <div class="mb-3">
+                            <strong>Teléfono:</strong> {{ local['tel'] }}
+                        </div>
+                        <div class="mb-3">
+                            <strong>Correo Electrónico:</strong> {{ local['correo'] }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Redes Sociales -->
+            <div class="col-12 col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-info text-white">
+                        <i class="bi bi-facebook"></i> Redes Sociales
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <strong>Facebook:</strong> 
+                            {% if local['facebook'] %}
+                                <a href="{{ local['facebook'] }}" target="_blank">Ver Facebook</a>
+                            {% else %}
+                                No disponible
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <strong>Instagram:</strong> 
+                            {% if local['instagram'] %}
+                                <a href="{{ local['instagram'] }}" target="_blank">Ver Instagram</a>
+                            {% else %}
+                                No disponible
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Imágenes del Local -->
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-success text-white">
+                        <i class="bi bi-image"></i> Imágenes del Local
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <strong>Logo:</strong><br>
+                            {% if local['logo'] %}
+                                <img src="{{ url_for('static', filename='static\assets\img_usuario\alquilador' + local['logo']) }}" class="img-fluid" style="max-width: 150px; max-height: 150px;">
+                            {% else %}
+                                <span>No disponible</span>
+                            {% endif %}
+                        </div> 
+                        
+                        <div class="mb-3">
+                            <strong>Banner:</strong><br>
+                            {% if local['banner'] %}
+                                <img src="{{ url_for('static', filename='static\assets\img_usuario\alquilador' + local['banner']) }}" class="img-fluid" style="max-width: 300px;">
+                            {% else %}
+                                <span>No disponible</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+   
     </div>
 {% endblock %}

@@ -5,81 +5,92 @@
 {% endblock %}
 
 {% block contenido %}
-    <div class="container mt-5">
-        <h2 class="text-center mb-4">Registrar Nueva Cancha Deportiva</h2>
-
-        <form action="/registrar_local" method="POST" enctype="multipart/form-data">
-            <!-- Información Básica -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-primary text-white">
-                    <i class="bi bi-building"></i> Información Básica
-                </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre del Local</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del local" required>
+<div class="container mt-5">
+    <form action="/registrar_local" method="POST" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <i class="bi bi-building"></i> Información Básica
                     </div>
-                    <div class="mb-3">
-                        <label for="direccion" class="form-label">Dirección</label>
-                        <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Dirección del local" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="tel" class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" id="tel" name="tel" placeholder="Número de teléfono" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="correo" class="form-label">Correo Electrónico</label>
-                        <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo electrónico" required>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre del Local</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del local" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Dirección del local" required>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Redes Sociales -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-info text-white">
-                    <i class="bi bi-facebook"></i> Redes Sociales
-                </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label for="facebook" class="form-label">Facebook</label>
-                        <input type="text" class="form-control" id="facebook" name="facebook" placeholder="Facebook del local">
+            <div class="col-12 col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <i class="bi bi-building"></i> Información de Contacto
                     </div>
-                    <div class="mb-3">
-                        <label for="instagram" class="form-label">Instagram</label>
-                        <input type="text" class="form-control" id="instagram" name="instagram" placeholder="Instagram del local">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="tel" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="tel" name="tel" placeholder="Número de teléfono" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo electrónico" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Redes Sociales y Imágenes -->
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-info text-white">
+                        <i class="bi bi-facebook"></i> Redes Sociales
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="facebook" class="form-label">Facebook</label>
+                            <input type="text" class="form-control" id="facebook" name="facebook" placeholder="Facebook del local">
+                        </div>
+                        <div class="mb-3">
+                            <label for="instagram" class="form-label">Instagram</label>
+                            <input type="text" class="form-control" id="instagram" name="instagram" placeholder="Instagram del local">
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Imágenes -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-success text-white">
-                    <i class="bi bi-image"></i> Imágenes del Local
-                </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label for="banner" class="form-label">Banner</label>
-                        <input type="file" class="form-control" id="banner" name="banner" accept="image/*" required>
+            <div class="col-12 col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-success text-white">
+                        <i class="bi bi-image"></i> Imágenes del Local
                     </div>
-                    <div class="mb-3">
-                        <label for="logo" class="form-label">Logo</label>
-                        <input type="file" class="form-control" id="logo" name="logo" accept="image/*" required>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="banner" class="form-label">Banner</label>
+                            <input type="file" class="form-control" id="banner" name="banner" accept="image/*" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="logo" class="form-label">Logo</label>
+                            <input type="file" class="form-control" id="logo" name="logo" accept="image/*" required>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Botón de Enviar -->
-             
+        <!-- Botón de Enviar -->
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-lg">Registrar Local</button>
+        </div>
+        
+    </form>
+</div>
 
-            {% if datos %}
-            <div class="text-center">
-                <button type="submit" class="btn btn-warning btn-lg">Modificar datos del local</button>
-            </div>
-            {% else %}
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary btn-lg">Registrar Local</button>
-            </div>
-            {% endif %}
-        </form>
-    </div>
 {% endblock %}
+

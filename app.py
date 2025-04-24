@@ -4,6 +4,7 @@ from controladores.local import controlador_local
 from controladores.locales import controlador_locales as local
 from hashlib import sha256
 import os
+from werkzeug.utils import secure_filename
 from enviar_correos import enviar_mensajecorreo
 
 app = Flask(__name__)
@@ -231,38 +232,48 @@ def pagina_registrar():
     return render_template('pages/negocio/negocio/negocio.html', datos = datos) 
 
 
-
 @app.route('/registrar_local', methods=['POST'])
-def registrar_local_view():
-    if request.method == 'POST':
-        datos_formulario = {
+def registrar_local():
+    try:
+        data = {
             'nombre': request.form['nombre'],
             'direccion': request.form['direccion'],
             'tel': request.form['tel'],
             'correo': request.form['correo'],
-            'facebook': request.form.get('facebook', None),  
-            'instagram': request.form.get('instagram', None),
-            'idUsuario': session.get('id'), 
-            'logo': request.files['logo'].filename if 'logo' in request.files else None,
-            'banner': request.files['banner'].filename if 'banner' in request.files else None  
+            'facebook': request.form['facebook'],
+            'instagram': request.form['instagram'],
+            'idUsuario': session.get('id'),
+            'logo': request.files['logo'].filename,
+            'banner': request.files['banner'].filename
         }
+        
+        local_id = controlador_local.registrar_local(data)
 
-        
-        local_id = controlador_local.registrar_local(datos_formulario)
-        
-        if local_id:
-            flash('Local registrado exitosamente', 'success')
+        if local_id:  # Si el local se registró correctamente
+            flash('Local registrado exitosamente.', 'success')
             return redirect(url_for('listar_locales'))  
         else:
-            flash('Error al registrar el local', 'danger')
+            flash('Hubo un problema al registrar el local.', 'danger')
+            return redirect(url_for('pagina_registrar'))
 
-    return render_template('pages/negocio/negocio/negocio.html') 
+    except Exception as e:
+        flash(f"Error: {str(e)}", 'danger')
+        return redirect(url_for('pagina_registrar'))
 
 
 @app.route('/locales', methods=['GET'])
-def listar_locales():    
-    locales = controlador_local.obtener_locales()
-    return render_template('pages/negocio/negocio/listar_locales.html', locales=locales)
+def listar_locales():
+    id_usuario = session.get('id') 
+    local = controlador_local.verificarregistrollocal(id_usuario)
+
+    print(f"Local para el usuario {id_usuario}: {local}") 
+
+    if local:  # Si local no es None
+        return render_template('pages/negocio/negocio/listar_locales.html', local=local)
+    else:
+        flash('No tienes un local registrado', 'danger')
+        return redirect(url_for('pagina_registrar'))
+
 
 
 if __name__ == '__main__':

@@ -16,14 +16,14 @@ def registrar_local(data):
                 data['correo'],
                 data['facebook'],  
                 data['instagram'], 
-                'A',  
+                'A', 
                 data['idUsuario'],  
                 data['logo'],  
                 data['banner'] 
             ))
 
         conexion.commit()
-        return cursor.lastrowid  
+        return cursor.lastrowid
     except Exception as e:
         print(f"Error al registrar el local: {e}")
         return 0  
@@ -76,11 +76,20 @@ def verificarregistrollocal(id_usuario):
                 SELECT idLocal, nombre, direccion, tel, correo, facebook, instagram, puntuacion, estado, idUsuario, logo, banner
                 FROM LOCAL WHERE idUsuario = %s
             '''
-            cursor.execute(query, (id_usuario))
+            cursor.execute(query, (id_usuario,))
             result = cursor.fetchall()
-            return result if result else []
+        
+            if result:
+                columns = [desc[0] for desc in cursor.description] 
+                local_dict = dict(zip(columns, result[0]))  
+                return local_dict
+            else:
+                return None  
+
     except Exception as e:
         print(f"Error al obtener los locales: {e}")
-        return []  
+        return None 
     finally:
         conexion.close()
+
+

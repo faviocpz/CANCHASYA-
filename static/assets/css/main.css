@@ -155,7 +155,6 @@ table tr.tr-grama-clara td {
 
 .sidebar-admin {
   height: calc(100vh - 67px); /* Ajusta el cálculo según el tamaño del otro div */
-  position: relative;
   background-color: #161620f2;
   color: white;
   padding-left: 0 !important;
