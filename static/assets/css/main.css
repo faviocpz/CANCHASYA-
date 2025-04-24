@@ -69,9 +69,13 @@ h1, h2, h3, .titulo, .btn, nav {
 /* 5. LOGIN PAGE */
 /* --------------------------------------------- */
 .bg-login-page {
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: white;
+  position: relative;
   z-index: 1;
+  padding: 0;
 }
 
 .bg-login-page::before {
@@ -155,7 +159,7 @@ table tr.tr-grama-clara td {
 
 .sidebar-admin {
   height: calc(100vh - 67px); /* Ajusta el cálculo según el tamaño del otro div */
-  position: relative;
+
   background-color: #161620f2;
   color: white;
   padding-left: 0 !important;
@@ -247,11 +251,10 @@ table tr.tr-grama-clara td {
   background-blend-mode: overlay;
 }
 
-.offcanvas-body.sidebar-admin {
-  height: 100%;
+.offcanvas {
+  height: 100vh;
   overflow-y: auto;
 }
-
 
 /* --------------------------------------------- */
 /* 9. SWIPER SLIDER */
@@ -310,9 +313,8 @@ table tr.tr-grama-clara td {
   justify-content: center;
 }
 
-
-.boton_salir {
-  border-radius: 0 !important;
-  height: 3rem;
-  font-size: large;
+html, body {
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
 }

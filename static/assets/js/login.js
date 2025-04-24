@@ -22,21 +22,25 @@ var formulario_alquiler = `
         <label for="nombre" class="form-label">Nombre completo:</label>
         <input type="text" name="nombres" class="form-control" id="nombre" required>
     </div>
-    <div class="mb-3">
-        <label for="dni" class="form-label">Número de DNI:</label>
-        <input type="text" name="dni" class="form-control" id="dni" required>
+    <div class="mb-3 row">
+        <div class="col-6">
+            <label for="dni" class="form-label">Número de DNI:</label>
+            <input type="text" name="dni" class="form-control" id="dni" required>
+        </div>
+        <div class="col-6">
+            <label for="telefono" class="form-label">Teléfono:</label>
+            <input type="text" name="telefono" class="form-control" id="telefono" required>
+        </div>
     </div>
-    <div class="mb-3">
-        <label for="correo" class="form-label">Correo electrónico:</label>
-        <input type="email" name="correo" class="form-control" id="correo" placeholder="usuario@correo.com" required>
-    </div>
-    <div class="mb-3">
-        <label for="telefono" class="form-label">Teléfono:</label>
-        <input type="text" name="telefono" class="form-control" id="telefono" required>
-    </div>
-    <div class="mb-3">
-        <label for="password" class="form-label">Contraseña:</label>
-        <input type="password" name="password" class="form-control" id="password" required>
+    <div class="mb-3 row">
+        <div class="col-6">
+            <label for="correo" class="form-label">Correo electrónico:</label>
+            <input type="email" name="correo" class="form-control" id="correo" placeholder="usuario@correo.com" required>
+        </div>
+        <div class="col-6">
+            <label for="password" class="form-label">Contraseña:</label>
+            <input type="password" name="password" class="form-control" id="password" required>
+        </div>
     </div>
     <div class="mb-3">
         <label for="foto" class="form-label">Sube tu Foto:</label>

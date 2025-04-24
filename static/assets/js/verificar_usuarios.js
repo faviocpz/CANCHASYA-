@@ -57,16 +57,41 @@ async function cambiar_estado(estado, id){
         const data = await response.json();
 
         if(data.codigo == 1){
-            alert('usuario cambiado de estado');
-        }else{
-            alert('no se pudo cambiar el estado');
+            alert('Estado del usuario actualizado');
+            
+            // Actualizar la fila correspondiente de la tabla sin recargarla
+            actualizar_fila_estado(id, estado);
+        } else {
+            alert('No se pudo cambiar el estado');
         }
     } catch (error) {
-        alert('no se pudo cambiar el estado');
+        alert('No se pudo cambiar el estado');
     }
-    modal.hide();
+    modal.hide();  // Cerrar el modal después de actualizar el estado
 }
 
+function actualizar_fila_estado(id, estado) {
+    const tbody = document.getElementById('datos_solicitud');
+    const filas = tbody.rows;
+
+    for (let fila of filas) {
+        const tdId = fila.cells[0].textContent;  // Obtener el ID desde la primera celda de cada fila
+        if (tdId == id) {
+            // Obtener la celda de estado y actualizar su valor
+            const tdEstado = fila.cells[4];
+            const btnVerificar = fila.querySelector("button"); // Obtener el botón de verificar
+            
+            if (estado === 'R') {
+                tdEstado.innerHTML = '<span class="text-danger">Foto rechazada.</span>';
+                btnVerificar.disabled = true;  // Deshabilitar el botón de verificar si fue rechazada
+            } else if (estado === 'V') {
+                tdEstado.innerHTML = '<span class="text-success">Aliado autorizado.</span>';
+                btnVerificar.disabled = true;  // Deshabilitar el botón de verificar si fue autorizado
+            }
+            break;  // Salir del loop una vez que hemos encontrado la fila correcta
+        }
+    }
+}
 function buscar(elemento){
     var texto = elemento.value;
     var tbody = document.getElementById('datos_solicitud');

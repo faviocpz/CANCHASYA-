@@ -29,12 +29,6 @@
         {% endif %}
 
       </div>
-
-
-   
-        <a  class="btn btn-danger boton_salir footer_menu  w-100 " onclick="salir()">
-          <i class="bi bi-box-arrow-right "></i> Salir
-        </a>
    
     </div>
 
@@ -53,6 +47,13 @@
           </div>
         </div>
         <hr>
+        {% if session.get('tipo') == 'Alquilador' %}
+       
+        {% elif (session.get('tipo') == 'Administrador' ) %}
+          <a href="{{ url_for('solicitudes') }}" class="btn w-100 btn_sidebar">Solicitudes</a>
+          <a href="" class="btn w-100 btn_sidebar">Otra opción</a>
+        {% endif %}
+        
         <!--  Opciones si es administrador o alquilador  -->
 
    
