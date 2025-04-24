@@ -153,10 +153,12 @@ def inicio_sesion():
             rpt['ruta'] = '/'
         elif(tipo == 'aliado'):
             if(respuesta[2] == 1):
+                session['id'] = respuesta[4]
                 session['tipo'] = "Administrador"
                 session['nombre'] = respuesta[3]
                 session['token'] = 'x'
             else:
+                session['id'] = respuesta[4]
                 session['nombre'] = respuesta[3]
                 session['vc'] = respuesta[1]
                 session['tipo'] = "Alquilador"
