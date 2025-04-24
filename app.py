@@ -106,37 +106,47 @@ def registrar_alquilador():
     except Exception as e:
         return jsonify({'codigo_rpt': 0, 'mensaje': f'Error al procesar la solicitud: {str(e)}'}), 500
 
-
-from werkzeug.utils import secure_filename
-import os
 @app.route('/actualizar_foto_verificacion', methods=['POST'])
 def actualizar_foto_verificacion():
-    if 'usuario' not in session:
-        return jsonify({'codigo': 0, 'mensaje': 'Sesión no válida'}), 401
-
     try:
-        correo = session['usuario']
-        id_usuario = session.get('id_usuario')
-        foto = request.files.get('foto_r')
+        # Obtener la foto del formulario
+        foto = request.files['foto_perfil']
+        correo = request.form['correo']
 
-        if not foto or foto.filename == '':
-            return jsonify({'codigo': 0, 'mensaje': 'No se recibió ninguna imagen válida'}), 400
-
-        # Guardar archivo
-        filename = secure_filename(foto.filename)
-        carpeta = os.path.join('static/assets/img_usuario/alquilador', str(id_usuario))
+        # Verificar si la foto fue subida
+        if not foto:
+            return jsonify({'codigo_rpt': 0, 'mensaje': 'No se recibió ninguna foto'}), 400
+        
+        # Crear la carpeta si no existe
+        carpeta = f"static/assets/img_usuario/alquilador/{correo}"
         if not os.path.exists(carpeta):
             os.makedirs(carpeta)
-        ruta_completa = os.path.join(carpeta, 'verificar_img_' + filename)
-        foto.save(ruta_completa)
 
-        # Actualizar en la BD
-        if cuser.actualizar_foto_verificacion(id_usuario, filename):
-            return jsonify({'codigo': 1, 'mensaje': 'Foto actualizada correctamente'})
+        # Generar nombre único para el archivo y guardarlo
+        foto_filename = f"vrf_{foto.filename}"  # Aquí guardamos solo el nombre del archivo
+        foto_path = os.path.join(carpeta, foto_filename)
+        foto.save(foto_path)
+
+        # Preparar los datos a enviar
+        data = {
+            'foto': foto_filename,  # Solo el nombre del archivo, sin la ruta completa
+            'correo': correo
+        }
+
+        print(f"Datos enviados para actualizar la foto: {data}")
+
+        # Llamar al controlador para actualizar la foto en la base de datos
+        resultado = cuser.actualizar_foto_verificacion(data)
+
+        # Responder según el resultado
+        if resultado:
+            return jsonify({'codigo_rpt': 1, 'mensaje': 'Foto actualizada correctamente.'})
         else:
-            return jsonify({'codigo': 0, 'mensaje': 'Error al actualizar en la base de datos'})
+            return jsonify({'codigo_rpt': 0, 'mensaje': 'Hubo un problema al actualizar la foto.'})
+
     except Exception as e:
-        return jsonify({'codigo': 0, 'mensaje': f'Error interno: {str(e)}'}), 500
+        print(f"Error al procesar la solicitud: {e}")
+        return jsonify({'codigo_rpt': 0, 'mensaje': f'Error al procesar la solicitud: {str(e)}'}), 500
 
 
 @app.route('/inicio_sesion', methods=['POST'])

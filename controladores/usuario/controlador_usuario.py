@@ -276,7 +276,7 @@ def obtener_datos_usuario_por_correo(correo):
     finally:
         conexion.close()
 
-def actualizar_foto_verificacion(id_usuario, nombre_foto):
+def actualizar_foto_verificacion(data):
     conexion = obtener_conexion()
     try:
         with conexion.cursor() as cursor:
@@ -284,9 +284,9 @@ def actualizar_foto_verificacion(id_usuario, nombre_foto):
                 UPDATE usuario
                 SET foto_verificacion = %s,
                     verificacion_cuenta = 'E'
-                WHERE id = %s
+                WHERE correo = %s
             '''
-            cursor.execute(query, (nombre_foto, id_usuario))
+            cursor.execute(query, (data['foto'], data['correo']))
         conexion.commit()
         return True
     except Exception as e:
@@ -294,8 +294,6 @@ def actualizar_foto_verificacion(id_usuario, nombre_foto):
         return False
     finally:
         conexion.close()
-
-
 
 
 

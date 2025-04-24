@@ -6,7 +6,7 @@
 
 {% block contenido %}
 <div class="container bg-white rounded shadow p-4">
-  <form id="form_perfil" method="POST" action="/actualizar_perfil">
+  <form id="form_perfil" method="POST" action="">
     <div class="mb-3">
       <label class="form-label fw-bold text-azulcy fst-italic">Nombre</label>
       <input type="text" class="form-control" id="nombre" name="nombre" value="{{ usuario.nombre }}" readonly>
@@ -47,15 +47,47 @@
         {% endif %}
       </div>
     </div>
+
     {% endif %}
 
     <div class="mt-4 text-end">
       <button type="submit" class="btn btn-primary fw-bold fst-italic">Guardar Cambios</button>
     </div>
   </form>
+
+  <!-- Modal para cambiar la foto -->
+  <div class="modal fade" id="modalFoto" tabindex="-1" aria-labelledby="modalFotoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalFotoLabel">Volver a enviar foto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="form_foto" enctype="multipart/form-data" method="POST" action="/actualizar_foto_verificacion">
+            <div class="mb-3">
+              <label for="foto_perfil" class="form-label">Selecciona una nueva foto</label>
+              <input type="file" class="form-control" id="foto_perfil" name="foto_perfil" accept="image/*" onchange="previewImage(event)" required>
+            </div>
+            <div class="mb-3">
+              <label for="foto_previa" class="form-label">Vista previa</label>
+              <img id="foto_previa" class="w-100" src="" alt="Vista previa de la imagen" style="display: none;">
+            </div>
+            <input type="hidden" id="correo" name="correo" value="{{ usuario.correo }}"> <!-- Oculto para trabajar con el correo -->
+            <div class="mt-3 text-center">
+              <button type="submit" class="btn btn-success">Enviar</button>
+            </div>
+          </form>          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
 </div>
 {% endblock %}
 
 {% block scripts %}
-
+  <script src="/static/assets/js/perfil.js"> </script>
 {% endblock %}

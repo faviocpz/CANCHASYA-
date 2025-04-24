@@ -1,35 +1,62 @@
-document.addEventListener("DOMContentLoaded", function () {
-    fetch("/obtener_perfil_usuario")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && data.codigo === 1) {
-          const user = data.usuario;
-          document.getElementById("nombre").value = user.nombre;
-          document.getElementById("dni").value = user.dni;
-          document.getElementById("correo").value = user.correo;
-          document.getElementById("telefono").value = user.telefono;
-  
-          if (user.idTipoUsuario == 2) {
-            const zonaVerificacion = document.getElementById("estado_verificacion");
-            if (user.verificacion_cuenta === "R") {
-              zonaVerificacion.innerHTML = `
-                <div class="alert alert-danger d-flex justify-content-between align-items-center">
-                  <span><i class="bi bi-exclamation-triangle me-2"></i> Foto rechazada</span>
-                  <button class="btn btn-outline-danger btn-sm">Nuevo intento</button>
-                </div>`;
-            } else if (user.verificacion_cuenta === "E") {
-              zonaVerificacion.innerHTML = `
-                <div class="alert alert-warning">
-                  <i class="bi bi-hourglass-split me-2"></i> Aprobación pendiente
-                </div>`;
-            } else if (user.verificacion_cuenta === "V") {
-              zonaVerificacion.innerHTML = `
-                <div class="alert alert-success">
-                  <i class="bi bi-check-circle me-2"></i> Aliado autorizado
-                </div>`;
-            }
-          }
-        }
-      });
-  });
-  
+document.getElementById('btn_nuevo_intento').addEventListener('click', function() {
+  const modal = new bootstrap.Modal(document.getElementById('modalFoto'));
+  modal.show();
+
+  // Limpiar el input y la imagen de vista previa cuando se abre el modal
+  document.getElementById('foto_perfil').value = ''; 
+  document.getElementById('foto_previa').style.display = 'none';
+  document.getElementById('foto_previa').src = '';
+});
+
+function previewImage(event) {
+  const file = event.target.files[0];
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    const preview = document.getElementById('foto_previa');
+    preview.style.display = 'block';
+    preview.src = e.target.result;
+  };
+
+  if (file) {
+    reader.readAsDataURL(file);
+  }
+}
+
+// Al hacer clic en el botón "Enviar", enviamos la foto al servidor
+document.getElementById('form_foto').addEventListener('submit', function(event) {
+  event.preventDefault();  // Prevenir el comportamiento por defecto del formulario (que hace un POST y recarga la página automáticamente)
+
+  const inputFile = document.getElementById('foto_perfil');
+  const formData = new FormData();
+
+  // Verificar si hay un archivo seleccionado
+  if (inputFile.files.length > 0) {
+    formData.append('foto_perfil', inputFile.files[0]);  // Agregar archivo al FormData
+    formData.append('correo', document.getElementById('correo').value);  // Agregar correo al FormData
+
+    // Enviar solicitud al servidor para actualizar la foto
+    fetch('/actualizar_foto_verificacion', {
+      method: 'POST',
+      body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.codigo_rpt === 1) {
+        // Foto subida correctamente
+        alert('Foto actualizada correctamente.');
+
+        // Recargar la página para ver los cambios reflejados
+        window.location.reload();
+      } else {
+        alert('Hubo un error al subir la foto.');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Hubo un problema con la solicitud.');
+    });
+  } else {
+    alert('Por favor selecciona una foto para subir.');
+  }
+});
