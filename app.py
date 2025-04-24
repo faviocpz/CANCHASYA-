@@ -283,6 +283,13 @@ def listar_locales():
         flash('No tienes un local registrado', 'danger')
         return redirect(url_for('pagina_registrar'))
 
+@app.route('/local/<int:idLocal>')
+def obtener_local(idLocal):
+    # Llamamos al controlador para obtener los datos del local
+    local_info = controlador_local.obtener_informacion_local(idLocal)
+
+    # Pasamos los datos al template (html)
+    return render_template('pages/cancha.html', local_info=local_info)
 
 
 if __name__ == '__main__':
