@@ -1,6 +1,7 @@
 from flask import Flask, flash, redirect, render_template, jsonify, request, session, url_for
 from controladores.usuario import controlador_usuario as cuser
-from controladores.local import controlador_local 
+from controladores.local import controlador_local
+from controladores.locales import controlador_locales as local
 from hashlib import sha256
 import os
 from enviar_correos import enviar_mensajecorreo
@@ -25,7 +26,13 @@ def logout():
 
 @app.route('/canchas')
 def canchas():
-    return render_template('pages/canchas.html')
+    locales = local.obtener_locales()
+    return render_template('pages/canchas.html', locales=locales)
+
+@app.route('/api_canchas')
+def api_canchas():
+    locales = local.obtener_locales()
+    return jsonify(locales)
 
 @app.route('/cancha')
 def cancha():
