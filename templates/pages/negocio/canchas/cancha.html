@@ -1,50 +1,223 @@
 {% extends 'base_negocio.html' %}
 
-
-
 {% block contenido %}
-
-        {% if session.get('tipo') == 'Alquilador' %}
-
-        <h2>Canchas disponibles</h2><br>     
-
-        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-            {% for i in range(1, 4) %}  <!-- Puedes ajustar el rango según el número de tarjetas -->
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img src="/static/assets/img/cancha{{ i }}.jpg" class="card-img-top" alt="Cancha N° {{ i }}" style="height: 150px; object-fit: cover;">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Cancha N° {{ i }}</h5>
-                        <p class="card-text">Esta cancha fue agregada el (fecha y hora)</p>
-                        <div class="d-flex justify-content-between mt-auto">
-                            <a href="#" class="btn btn-primary m-2">Ver cancha</a>
-                            <a href="/agregar_horario_cancha/{{ i }}" class="btn btn-secondary m-2">Ver horario</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  {% if session.get('tipo') == 'Alquilador' %}
+    <h2>Canchas disponibles</h2><br>
+    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+      
+      {# Para cada cancha en data #}
+      {% for cancha in data %}
+        <div class="col">
+          <div class="card h-100">
             
-            {% endfor %}
-    
-            <div class="col">
-                <div class="card" style="width: 18rem; height: 315px;">
-                    <img src="/static/assets/img/agregar_cancha.png" class="card-img-top" style="height: 100px; width: 100px; text-align: center; margin: auto; margin-top: 20px;" alt="Agregar cancha"
-                        onclick="location.href='/agregar_cancha'">
-                    <div class="card-body">
-                        <h5 class="card-title">Agregar una nueva cancha</h5>
-    
-                    </div>
-                </div>
+            {# Carousel único por cancha #}
+            <div id="carouselCancha{{ cancha.idCancha }}" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-inner">
+                {% for foto in cancha.fotos %}
+                  <div class="carousel-item {% if loop.first %}active{% endif %}">
+                    <img src="{{ url_for('static', filename='assets/img/' ~ foto) }}"
+                         class="d-block w-100"
+                         style="height:150px; object-fit:cover"
+                         alt="Foto cancha {{ cancha.idCancha }}">
+                  </div>
+                {% endfor %}
+              </div>
+              <button class="carousel-control-prev" type="button"
+                      data-bs-target="#carouselCancha{{ cancha.idCancha }}" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+              </button>
+              <button class="carousel-control-next" type="button"
+                      data-bs-target="#carouselCancha{{ cancha.idCancha }}" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+              </button>
             </div>
+
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">{{ cancha.descripcion }}</h5>
+              <p class="card-text">Precio: S/ {{ cancha.precio }}</p>
+              <p class="card-text">
+                Estado: {{ 'Activo' if cancha.estado == 'A' else 'Inactivo' }}
+              </p>
+              <div class="mt-auto d-flex justify-content-between">
+                <button class="btn btn-primary btn-sm"
+                        onclick="openModalCancha({{ cancha.idCancha }})">
+                Ver cancha
+                </button>
+
+                
+              </div>
+            </div>
+          </div>
         </div>
-       
-        {% elif (session.get('tipo') == 'Administrador' ) %}
+      {% endfor %}
 
-        {% endif %}
+      {# Tarjeta para agregar nueva cancha #}
+      <div class="col">
+        <div class="card h-100 text-center" style="cursor:pointer;"
+             onclick="location.href='/agregar_cancha'">
+          <div class="card-body d-flex flex-column justify-content-center">
+            <img src="{{ url_for('static', filename='assets/img/agregar_cancha.png') }}"
+                 class="mx-auto mb-3" style="height:100px;" alt="Agregar cancha">
+            <h5 class="card-title">Agregar nueva cancha</h5>
+          </div>
+        </div>
+      </div>
 
-    
+    </div>
+
+
+    <!-- Modal -->
+<div class="modal fade" id="modalCancha" tabindex="-1" aria-labelledby="modalCanchaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg">
+        <!-- Header -->
+        <div class="modal-header bg-success text-white border-0">
+          <h5 class="modal-title" id="modalCanchaLabel">
+            <i class="bi bi-door-open-fill me-2"></i>
+            Detalle de Cancha
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+  
+        <!-- Body -->
+        <div class="modal-body">
+          <div class="row gy-3">
+            <!-- Carousel (en pantallas pequeñas arriba) -->
+            <div class="col-12 col-md-6 order-1 order-md-2">
+              <div id="carouselDetalle" class="carousel slide rounded overflow-hidden" data-bs-ride="carousel">
+                <div class="carousel-indicators"></div>
+                <div class="carousel-inner" style="height:280px;"></div>
+                <button class="carousel-control-prev" type="button"
+                        data-bs-target="#carouselDetalle" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon bg-dark rounded-circle p-2"></span>
+                  <span class="visually-hidden">Anterior</span>
+                </button>
+                <button class="carousel-control-next" type="button"
+                        data-bs-target="#carouselDetalle" data-bs-slide="next">
+                  <span class="carousel-control-next-icon bg-dark rounded-circle p-2"></span>
+                  <span class="visually-hidden">Siguiente</span>
+                </button>
+              </div>
+            </div>
+  
+            <!-- Detalles -->
+            <div class="col-12 col-md-6 order-2 order-md-1">
+              <h6 class="text-secondary">Descripción</h6>
+              <p class="descripcion fst-italic lh-base mb-4"></p>
+  
+              <ul class="list-group list-group-flush mb-4">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <span class="fw-semibold">Deporte</span>
+                  <span class="deporte badge bg-info text-dark"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <span class="fw-semibold">Precio</span>
+                  <span class="precio fw-bold"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <span class="fw-semibold">Estado</span>
+                  <span class="estado badge"></span>
+                </li>
+              </ul>
+  
+              <h6 class="text-secondary">Horario disponible</h6>
+              <div class="row g-2">
+                <div class="col-12">
+                  <div class="small text-muted">Días</div>
+                  <div class="dias fw-medium"></div>
+                </div>
+                <div class="col-6">
+                  <div class="small text-muted">Hora Inicio</div>
+                  <div class="h_inicio fw-medium"></div>
+                </div>
+                <div class="col-6">
+                  <div class="small text-muted">Hora Fin</div>
+                  <div class="h_fin fw-medium"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Footer -->
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle me-1"></i> Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+      
+      
+  {% endif %}
 {% endblock %}
 
 {% block scripts %}
-    <script src="/static/assets/js/verificar_usuarios.js"></script>
+  <script src="/static/assets/js/verificar_usuarios.js"></script>
+
+  <script>
+   async function openModalCancha(id) {
+  const modalEl     = document.getElementById('modalCancha');
+  const bsModal     = new bootstrap.Modal(modalEl);
+  const carouselInn = modalEl.querySelector('.carousel-inner');
+  const descEl      = modalEl.querySelector('.descripcion');
+  const deporteEl   = modalEl.querySelector('.deporte');
+  const precioEl    = modalEl.querySelector('.precio');
+  const estadoEl    = modalEl.querySelector('.estado');
+  const diasEl      = modalEl.querySelector('.dias');
+  const hInicioEl   = modalEl.querySelector('.h_inicio');
+  const hFinEl      = modalEl.querySelector('.h_fin');
+
+  // estado de carga rápido
+  carouselInn.innerHTML = `<div class="carousel-item active text-center p-5">Cargando...</div>`;
+  bsModal.show();
+
+  try {
+    const res  = await fetch(`/api/cancha/${id}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const { descripcion, deporte, precio, estado, dias, h_inicio, h_fin, fotos } = await res.json();
+
+    // Rellenar texto
+    descEl.textContent    = descripcion;
+    deporteEl.textContent = deporte;
+    precioEl.textContent  = `S/ ${precio.toFixed(2)}`;
+    estadoEl.textContent  = estado==='A' ? 'Activo' : 'Inactivo';
+    estadoEl.className    = `estado badge ${estado==='A'?'bg-success':'bg-danger'}`;
+    diasEl.textContent    = dias;
+    hInicioEl.textContent = h_inicio;
+    hFinEl.textContent    = h_fin;
+
+    // Carrusel
+    carouselInn.innerHTML = '';
+    const frag = document.createDocumentFragment();
+    if (fotos.length) {
+      fotos.forEach((foto, idx) => {
+        const div = document.createElement('div');
+        div.className = `carousel-item${idx===0?' active':''}`;
+        div.innerHTML = `
+          <img src="/static/assets/img/${foto}"
+               class="d-block w-100 rounded"
+               style="height:250px;object-fit:cover">
+        `;
+        frag.appendChild(div);
+      });
+    } else {
+      const noImg = document.createElement('div');
+      noImg.className = 'carousel-item active text-center p-5 text-muted';
+      noImg.textContent = 'No hay fotos disponibles';
+      frag.appendChild(noImg);
+    }
+    carouselInn.appendChild(frag);
+
+  } catch (e) {
+    console.error(e);
+    carouselInn.innerHTML = `<div class="carousel-item active text-danger p-5">Error al cargar</div>`;
+  }
+}
+
+
+    </script>
+
+
 {% endblock %}

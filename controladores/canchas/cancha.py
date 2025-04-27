@@ -27,30 +27,191 @@ def consultar_cancha(id):
     finally:
         conexion.close()
         
-def consultar_cancha_x_persona(id):
+        
+def consultar_cancha_x_persona(id_usuario):
+    sql = """
+    SELECT
+      ca.idCancha,
+      ca.descripcion,
+      ca.precio,
+      ca.estado,
+      GROUP_CONCAT(fo.foto SEPARATOR ',') AS fotos
+    FROM CANCHA AS ca
+    INNER JOIN LOCAL  AS lo ON lo.idLocal   = ca.idLocal
+    INNER JOIN FOTO   AS fo ON fo.idCancha  = ca.idCancha
+    WHERE lo.idUsuario = %s
+    GROUP BY
+      ca.idCancha,
+      ca.descripcion,
+      ca.precio,
+      ca.estado
+    """
     conexion = obtener_conexion()
     try:
         with conexion.cursor() as cursor:
-            query = """
-            SELECT * FROM CANCHA ca
-            INNER JOIN `LOCAL` lo ON ca.idLocal = lo.idLocal
-            WHERE lo.idUsuario = %s
-            """
-            cursor.execute(query, (id,))
-            result = cursor.fetchall()
-            canchas = []
-            for row in result:
-                cancha = {
-                    "idCancha": row[0],
-                    "descripcion": row[1],
-                    "precio": row[2],
-                    "puntuacion": row[3],
-                    "estado": row[4],
-                    "idLocal": row[5],
-                    "nombre_foto": row[6],
-                    "foto": row[7]
-                }
-                canchas.append(cancha)
-            return canchas
+            cursor.execute(sql, (id_usuario,))
+            filas = cursor.fetchall()
+        canchas = []
+        for idCancha, descripcion, precio, estado, fotos_csv in filas:
+            fotos = fotos_csv.split(',')  # ["cancha1.jpg","cancha2.jpg",...]
+            canchas.append({
+                "idCancha":    idCancha,
+                "descripcion": descripcion,
+                "precio":      precio,
+                "estado":      estado,
+                "fotos":       fotos
+            })
+        return canchas
     finally:
         conexion.close()
+
+
+def consultar_detalle_cancha(id_cancha):
+    sql = """
+    SELECT
+      ca.idCancha,
+      ca.descripcion,
+      ca.precio,
+      ca.estado,
+      de.nombre AS deporte,
+      GROUP_CONCAT(DISTINCT fo.foto
+                   ORDER BY fo.idFoto
+                   SEPARATOR ',')      AS fotos_csv,
+      GROUP_CONCAT(DISTINCT ho.dias
+                   ORDER BY FIELD(ho.dias,
+                                  'Lunes','Martes','Miércoles','Jueves',
+                                  'Viernes','Sábado','Domingo')
+                   SEPARATOR ',')      AS dias_csv,
+      GROUP_CONCAT(DISTINCT DATE_FORMAT(ho.h_inicio, '%%H:%%i')
+                   ORDER BY ho.h_inicio
+                   SEPARATOR ',')      AS h_inicio_csv,
+      GROUP_CONCAT(DISTINCT DATE_FORMAT(ho.h_fin,    '%%H:%%i')
+                   ORDER BY ho.h_fin
+                   SEPARATOR ',')      AS h_fin_csv
+    FROM CANCHA    AS ca
+    JOIN LOCAL     AS lo ON lo.idLocal   = ca.idLocal
+    JOIN DEPORTE   AS de ON de.idDeporte = ca.idDeporte
+    LEFT JOIN FOTO     AS fo ON fo.idCancha  = ca.idCancha
+    LEFT JOIN HORARIO  AS ho ON ho.idCancha  = ca.idCancha
+    WHERE ca.idCancha = %s
+    GROUP BY
+      ca.idCancha,
+      ca.descripcion,
+      ca.precio,
+      ca.estado,
+      de.nombre;
+    """
+    conn = obtener_conexion()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(sql, (id_cancha,))
+            row = cur.fetchone()
+            if not row:
+                return None
+
+            (idC, desc, precio, estado, deporte,
+             fotos_csv, dias_csv, h_inicio_csv, h_fin_csv) = row
+
+            return {
+                "idCancha":    idC,
+                "descripcion": desc,
+                "precio":      float(precio),
+                "estado":      estado,
+                "deporte":     deporte,
+                "fotos":       fotos_csv.split(',')    if fotos_csv   else [],
+                "dias":        dias_csv     if dias_csv    else [],
+                "h_inicio":    h_inicio_csv if h_inicio_csv else [],
+                "h_fin":       h_fin_csv   if h_fin_csv   else []
+            }
+    finally:
+        conn.close()
+
+
+
+def tipo_cancha():
+    sql = """
+    SELECT de.idDeporte, de.nombre FROM DEPORTE de WHERE de.estado = 'A'
+    """
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            cursor.execute(sql)
+            filas = cursor.fetchall()
+        tipos = []
+        for idDeporte, nombre in filas:
+            tipos.append({
+                "idTipoCancha": idDeporte,
+                "nombre":       nombre
+            })
+        return tipos
+    finally:
+        conexion.close()
+        
+def id_local(id_usuario):
+    sql = """
+    SELECT lo.idLocal FROM LOCAL lo WHERE lo.idUsuario = %s
+    """
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            cursor.execute(sql, (id_usuario,))
+            id_local = cursor.fetchone()
+        return id_local[0] if id_local else None
+    finally:
+        conexion.close()
+        
+
+
+def insertar_cancha(descripcion, precio, puntuacion, id_local, id_deporte):
+    sql = """
+      INSERT INTO CANCHA
+        (descripcion, precio, puntuacion, estado, idLocal, idDeporte)
+      VALUES
+        (%s,          %s,     %s,         'A',    %s,      %s)
+    """
+    conn = obtener_conexion()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(sql, (descripcion, precio, puntuacion, id_local, id_deporte))
+            conn.commit()
+            return cur.lastrowid
+    finally:
+        conn.close()
+
+
+def insertar_horario(id_cancha, dias, h_inicio, h_fin, estado='A'):
+    """
+    Inserta UN registro en HORARIO,
+    guardando la lista de días como texto en `dias`.
+    """
+    sql = """
+      INSERT INTO HORARIO
+        (dias, h_inicio, h_fin, estado, idCancha)
+      VALUES
+        (%s,   %s,       %s,    %s,     %s)
+    """
+    conn = obtener_conexion()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(sql, (dias, h_inicio, h_fin, estado, id_cancha))
+            conn.commit()
+    finally:
+        conn.close()
+
+def insertar_foto(id_cancha, nombre, ruta):
+    """
+    Inserta un registro en FOTO apuntando al archivo guardado.
+    """
+    sql = """
+      INSERT INTO FOTO
+        (nombre, foto, idCancha)
+      VALUES
+        (%s,     %s,   %s)
+    """
+    conn = obtener_conexion()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(sql, (nombre, ruta, id_cancha))
+            conn.commit()
+    finally:
+        conn.close()

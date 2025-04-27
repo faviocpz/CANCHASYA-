@@ -1,4 +1,4 @@
-from flask import Flask, flash, redirect, render_template, jsonify, request, session, url_for
+from flask import Flask, flash, redirect, render_template, jsonify, request, session, url_for, current_app
 from controladores.usuario import controlador_usuario as cuser
 from controladores.local import controlador_local
 from controladores.locales import controlador_locales as local
@@ -11,7 +11,13 @@ from enviar_correos import enviar_mensajecorreo
 app = Flask(__name__)
 app.secret_key = 'clavesegura'
 
-
+####### CARPERTA PARA GUARDAR IMAGENES #######
+app.config['UPLOAD_FOLDER'] = os.path.join(
+    app.root_path,
+    'static', 'assets', 'img'
+)
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+#############################################
 
 @app.route('/')
 def index():
@@ -220,11 +226,71 @@ def cambiar_estado_usuario(estado, id):
 
 @app.route('/canchass')
 def canchass():
-    return render_template('pages/negocio/canchas/cancha.html')
+    data = controlador_cancha_admin.consultar_cancha_x_persona(session.get('id'))
+    return render_template('pages/negocio/canchas/cancha.html', data=data)
+
+@app.route('/api/cancha/<int:id_cancha>')
+def api_cancha(id_cancha):
+    data = controlador_cancha_admin.consultar_detalle_cancha(id_cancha)
+    if not data:
+        return jsonify({"error": "Cancha no encontrada"}), 404
+    return jsonify(data)
 
 @app.route('/agregar_cancha')
 def agregar_cancha():
-    return render_template('pages/negocio/canchas/agregar_cancha.html')
+    id_local = controlador_cancha_admin.id_local(session.get('id'))
+    canchas = controlador_cancha_admin.tipo_cancha()
+    return render_template('pages/negocio/canchas/agregar_cancha.html', canchas=canchas)
+
+
+@app.route('/insertar_cancha', methods=['POST'])
+def insertar_cancha():
+    # 1) Recuperar datos del formulario
+    descripcion = request.form['descripcion_cancha']
+    id_deporte  = request.form['tipo_cancha']
+    precio      = request.form['precio_cancha']
+    puntuacion       = request.form['puntuacion_cancha']   
+    dias_sel    = request.form.getlist('dias[]')      # ['Lunes','Martes',...]
+    hora_inicio = request.form['hora_inicio']         # '08:00'
+    hora_fin    = request.form['hora_fin']            # '12:00'
+    archivos    = request.files.getlist('foto_cancha')# lista de FileStorage
+
+    # 2) Convertir lista de días a string
+    dias_str = ','.join(dias_sel)                     # "Lunes,Martes,..."
+
+    # 3) Obtener idLocal asociado al usuario en sesión
+    id_usuario = session.get('id')
+    id_local   = controlador_cancha_admin.id_local(id_usuario)
+
+    # 4) Insertar la CANCHA y obtener su PK
+    id_cancha = controlador_cancha_admin.insertar_cancha(
+        descripcion, precio, puntuacion, id_local, id_deporte
+    )
+
+    # 5) Insertar UN SOLO registro en HORARIO con todos los días
+    controlador_cancha_admin.insertar_horario(
+        id_cancha,
+        dias_str,
+        hora_inicio,
+        hora_fin,
+        estado='A'
+    )
+
+    # 6) Guardar las fotos (hasta 3) en disco y BD
+    for file in archivos:
+        if file and file.filename:
+            filename = secure_filename(file.filename)
+            destino  = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            file.save(destino)
+            controlador_cancha_admin.insertar_foto(
+                id_cancha,
+                nombre=filename,
+                ruta=filename
+            )
+
+    # 7) Redirigir al listado de canchas
+    return redirect(url_for('canchass'))
+
 
 
 @app.route('/agregar_horario_cancha/<id>')
