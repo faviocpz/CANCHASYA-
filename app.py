@@ -89,7 +89,7 @@ def registrar_alquilador():
         correo = request.form['correo']
         codigos = []
         foto = request.files['foto_r']
-        foto_renombrada = f"verificar_img_{correo}{os.path.splitext(foto.filename)[1]}"
+        foto_renombrada = f"verificar_img_{correo}.png"
 
         data = {
             'foto': foto_renombrada,
@@ -128,36 +128,27 @@ def registrar_alquilador():
 @app.route('/actualizar_foto_verificacion', methods=['POST'])
 def actualizar_foto_verificacion():
     try:
-        # Obtener la foto del formulario
         foto = request.files['foto_perfil']
         correo = request.form['correo']
 
-        # Verificar si la foto fue subida
         if not foto:
             return jsonify({'codigo_rpt': 0, 'mensaje': 'No se recibió ninguna foto'}), 400
         
-        # Crear la carpeta si no existe
-        carpeta = f"static/assets/img_usuario/alquilador/{correo}"
+        carpeta = f"static/assets/img_usuario/alquilador/"
         if not os.path.exists(carpeta):
             os.makedirs(carpeta)
 
-        # Generar nombre único para el archivo y guardarlo
-        foto_filename = f"vrf_{foto.filename}"  # Aquí guardamos solo el nombre del archivo
+        foto_filename = f"verificar_img_{correo}.png"
         foto_path = os.path.join(carpeta, foto_filename)
         foto.save(foto_path)
 
-        # Preparar los datos a enviar
         data = {
-            'foto': foto_filename,  # Solo el nombre del archivo, sin la ruta completa
+            'foto': foto_filename,
             'correo': correo
         }
 
-        print(f"Datos enviados para actualizar la foto: {data}")
-
-        # Llamar al controlador para actualizar la foto en la base de datos
         resultado = cuser.actualizar_foto_verificacion(data)
 
-        # Responder según el resultado
         if resultado:
             return jsonify({'codigo_rpt': 1, 'mensaje': 'Foto actualizada correctamente.'})
         else:

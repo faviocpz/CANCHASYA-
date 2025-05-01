@@ -39,7 +39,9 @@
       <div id="texto_estado" class="mb-2">
         {% if usuario.verificacion_cuenta == 'R' %}
           <span class="text-danger">Foto rechazada.</span>
-          <button type="button" id="btn_nuevo_intento" class="btn btn-outline-danger btn-sm mt-2">Nuevo intento</button>
+          <div class="mt-2">
+            <button type="button" id="btn_nuevo_intento" class="btn btn-outline-danger btn-sm">Nuevo intento</button>
+          </div>
         {% elif usuario.verificacion_cuenta == 'E' %}
           <span class="text-warning">Aprobación pendiente.</span>
         {% elif usuario.verificacion_cuenta == 'V' %}
