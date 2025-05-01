@@ -23,6 +23,7 @@
       <div class="px-2">
         {% if session.get('tipo') == 'Alquilador' %}
           <a href="{{ url_for('pagina_registrar') }}" class="btn w-100 btn_sidebar">Locales</a>
+          <a href="{{ url_for('canchass') }}" class="btn w-100 btn_sidebar">Canchas</a>
           <a href="{{ url_for('pagina_reservas') }}" class="btn w-100 btn_sidebar">Agregar reservas</a>  
 
         {% elif (session.get('tipo') == 'Administrador' ) %}
