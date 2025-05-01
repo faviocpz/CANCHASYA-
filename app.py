@@ -299,6 +299,11 @@ def obtener_local(idLocal):
     return render_template('pages/cancha.html', local_info=local_info)
 
 
+@app.route('/pagina_reservas/')
+def pagina_reservas():
+    return render_template('pages/negocio/canchas/reserva_cancha.html')
+
+
 Routes.local.router_local.registrar_rutas(app)
 
 
