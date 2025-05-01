@@ -1,0 +1,81 @@
+{% extends 'base_interna.html' %}
+{% block estilos %} 
+    <link rel="stylesheet" href="/static/assets/css/reservas.css">
+{% endblock %}
+{% block contenido %}
+        <div class="container mt-4 d-flex">
+            <div class="table-responsive ancho_tabla">
+            <table class="table table-bordered horarios">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Hora</th>
+                    {% for date in days%}
+                    <th class="dias">{{ date }}</th>
+                    {% endfor %}
+                </tr>
+                </thead>
+                <tbody >
+                {% for hour in range(7, 24) %}
+                <tr  class="tabla_fecha_hora">
+                    <td>{{ hour }}:00 - {{ hour + 1 }}:00</td>
+                    <td>{{ hour + 2 }}</td>
+                    <td>{{ hour + 3 }}</td>
+                    <td>{{ hour + 4 }}</td>
+                    <td>{{ hour + 5 }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+            <div class="ms-4 formulario_acciones p-3 border rounded shadow-sm bg-light">
+                <h5 class="text-center mt-2 mb-4" id="titulo_formulario">Reservar cancha</h5>
+                <div class="d-flex justify-content-between mb-4">
+                    <button class="w-50 verde_seleccionado" onclick="reservar()">Reservar</button>
+                    <button class="w-50 rojo_noseleccionado" onclick="eliminar_reserva()">Eliminar reserva</button>
+                </div>
+
+                <form id="frm_reservas">
+                    <div class="mb-3">
+                        <label for="date" class="form-label">Selecciona una fecha</label>
+                        <select class="form-select" name="date" id="date">
+                            {% for date in days %}
+                            <option value="{{ date }}">{{ date }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="start_time" class="form-label">Hora de inicio</label>
+                        <input type="time" min="07:00" max="18:00" class="form-control" name="start_time" id="start_time">
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label for="duration" class="form-label">Duración</label>
+    
+                        <div>
+                            <select class="form-select mt-2" name="duration" id="duration" disabled>
+                                <option value="0">Selecciona una opción</option>
+                                <option value="0.50">30 minutos</option>
+                                <option value="1">1 hora</option>
+                                <option value="1.5">1 hora 30 minutos</option>
+                                <option value="2">2 horas</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="mb-3">
+                        <label for="end_time" class="form-label">Hora de fin</label>
+                        <input disabled type="time" min="07:00" max="18:00" class="form-control" name="end_time" id="end_time">
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button disabled type="button" onclick="aplicar_accion()" id="confirmar" class="btn btn-primary w-100">Confirmar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+{% endblock %}
+{% block scripts%}
+    <script src="/static/assets/js/reservas_canchas.js"></script>
+{% endblock%}

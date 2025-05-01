@@ -2,7 +2,7 @@ var modal = new bootstrap.Modal(document.getElementById('modal_verificacion'));
 
 function mostrar_modal(url_foto, dni, id,nombre_user, correo){
     const basePath = '/static/assets/img_usuario/alquilador';
-    document.getElementById('foto_usuario').src = `${basePath}/${id}/verificar_img_${url_foto}`;
+    document.getElementById('foto_usuario').src =  `${basePath}/${url_foto}`;
     document.getElementById('nombre_user').value = nombre_user;
     document.getElementById('dni_usuario').value = dni;
 

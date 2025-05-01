@@ -107,6 +107,12 @@ h1, h2, h3, .titulo, .btn, nav {
   color: white;
 }
 
+#btn_nuevo_intento {
+  display: block;
+  margin-top: 0.5rem;
+}
+
+
 /* --------------------------------------------- */
 /* 6. BOTONES PERSONALIZADOS */
 /* --------------------------------------------- */

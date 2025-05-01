@@ -238,3 +238,19 @@ def insertar_foto(id_cancha, nombre, ruta):
             conn.commit()
     finally:
         conn.close()
+
+def listar_canchas_idalquilador(id):
+    try:
+        conexion = obtener_conexion()
+        with conexion.cursor() as cursor:
+            sql = '''
+                select * from CANCHA as ch
+                    where ch.idLocal =  (select lc.idLocal from LOCAL as lc where lc.idUsuario = %s) and ch.estado = 'A';
+            '''
+            cursor.execute(sql,(id))
+            datos = cursor.fetchall()
+            return datos if datos else None
+    except:
+        return None
+    finally:
+        conexion.close()  

@@ -7,6 +7,8 @@ from hashlib import sha256
 import os
 from werkzeug.utils import secure_filename
 from enviar_correos import enviar_mensajecorreo
+import Routes.local.router_local
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.secret_key = 'clavesegura'
@@ -89,8 +91,10 @@ def registrar_alquilador():
         correo = request.form['correo']
         codigos = []
         foto = request.files['foto_r']
+        foto_renombrada = f"verificar_img_{correo}.png"
+
         data = {
-            'foto': foto.filename,
+            'foto': foto_renombrada,
             'nombre': request.form['nombres'],
             'dni': dni,
             'correo': correo,
@@ -101,59 +105,52 @@ def registrar_alquilador():
         respuesta_correo = cuser.verificar_correo(correo)
         respuesta_dni = cuser.verificar_dni(dni)
         
-        if (respuesta_correo or respuesta_dni):
-            if(respuesta_correo):
+        if respuesta_correo or respuesta_dni:
+            if respuesta_correo:
                 codigos.append('correo')
-            elif(respuesta_dni):
+            elif respuesta_dni:
                 codigos.append('dni')
-            codigo = 2
+            codigo = 2 
         else:
-            id_carpeta = cuser.crear_usuario_alquilador(data)
-            carpeta = f"/static/assets/img_usuario/alquilador/{id_carpeta})"
-            carpeta = os.path.join(f"static/assets/img_usuario/alquilador/{id_carpeta}")
-            if not os.path.exists(carpeta):
-                os.makedirs(carpeta)
-            foto_path = os.path.join(carpeta, 'verificar_img_' + foto.filename)
+            foto_path = os.path.join("static/assets/img_usuario/alquilador", foto_renombrada)
             foto.save(foto_path)
-            codigo = 1
-        print({'codigo_rpt': codigo, 'rpt_duplicados' : codigos}) 
-        return jsonify({'codigo_rpt': codigo, 'rpt_duplicados' : codigos})
+            
+            usuario_id = cuser.crear_usuario_alquilador(data)
+
+            if usuario_id:
+                codigo = 1
+            else:
+                codigo = 0  
+
+        return jsonify({'codigo_rpt': codigo, 'rpt_duplicados': codigos})
+
     except Exception as e:
         return jsonify({'codigo_rpt': 0, 'mensaje': f'Error al procesar la solicitud: {str(e)}'}), 500
 
 @app.route('/actualizar_foto_verificacion', methods=['POST'])
 def actualizar_foto_verificacion():
     try:
-        # Obtener la foto del formulario
         foto = request.files['foto_perfil']
         correo = request.form['correo']
 
-        # Verificar si la foto fue subida
         if not foto:
             return jsonify({'codigo_rpt': 0, 'mensaje': 'No se recibió ninguna foto'}), 400
         
-        # Crear la carpeta si no existe
-        carpeta = f"static/assets/img_usuario/alquilador/{correo}"
+        carpeta = f"static/assets/img_usuario/alquilador/"
         if not os.path.exists(carpeta):
             os.makedirs(carpeta)
 
-        # Generar nombre único para el archivo y guardarlo
-        foto_filename = f"vrf_{foto.filename}"  # Aquí guardamos solo el nombre del archivo
+        foto_filename = f"verificar_img_{correo}.png"
         foto_path = os.path.join(carpeta, foto_filename)
         foto.save(foto_path)
 
-        # Preparar los datos a enviar
         data = {
-            'foto': foto_filename,  # Solo el nombre del archivo, sin la ruta completa
+            'foto': foto_filename,
             'correo': correo
         }
 
-        print(f"Datos enviados para actualizar la foto: {data}")
-
-        # Llamar al controlador para actualizar la foto en la base de datos
         resultado = cuser.actualizar_foto_verificacion(data)
 
-        # Responder según el resultado
         if resultado:
             return jsonify({'codigo_rpt': 1, 'mensaje': 'Foto actualizada correctamente.'})
         else:
@@ -308,64 +305,29 @@ def agregar_horario_cancha(id):
     datos = controlador_cancha_admin.consultar_cancha(id)
     return render_template('pages/negocio/canchas/agregar_horario_cancha.html', id=id, datos=datos)
 
-
-
-@app.route('/pagina_registrar')
-def pagina_registrar():
-    id = session.get('id')
-    datos = controlador_local.verificarregistrollocal(id)
-    return render_template('pages/negocio/negocio/negocio.html', datos = datos) 
-
-
-@app.route('/registrar_local', methods=['POST'])
-def registrar_local():
-    try:
-        data = {
-            'nombre': request.form['nombre'],
-            'direccion': request.form['direccion'],
-            'tel': request.form['tel'],
-            'correo': request.form['correo'],
-            'facebook': request.form['facebook'],
-            'instagram': request.form['instagram'],
-            'idUsuario': session.get('id'),
-            'logo': request.files['logo'].filename,
-            'banner': request.files['banner'].filename
-        }
-        
-        local_id = controlador_local.registrar_local(data)
-
-        if local_id:  # Si el local se registró correctamente
-            flash('Local registrado exitosamente.', 'success')
-            return redirect(url_for('listar_locales'))  
-        else:
-            flash('Hubo un problema al registrar el local.', 'danger')
-            return redirect(url_for('pagina_registrar'))
-
-    except Exception as e:
-        flash(f"Error: {str(e)}", 'danger')
-        return redirect(url_for('pagina_registrar'))
-
-
-@app.route('/locales', methods=['GET'])
-def listar_locales():
-    id_usuario = session.get('id') 
-    local = controlador_local.verificarregistrollocal(id_usuario)
-
-    print(f"Local para el usuario {id_usuario}: {local}") 
-
-    if local:  # Si local no es None
-        return render_template('pages/negocio/negocio/listar_locales.html', local=local)
-    else:
-        flash('No tienes un local registrado', 'danger')
-        return redirect(url_for('pagina_registrar'))
-
 @app.route('/local/<int:idLocal>')
-def obtener_local(idLocal):
-    # Llamamos al controlador para obtener los datos del local
+def obtener_local(idLocal):    
     local_info = controlador_local.obtener_informacion_local(idLocal)
-
-    # Pasamos los datos al template (html)
     return render_template('pages/cancha.html', local_info=local_info)
+
+
+@app.route('/pagina_reservas/')
+def pagina_reservas():
+    listas_canchas = controlador_cancha_admin.listar_canchas_idalquilador(session.get('id'))
+    print(listas_canchas)
+    print(session.get('id'))
+    return render_template('pages/negocio/canchas/lista_cancha.html', listas_canchas = listas_canchas)
+
+@app.route('/reservar_cancha/<int:id>')
+def reservar_cancha(id):
+    hoy = datetime.now()
+    dias = [hoy + timedelta(days=i) for i in range(4)]
+    fechas_formateadas = [fecha.strftime('%d/%m/%Y') for fecha in dias]
+    return render_template('pages/negocio/canchas/reserva_canchas.html', days = fechas_formateadas )
+
+
+
+Routes.local.router_local.registrar_rutas(app)
 
 
 if __name__ == '__main__':
