@@ -1,0 +1,26 @@
+.bg-azulcy {
+    background-color: #0d6efd;
+}
+
+.text-blancocy {
+    color: white;
+}
+
+ 
+.input-group .btn-outline-secondary {
+    transition: all 0.3s ease;
+}
+
+.input-group .btn-outline-secondary:not(:disabled):hover {
+    background-color: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+}
+
+
+#imagePreviewModal .modal-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+}

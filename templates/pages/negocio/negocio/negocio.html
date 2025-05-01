@@ -1,7 +1,11 @@
-{% extends 'base_negocio.html' %}
+{% extends 'base_interna.html' %}
 
 {% block titulo_pagina %}
     Registrar Nueva Cancha Deportiva
+{% endblock %}
+
+{% block styles %}
+<link href="/static/assets/css/local.css" rel="stylesheet">
 {% endblock %}
 
 {% block contenido %}
@@ -65,32 +69,67 @@
                 </div>
             </div>
 
-            <div class="col-12 col-md-6">
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-success text-white">
-                        <i class="bi bi-image"></i> Imágenes del Local
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="banner" class="form-label">Banner</label>
-                            <input type="file" class="form-control" id="banner" name="banner" accept="image/*" required>
+            
+                <div class="col-12 col-md-6">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-success text-white">
+                            <i class="bi bi-image"></i> Imágenes del Local
                         </div>
-                        <div class="mb-3">
-                            <label for="logo" class="form-label">Logo</label>
-                            <input type="file" class="form-control" id="logo" name="logo" accept="image/*" required>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="banner" class="form-label">Banner</label>
+                                <div class="input-group">
+                                    <input type="file" class="form-control" id="banner" name="banner" accept="image/*" required>
+                                    <button type="button" id="viewBannerBtn" class="btn btn-outline-secondary" disabled>
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="logo" class="form-label">Logo</label>
+                                <div class="input-group">
+                                    <input type="file" class="form-control" id="logo" name="logo" accept="image/*" required>
+                                    <button type="button" id="viewLogoBtn" class="btn btn-outline-secondary" disabled>
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>            
+    
+            <!-- Modal para previsualización -->
+            <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-centered">
+                    <div class="modal-content rounded-4 overflow-hidden">
+                        <!-- Header azul con título y X -->
+                        <div class="modal-header bg-azulcy text-blancocy border-0">
+                            <h5 class="modal-title fw-bold fst-italic">Vista Previa</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        
+                        <!-- Cuerpo del modal solo con imagen -->
+                        <div class="modal-body p-0 bg-black">
+                            <img id="modalPreviewImage" src="" alt="Vista previa" style="width: 100%; display: block; max-height: 70vh; object-fit: contain; margin: 0 auto;">
+                        </div>
+                        
+                        <!-- Footer con botón de cerrar -->
+                        <div class="modal-footer justify-content-end bg-azulcy border-0">
+                            <button type="button" class="btn btn-secondary fw-bold fst-italic px-4" data-bs-dismiss="modal">Cerrar</button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
         <!-- Botón de Enviar -->
         <div class="text-center">
             <button type="submit" class="btn btn-primary btn-lg">Registrar Local</button>
         </div>
-        
     </form>
 </div>
+{% endblock %}
 
+{% block scripts %}
+<script src="/static/assets/js/registro_local.js"></script>
 {% endblock %}
 

@@ -1,4 +1,4 @@
-{% extends 'base_negocio.html' %}
+{% extends 'base_interna.html' %}
 
 {% block titulo_pagina %}
     Detalles del Local
@@ -70,7 +70,7 @@
                         <div class="mb-3">
                             <strong>Logo:</strong><br>
                             {% if local['logo'] %}
-                                <img src="{{ url_for('static', filename='static\assets\img_usuario\alquilador' + local['logo']) }}" class="img-fluid" style="max-width: 150px; max-height: 150px;">
+                                <img src="{{ url_for('static', filename='assets\img_local' + local['logo']) }}" class="img-fluid" style="max-width: 150px; max-height: 150px;">
                             {% else %}
                                 <span>No disponible</span>
                             {% endif %}
@@ -79,7 +79,7 @@
                         <div class="mb-3">
                             <strong>Banner:</strong><br>
                             {% if local['banner'] %}
-                                <img src="{{ url_for('static', filename='static\assets\img_usuario\alquilador' + local['banner']) }}" class="img-fluid" style="max-width: 300px;">
+                                <img src="{{ url_for('static', filename='assets\img_local' + local['banner']) }}" class="img-fluid" style="max-width: 300px;">
                             {% else %}
                                 <span>No disponible</span>
                             {% endif %}
