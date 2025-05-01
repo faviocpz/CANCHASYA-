@@ -10,18 +10,18 @@
                 <tr>
                     <th>Hora</th>
                     {% for date in days%}
-                    <th>{{ date }}</th>
+                    <th class="dias">{{ date }}</th>
                     {% endfor %}
                 </tr>
                 </thead>
-                <tbody>
-                {% for hour in range(7, 25) %}
-                <tr>
+                <tbody >
+                {% for hour in range(7, 24) %}
+                <tr  class="tabla_fecha_hora">
                     <td>{{ hour }}:00 - {{ hour + 1 }}:00</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>{{ hour + 2 }}</td>
+                    <td>{{ hour + 3 }}</td>
+                    <td>{{ hour + 4 }}</td>
+                    <td>{{ hour + 5 }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -70,7 +70,7 @@
                     </div>
 
                     <div class="text-center mt-4">
-                        <button disabled type="submit" id="confirmar" class="btn btn-primary w-100">Confirmar</button>
+                        <button disabled type="button" onclick="aplicar_accion()" id="confirmar" class="btn btn-primary w-100">Confirmar</button>
                     </div>
                 </form>
             </div>

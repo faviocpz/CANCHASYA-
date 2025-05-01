@@ -76,3 +76,35 @@ function calcular_hora() {
     // Establecer la hora final en el campo de texto
     tiempo_final.value = `${String(adjustedHours).padStart(2, '0')}:${String(adjustedMinutes).padStart(2, '0')}`;
 }
+
+
+
+function aplicar_accion(){
+    const hora_inicio = document.getElementById('start_time').value;
+    const hora_fin = document.getElementById('end_time').value;
+    const fechas = document.getElementsByClassName('dias');
+    const fecha_seleccionada = document.getElementById('date').value;
+    dibujar(hora_inicio, hora_fin, fechas, fecha_seleccionada);
+}
+
+let indice;
+function dibujar(hora_inicio, hora_fin, fechas, fecha_seleccionada){
+    const tabla = document.getElementsByClassName('tabla_fecha_hora');
+    const [hr_inicio, minuto_inicio] = hora_inicio.split(':');
+    const [hr_fin, minuto_fin] = hora_fin.split(':');
+
+
+    Array.from(fechas).forEach((tr) => {
+        let fecha = tr.textContent;
+        indice ++;
+        if (fecha == fecha_seleccionada){
+            console.log(fecha_seleccionada);
+            return;
+        }
+    })
+
+    
+
+
+
+}
