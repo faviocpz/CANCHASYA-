@@ -249,14 +249,14 @@ def insertar_cancha():
     descripcion = request.form['descripcion_cancha']
     id_deporte  = request.form['tipo_cancha']
     precio      = request.form['precio_cancha']
-    puntuacion       = request.form['puntuacion_cancha']   
-    dias_sel    = request.form.getlist('dias[]')      # ['Lunes','Martes',...]
-    hora_inicio = request.form['hora_inicio']         # '08:00'
-    hora_fin    = request.form['hora_fin']            # '12:00'
+    puntuacion       = 0.01
+    # dias_sel    = request.form.getlist('dias[]')      # ['Lunes','Martes',...]
+    # hora_inicio = request.form['hora_inicio']         # '08:00'
+    # hora_fin    = request.form['hora_fin']            # '12:00'
     archivos    = request.files.getlist('foto_cancha')# lista de FileStorage
 
     # 2) Convertir lista de días a string
-    dias_str = ','.join(dias_sel)                     # "Lunes,Martes,..."
+                     # "Lunes,Martes,..."
 
     # 3) Obtener idLocal asociado al usuario en sesión
     id_usuario = session.get('id')
@@ -268,13 +268,13 @@ def insertar_cancha():
     )
 
     # 5) Insertar UN SOLO registro en HORARIO con todos los días
-    controlador_cancha_admin.insertar_horario(
-        id_cancha,
-        dias_str,
-        hora_inicio,
-        hora_fin,
-        estado='A'
-    )
+    # controlador_cancha_admin.insertar_horario(
+    #     id_cancha,
+    #     dias_str,
+    #     hora_inicio,
+    #     hora_fin,
+    #     estado='A'
+    # )
 
     # 6) Guardar las fotos (hasta 3) en disco y BD
     for file in archivos:
@@ -292,6 +292,16 @@ def insertar_cancha():
     return redirect(url_for('canchass'))
 
 
+@app.route('/ir_a_modificar_cancha/<int:id_cancha>')
+def ir_a_modificar_cancha(id_cancha):
+    # 1) Consultar la cancha por su id
+    datos = controlador_cancha_admin.consultar_cancha(id_cancha)
+    fotos = controlador_cancha_admin.consultar_fotos(id_cancha)
+    # 2) Consultar los tipos de canchas
+    canchas = controlador_cancha_admin.tipo_cancha()
+
+    # 3) Enviar los datos al template
+    return render_template('pages/negocio/canchas/modificar_cancha.html', datos=datos, canchas=canchas, fotos=fotos)
 
 @app.route('/agregar_horario_cancha/<id>')
 def agregar_horario_cancha(id):

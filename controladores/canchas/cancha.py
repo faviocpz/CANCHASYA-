@@ -5,7 +5,7 @@ def consultar_cancha(id):
     try:
         with conexion.cursor() as cursor:
             query = """
-            select c.descripcion, c.precio, c.puntuacion, c.estado, fo.nombre, fo.foto 
+            select c.descripcion, c.precio, c.puntuacion, c.estado, fo.nombre, fo.foto , idDeporte
             from CANCHA c 
             inner join FOTO fo on c.idCancha = fo.idCancha
             where c.idCancha = %s
@@ -19,7 +19,8 @@ def consultar_cancha(id):
                     "puntuacion": result[2],
                     "estado": result[3],
                     "nombre_foto": result[4],
-                    "foto": result[5]
+                    "foto": result[5],
+                    "idDeporte": result[6]
                 }
                 return cancha
             else:
@@ -27,6 +28,28 @@ def consultar_cancha(id):
     finally:
         conexion.close()
         
+def consultar_fotos(id_cancha):
+    sql = """
+    SELECT
+      fo.nombre,
+      fo.foto
+    FROM FOTO AS fo
+    WHERE fo.idCancha = %s
+    """
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            cursor.execute(sql, (id_cancha,))
+            filas = cursor.fetchall()
+        fotos = []
+        for nombre, foto in filas:
+            fotos.append({
+                "nombre": nombre,
+                "foto":   foto
+            })
+        return fotos
+    finally:
+        conexion.close()
         
 def consultar_cancha_x_persona(id_usuario):
     sql = """
