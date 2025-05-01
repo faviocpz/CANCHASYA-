@@ -89,8 +89,10 @@ def registrar_alquilador():
         correo = request.form['correo']
         codigos = []
         foto = request.files['foto_r']
+        foto_renombrada = f"verificar_img_{correo}{os.path.splitext(foto.filename)[1]}"
+
         data = {
-            'foto': foto.filename,
+            'foto': foto_renombrada,
             'nombre': request.form['nombres'],
             'dni': dni,
             'correo': correo,
@@ -101,23 +103,25 @@ def registrar_alquilador():
         respuesta_correo = cuser.verificar_correo(correo)
         respuesta_dni = cuser.verificar_dni(dni)
         
-        if (respuesta_correo or respuesta_dni):
-            if(respuesta_correo):
+        if respuesta_correo or respuesta_dni:
+            if respuesta_correo:
                 codigos.append('correo')
-            elif(respuesta_dni):
+            elif respuesta_dni:
                 codigos.append('dni')
-            codigo = 2
+            codigo = 2 
         else:
-            id_carpeta = cuser.crear_usuario_alquilador(data)
-            carpeta = f"/static/assets/img_usuario/alquilador/{id_carpeta})"
-            carpeta = os.path.join(f"static/assets/img_usuario/alquilador/{id_carpeta}")
-            if not os.path.exists(carpeta):
-                os.makedirs(carpeta)
-            foto_path = os.path.join(carpeta, 'verificar_img_' + foto.filename)
+            foto_path = os.path.join("static/assets/img_usuario/alquilador", foto_renombrada)
             foto.save(foto_path)
-            codigo = 1
-        print({'codigo_rpt': codigo, 'rpt_duplicados' : codigos}) 
-        return jsonify({'codigo_rpt': codigo, 'rpt_duplicados' : codigos})
+            
+            usuario_id = cuser.crear_usuario_alquilador(data)
+
+            if usuario_id:
+                codigo = 1
+            else:
+                codigo = 0  
+
+        return jsonify({'codigo_rpt': codigo, 'rpt_duplicados': codigos})
+
     except Exception as e:
         return jsonify({'codigo_rpt': 0, 'mensaje': f'Error al procesar la solicitud: {str(e)}'}), 500
 

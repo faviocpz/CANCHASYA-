@@ -95,42 +95,43 @@ function mostrar_imagen(imagen){
 }
 
 
-async function enviar(){
+async function enviar() {
     const radio_seleccionado = document.querySelector('input[name="tipo_usuario"]:checked').value;
     var form_data = new FormData(document.getElementById('formulario_registro'));
-
+  
     if (radio_seleccionado === 'deportista') {
-        
     } else {
-        try{
-            const response = await fetch('/registrar_alquilador',{
-                method:"POST",
-                body: form_data 
-            });
-            const data = await response.json();
-            console.log(data);
-            if(data.codigo_rpt == 1){
-                location.href = "/maestra_interna";
-            }else{
-                const rpt_duplicados = data.rpt_duplicados;
-
-                if(rpt_duplicados.length > 0){
-                    alert('el correo y dni ya existe');
-                }else{
-                    if (rpt_duplicados[0] == 'correo' || rpt_duplicados[1] == 'correo' ){
-                        alert('el correo ya existe');
-                    }else{
-                        alert('el dni ya existe');
-                    }
-                }
+      try {
+        const response = await fetch('/registrar_alquilador', {
+          method: "POST",
+          body: form_data
+        });
+        const data = await response.json();
+        console.log(data);    
+        if (data.codigo_rpt == 1) {
+          alert('Registro exitoso, inicia sesión con tus credenciales');
+          setTimeout(() => {
+            location.href = "/login";
+          }, 2000);
+        } else {
+          const rpt_duplicados = data.rpt_duplicados;
+  
+          if (rpt_duplicados.length > 0) {
+            alert('El correo y DNI ya existen');
+          } else {
+            if (rpt_duplicados[0] == 'correo' || rpt_duplicados[1] == 'correo') {
+              alert('El correo ya existe');
+            } else {
+              alert('El DNI ya existe');
             }
-        }catch {
-            alert("No hay conexión");
+          }
         }
+      } catch {
+        alert("No hay conexión");
+      }
     }
 }
-
-
+  
 
 async function iniciar_sesion(){
     const radio_seleccionado = document.querySelector('input[name="tipo_usuario"]:checked').value;
