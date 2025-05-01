@@ -22,16 +22,21 @@
 
       <div class="px-2">
         {% if session.get('tipo') == 'Alquilador' %}
-          <a href="{{ url_for('pagina_registrar') }}" class="btn w-100 btn_sidebar">Locales</a>
-          <a href="{{ url_for('canchass') }}" class="btn w-100 btn_sidebar">Canchas</a>
-          <a href="{{ url_for('pagina_reservas') }}" class="btn w-100 btn_sidebar">Agregar reservas</a>  
-
+        <a href="{{ url_for('canchass') }}" class="btn w-100 btn_sidebar">Canchas</a>
+        <a href="{{ url_for('canchass') }}" class="btn w-100 btn_sidebar">Negocio</a>
+       
         {% elif (session.get('tipo') == 'Administrador' ) %}
           <a href="{{ url_for('solicitudes') }}" class="btn w-100 btn_sidebar">Solicitudes</a>
           <a href="" class="btn w-100 btn_sidebar">Otra opción</a>
         {% endif %}
 
       </div>
+
+
+   
+        <!-- <a  class="btn btn-danger boton_salir footer_menu  w-100 " onclick="salir()">
+          <i class="bi bi-box-arrow-right "></i> Salir
+        </a> -->
    
     </div>
 
@@ -50,14 +55,7 @@
           </div>
         </div>
         <hr>
-        {% if session.get('tipo') == 'Alquilador' %}
-       
-        {% elif (session.get('tipo') == 'Administrador' ) %}
-          <a href="{{ url_for('solicitudes') }}" class="btn w-100 btn_sidebar">Solicitudes</a>
-          <a href="" class="btn w-100 btn_sidebar">Otra opción</a>
-        {% endif %}
         
-        <!--  Opciones si es administrador o alquilador  -->
 
    
       </div>
@@ -68,7 +66,7 @@
       <h2 class="titulo-pagina-cy">
         {% block titulo_pagina %}{% endblock %}
       </h2>
-      
+
       {% block contenido %}
       <!-- Aquí irá el contenido de cada vista -->
       {% endblock %}

@@ -1,0 +1,53 @@
+.lista_canchas{
+    height: 4rem;
+    justify-content: center;
+    align-items: center;
+    box-shadow: -5px 0 5px rgba(0, 0, 0, 0.2), 5px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.ancho_tabla{
+    width: 45rem;
+    height: 80vh;
+}
+
+.formulario_acciones{
+    width: 25rem;
+    box-shadow: -5px 0 5px rgba(0, 0, 0, 0.2), 5px 0 5px rgba(0, 0, 0, 0.2);
+
+}   
+.horarios{
+    box-shadow: -5px 0 5px rgba(0, 0, 0, 0.2), 5px 0 5px rgba(0, 0, 0, 0.2);
+
+}
+
+.verde_seleccionado{
+    background-color: green;
+    color: white;
+    height: 2rem;
+    border: none;
+}
+
+.verde_seleccionado:hover{
+    background-color: rgba(0, 128, 0, 0.88);
+}
+
+
+
+.verde_noseleccionado{
+
+}
+
+.rojo_noseleccionado{
+    background-color: rgb(150, 58, 58);
+    color: white;
+    height: 2rem;
+    border: none;
+}
+
+.rojo_noseleccionado:hover{
+    background-color: rgba(150, 58, 58, 0.88);
+}
+
+.rojo_seleccionado{
+
+}

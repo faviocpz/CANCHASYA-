@@ -267,3 +267,83 @@ body {
   height: 100vh; /* Usamos la altura completa de la pantalla */
   padding: 0;
 }
+.schedule {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.turno {
+  margin-bottom: 1.5rem;
+}
+
+.turno h6 {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.hours {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 10px;
+}
+
+.hour {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.hour.available {
+  background-color: #28a745; 
+  color: white;
+}
+
+.hour.occupied {
+  background-color: #dc3545; 
+  color: white;
+}
+
+.hour:hover {
+  opacity: 0.8;
+}
+
+
+.modal.fade {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.modal.fade.show {
+  opacity: 1;
+}
+
+
+.modal-content {
+  transform: translateY(-50px);
+  transition: transform 0.5s ease-in-out;
+}
+
+.modal.fade.show .modal-content {
+  transform: translateY(0); 
+}
+
+
+.modal-backdrop {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.modal-backdrop.show {
+  opacity: 0.5;
+}
+/* Aseguramos que las imágenes del carrusel tengan el mismo tamaño que la imagen de la card */
+.carousel-inner img {
+  width: 100%;
+  height: 200px;  /* Ajusta la altura para que todas las imágenes tengan el mismo tamaño */
+  object-fit: cover;  /* Asegura que la imagen se recorte bien sin distorsión */
+  border-top-left-radius: 15px;  /* Bordes redondeados para las imágenes */
+  border-top-right-radius: 15px;
+}
