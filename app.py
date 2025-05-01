@@ -8,6 +8,8 @@ import os
 from werkzeug.utils import secure_filename
 from enviar_correos import enviar_mensajecorreo
 import Routes.local.router_local
+from datetime import datetime, timedelta
+
 app = Flask(__name__)
 app.secret_key = 'clavesegura'
 
@@ -301,7 +303,18 @@ def obtener_local(idLocal):
 
 @app.route('/pagina_reservas/')
 def pagina_reservas():
-    return render_template('pages/negocio/canchas/reserva_cancha.html')
+    listas_canchas = controlador_cancha_admin.listar_canchas_idalquilador(session.get('id'))
+    print(listas_canchas)
+    print(session.get('id'))
+    return render_template('pages/negocio/canchas/lista_cancha.html', listas_canchas = listas_canchas)
+
+@app.route('/reservar_cancha/<int:id>')
+def reservar_cancha(id):
+    hoy = datetime.now()
+    dias = [hoy + timedelta(days=i) for i in range(4)]
+    fechas_formateadas = [fecha.strftime('%d/%m/%Y') for fecha in dias]
+    return render_template('pages/negocio/canchas/reserva_canchas.html', days = fechas_formateadas )
+
 
 
 Routes.local.router_local.registrar_rutas(app)
