@@ -57,6 +57,16 @@ def registrar_rutas(app):
     def registrar_local():
         try:
             # Validar archivos
+            facebook = request.form.get('facebook', '').strip()
+            instagram = request.form.get('instagram', '').strip()
+
+            # Validación básica de URLs
+            if facebook and not (facebook.startswith('http') or facebook.startswith('@')):
+                facebook = f'https://facebook.com/{facebook.replace("@", "")}'
+            
+            if instagram and not (instagram.startswith('http') or instagram.startswith('@')):
+                instagram = f'https://instagram.com/{instagram.replace("@", "")}'
+
             if 'logo' not in request.files or 'banner' not in request.files:
                 flash('Debes subir ambas imágenes', 'danger')
                 return redirect(url_for('pagina_registrar'))
@@ -78,8 +88,8 @@ def registrar_rutas(app):
                 'direccion': request.form['direccion'],
                 'tel': request.form['tel'],
                 'correo': request.form['correo'],
-                'facebook': request.form['facebook'],
-                'instagram': request.form['instagram'],
+                'facebook': facebook,
+                'instagram': instagram,
                 'idUsuario': session.get('id'),
                 'logo': logo_filename,
                 'banner': banner_filename

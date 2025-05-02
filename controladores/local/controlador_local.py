@@ -14,8 +14,8 @@ def registrar_local(data):
                 data['direccion'],
                 data['tel'],
                 data['correo'],
-                data['facebook'],  
-                data['instagram'], 
+                data['facebook'] if data['facebook'] else None, 
+                data['instagram'] if data['instagram'] else None, 
                 'A', 
                 data['idUsuario'],  
                 data['logo'],  
@@ -43,6 +43,7 @@ def obtener_locales():
             cursor.execute(query)
             result = cursor.fetchall()
 
+        # Devolver los locales en formato de lista de diccionarios
         locales = [
             {
                 "idLocal": row[0],
