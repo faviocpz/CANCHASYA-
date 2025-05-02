@@ -43,7 +43,6 @@ def obtener_locales():
             cursor.execute(query)
             result = cursor.fetchall()
 
-        # Devolver los locales en formato de lista de diccionarios
         locales = [
             {
                 "idLocal": row[0],

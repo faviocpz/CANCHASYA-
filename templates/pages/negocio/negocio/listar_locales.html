@@ -4,11 +4,15 @@
     Detalles del Local
 {% endblock %}
 
+{% block styles %}
+<link href="/static/assets/css/local/listar_local.css" rel="stylesheet">
+{% endblock %}
 {% block contenido %}
     <div class="container mt-5">
         
         <div class="row">
-            <!-- Datos Básicos -->
+            
+            
             <div class="col-12 col-md-6">
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-primary text-white">
@@ -31,7 +35,6 @@
                 </div>
             </div>
 
-            <!-- Redes Sociales -->
             <div class="col-12 col-md-6">
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-info text-white">
@@ -59,36 +62,88 @@
             </div>
         </div>
 
-        <!-- Imágenes del Local -->
         <div class="row">
+            <!-- Sección de Imágenes (ahora en horizontal) -->
             <div class="col-12 col-md-6">
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-success text-white">
-                        <i class="bi bi-image"></i> Imágenes del Local
+                        <i class="bi bi-images"></i> Imágenes del Local
                     </div>
-                    <div class="card-body text-center">
-                        <div class="mb-3">
-                            <strong>Logo:</strong><br>
-                            {% if local['logo'] %}
-                                <img src="{{ url_for('static', filename='assets\img_local' + local['logo']) }}" class="img-fluid" style="max-width: 150px; max-height: 150px;">
-                            {% else %}
-                                <span>No disponible</span>
-                            {% endif %}
-                        </div> 
-                        
-                        <div class="mb-3">
-                            <strong>Banner:</strong><br>
-                            {% if local['banner'] %}
-                                <img src="{{ url_for('static', filename='assets\img_local' + local['banner']) }}" class="img-fluid" style="max-width: 300px;">
-                            {% else %}
-                                <span>No disponible</span>
-                            {% endif %}
+                    <div class="card-body">
+                        <div class="row">  <!-- Fila interna para alinear horizontalmente -->
+                            <!-- Logo -->
+                            <div class="col-6 text-center">
+                                <h6 class="fw-bold">Logo</h6>
+                                <div class="image-container">
+                                    {% if local['logo'] %}
+                                        <img src="{{ url_for('static', filename='assets/img_locales/logos/' + local['logo']) }}" 
+                                             class="img-fluid rounded border" 
+                                             style="max-height: 120px; width: auto;"
+                                             onclick="openModal(this.src)">
+                                    {% else %}
+                                        <div class="no-image-placeholder">
+                                            <i class="bi bi-building"></i>
+                                            <p class="text-muted small mt-1">No disponible</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Banner -->
+                            <div class="col-6 text-center">
+                                <h6 class="fw-bold">Banner</h6>
+                                <div class="image-container">
+                                    {% if local['banner'] %}
+                                        <img src="{{ url_for('static', filename='assets/img_locales/banners/' + local['banner']) }}" 
+                                             class="img-fluid rounded border" 
+                                             style="max-height: 120px; width: auto;"
+                                             onclick="openModal(this.src)">
+                                    {% else %}
+                                        <div class="no-image-placeholder">
+                                            <i class="bi bi-image"></i>
+                                            <p class="text-muted small mt-1">No disponible</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        
+<!-- Modal para Imagen Ampliada -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content rounded-4 overflow-hidden">
+            <!-- Header azul (como en registrar) -->
+            <div class="modal-header bg-azulcy text-blancocy border-0">
+                <h5 class="modal-title fw-bold fst-italic">Vista Previa</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            
+            <!-- Cuerpo con fondo negro profesional -->
+            <div class="modal-body p-0 bg-black">
+                <img id="modalImage" src="" alt="Imagen ampliada" 
+                     class="img-fluid d-block mx-auto" 
+                     style="max-height: 70vh; width: auto; object-fit: contain;">
+            </div>
+            
+            <!-- Footer con botón de cerrar -->
+            <div class="modal-footer justify-content-end bg-azulcy border-0">
+                <button type="button" class="btn btn-secondary fw-bold fst-italic px-4" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle"></i> Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
    
     </div>
 {% endblock %}
+
+{% block scripts %}
+<script src="/static/assets/js/local/listar_local.js"></script>
+{% endblock %}
+

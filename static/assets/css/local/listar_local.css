@@ -1,0 +1,36 @@
+.image-container {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.no-image-placeholder {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #6c757d;
+}
+
+.img-fluid {
+    transition: transform 0.3s;
+}
+
+.img-fluid:hover {
+    transform: scale(1.03);
+}
+
+.bg-azulcy {
+    background-color: #0d6efd; /* Azul de Bootstrap o tu color personalizado */
+}
+
+.text-blancocy {
+    color: white;
+}
+
+/* Efecto hover para imágenes en el modal */
+#modalImage:hover {
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
+}
