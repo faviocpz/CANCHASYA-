@@ -1,79 +1,34 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container-fluid px-0">
-  <!-- Botón Burger solo en pantallas pequeñas -->
-  <button class="btn btn-light d-lg-none m-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarAdmin">
-    <i class="bi bi-list"></i>
-  </button>
-
-  <div class="row g-0">
-    <!-- Sidebar fijo en pantallas grandes -->
-    <div class="col-lg-2 d-none d-lg-block sidebar-admin">
-      <div class="d-flex align-items-center mt-3">
-        <img src="/static/assets/img/red.png" alt="Perfil" class="rounded-circle ms-2" width="48" height="48">
-        <div class="ms-2">
-          <div class="fw-bold azul_color">{{ session.get('nombre') }}</div>
-          <small class="gris_color">{{ session.get('tipo') }}</small>
-        </div>
-      </div>
-      <hr class="mx-2">
-
-
-      <div class="px-2">
-        {% if session.get('tipo') == 'Alquilador' %}
-          <a href="{{ url_for('pagina_registrar') }}" class="btn w-100 btn_sidebar">Locales</a>
-          <a href="{{ url_for('canchass') }}" class="btn w-100 btn_sidebar">Canchas</a>
-          <a href="{{ url_for('pagina_reservas') }}" class="btn w-100 btn_sidebar">Agregar reservas</a>  
-
-        {% elif (session.get('tipo') == 'Administrador' ) %}
-          <a href="{{ url_for('solicitudes') }}" class="btn w-100 btn_sidebar">Solicitudes</a>
-          <a href="" class="btn w-100 btn_sidebar">Otra opción</a>
-        {% endif %}
-
-      </div>
-   
-    </div>
-
-    <!-- Offcanvas sidebar para pantallas pequeñas -->
-    <div class="offcanvas offcanvas-start sidebar-admin" tabindex="-1" id="sidebarAdmin">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title fw-bold text-white">Canchas Ya!</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
-      </div>
-      <div class="offcanvas-body d-flex flex-column">
-        <div class="d-flex align-items-center">
-          <img src="/static/assets/img/red.png" alt="Perfil" class="rounded-circle me-2" width="48" height="48">
-          <div>
-            <div class="fw-bold azul_color">{{ session.get('nombre') }}</div>
-            <small class="gris_color">{{ session.get('tipo') }}</small>
-          </div>
-        </div>
-        <hr>
-        {% if session.get('tipo') == 'Alquilador' %}
-       
-        {% elif (session.get('tipo') == 'Administrador' ) %}
-          <a href="{{ url_for('solicitudes') }}" class="btn w-100 btn_sidebar">Solicitudes</a>
-          <a href="" class="btn w-100 btn_sidebar">Otra opción</a>
-        {% endif %}
-        
-        <!--  Opciones si es administrador o alquilador  -->
-
-   
+<div class="d-flex">
+  <div class="sidebar-admin">
+    <div class="d-flex align-items-center mt-3 px-3">
+      <img src="/static/assets/img/red.png" alt="Perfil" class="rounded-circle" width="48" height="48">
+      <div class="ms-2">
+        <div class="fw-bold azul_color">{{ session.get('nombre') }}</div>
+        <small class="gris_color">{{ session.get('tipo') }}</small>
       </div>
     </div>
-
-    <!-- Contenido principal -->
-    <main class="col-12 col-lg-10 pt-3 px-3 px-lg-4">
-      <h2 class="titulo-pagina-cy">
-        {% block titulo_pagina %}{% endblock %}
-      </h2>
-      
-      {% block contenido %}
-      <!-- Aquí irá el contenido de cada vista -->
-      {% endblock %}
+    <hr class="mx-3">
+    <div class="px-3">
+      {% if session.get('tipo') == 'Alquilador' %}
+        <a href="{{ url_for('pagina_registrar') }}" class="btn w-100 btn_sidebar">Locales</a>
+        <a href="{{ url_for('canchass') }}" class="btn w-100 btn_sidebar">Canchas</a>
+        <a href="{{ url_for('pagina_reservas') }}" class="btn w-100 btn_sidebar">Agregar reservas</a>
+      {% elif session.get('tipo') == 'Administrador' %}
+        <a href="{{ url_for('solicitudes') }}" class="btn w-100 btn_sidebar">Solicitudes</a>
+        <a href="#" class="btn w-100 btn_sidebar">Otra opción</a>
+      {% endif %}
+    </div>
+  </div>
+  <div class="main-content flex-grow-1 overflow-auto">
+    <main class="pt-3 px-3 px-lg-4">
+      <h2 class="titulo-pagina-cy">{% block titulo_pagina %}{% endblock %}</h2>
+      {% block contenido %}{% endblock %}
     </main>
   </div>
+
 </div>
 {% endblock %}
 

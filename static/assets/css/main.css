@@ -166,14 +166,16 @@ table tr.tr-grama-clara td {
 }
 
 .sidebar-admin {
-  height: calc(100vh - 67px); /* Ajusta el cálculo según el tamaño del otro div */
-
+  width: 18rem;
+  height: 100vh; 
   background-color: #161620f2;
   color: white;
-  padding-left: 0 !important;
-  margin-left: 0 !important;
-  overflow-y: auto; /* Permite desplazamiento si el contenido excede */
+  overflow-y: auto;
+  position: sticky;
 }
+
+
+
 
 .buscador-cy {
   border: 2px solid #0D192C;
