@@ -23,6 +23,8 @@ def verificar_cuenta(correo, contraseña, tipo):
                         '''
             cursor.execute(query, (correo, contraseña))
             result = cursor.fetchone()
+            if result and result[0] > 0:
+                session['telefono'] = result[6]
         return result if result[0] > 0 else [0]
     finally:
         conexion.close()

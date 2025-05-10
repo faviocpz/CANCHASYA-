@@ -267,6 +267,7 @@ body {
   height: 100vh; /* Usamos la altura completa de la pantalla */
   padding: 0;
 }
+
 .schedule {
   display: flex;
   flex-direction: column;
@@ -297,15 +298,23 @@ body {
   cursor: pointer;
 }
 
-.hour.available {
-  background-color: #28a745; 
+
+
+.hour.disponible {
+  background-color: #28a745;  /* Verde */
   color: white;
 }
 
-.hour.occupied {
-  background-color: #dc3545; 
+.hour.ocupado {
+  background-color: #dc3545;  /* Rojo */
   color: white;
 }
+
+.hour.seleccionado {
+  background-color: #007bff;  /* Azul */
+  color: white;
+}
+
 
 .hour:hover {
   opacity: 0.8;
@@ -346,4 +355,25 @@ body {
   object-fit: cover;  /* Asegura que la imagen se recorte bien sin distorsión */
   border-top-left-radius: 15px;  /* Bordes redondeados para las imágenes */
   border-top-right-radius: 15px;
+}
+
+.hidden {
+  display: none;
+}
+
+.show {
+  display: block; /* O cualquier otro estilo que desees */
+  
+}
+button {
+  cursor: pointer;
+  padding: 10px 20px;
+  background-color: #17a2b8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #138496;
 }

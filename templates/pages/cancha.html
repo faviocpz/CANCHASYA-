@@ -1,4 +1,4 @@
-{% extends 'base_interna.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/cancha.css') }}">
@@ -28,18 +28,18 @@
         <p><strong>Instagram:</strong> @elesfericofutbol</p>
       </div>-->
       <div class="social-buttons">
-        <a href="https://facebook.com/ElEsferico" class="facebook" target="_blank">
+        <a href="https://www.facebook.com/{{ local_info[0][4] }}" class="facebook" target="_blank">
           <i class="bi bi-facebook"></i> Facebook
         </a>
-        <a href="https://instagram.com/elesfericofutbol" class="instagram" target="_blank">
+        <a href="https://www.instagram.com{{ local_info[0][5] }}" class="instagram" target="_blank">
           <i class="bi bi-instagram"></i> Instagram
         </a>
       </div>
       <div class="turno-box">
         <h5>Turnos:</h5>
-        <p><strong>Mañana:</strong> 10:00 AM - 01:59 PM</p>
-        <p><strong>Tarde:</strong> 02:00 PM - 05:59 PM</p>
-        <p><strong>Noche:</strong> 06:00 PM - 10:00 PM</p>
+        {% for turno in turnos_info %}
+        <p><strong>{{ turno[0] }}:</strong> {{ turno[1] }} - {{ turno[2] }}</p>
+        {% endfor %}
       </div>
    
   </div>
@@ -47,167 +47,68 @@
 </div>
 
   </div>
-    <div class="text-center mb-4">
+  <div class="text-center mb-4">
     <h2 class="text-primary fw-bold">Canchas Disponibles</h2>
   </div>
 
 
   <div class="row g-4 pb-5">
+    {% for cancha in canchas_info %}
     <div class="col-sm-12 col-md-4">
       <div class="card reserva-card">
-        <div id="carouselCancha" class="carousel slide" data-bs-ride="carousel">
+        <div id="carouselCancha{{ cancha[0] }}" class="carousel slide" data-bs-ride="carousel">
           <div class="carousel-inner">
+            {% for foto in canchas_fotos[cancha[0]] %}
             <!-- Imagen 1 -->
-            <div class="carousel-item active">
-              <img src="{{ url_for('static', filename='assets/img/cancha1.jpg') }}" class="d-block w-100" alt="Imagen de la cancha 1">
+            <div class="carousel-item {% if loop.first %} active {% endif %}">
+              <img src="{{ url_for('static', filename='assets/img/' ~ foto) }}" class="d-block w-100" alt="Imagen de la cancha 1">
             </div>
             <!-- Imagen 2 -->
-            <div class="carousel-item">
-              <img src="{{ url_for('static', filename='assets/img/cancha2.jpg') }}" class="d-block w-100" alt="Imagen de la cancha 2">
-            </div>
-            <!-- Imagen 3 -->
-            <div class="carousel-item">
-              <img src="{{ url_for('static', filename='assets/img/cancha3.jpg') }}" class="d-block w-100" alt="Imagen de la cancha 3">
-            </div>
+            {% endfor %}
           </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselCancha" data-bs-slide="prev">
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselCancha{{ cancha[0] }}" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
           </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselCancha" data-bs-slide="next">
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselCancha{{ cancha[0] }}" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
           </button>
         </div>
         <div class="card-body d-flex flex-column">
-          <h5 class="card-title">Cancha Sintética El Golazo</h5>
+          <!--<h5 class="card-title">{{ cancha[1] }}</h5>-->
           <blockquote style="font-style: italic; color: #2c3e50; border-left: 4px solid #2980b9; padding-left: 10px;">
-            Cancha con buena iluminación nocturna. Excelente para partidos en la noche o en días lluviosos, con tribunas para espectadores.
-         </blockquote>
+            {{ cancha[1] }} </blockquote>
+            <p><strong>{{ cancha[1] }}</strong></p>
        <!--<p style="background-color: #e0f7fa; padding: 0.5rem; border-radius: 8px;">
         Cancha con buena iluminación nocturna. Excelente para partidos en la noche o en días lluviosos, con tribunas para espectadores.
      </p>-->
             
 
-          <p><strong>Puntuación:</strong> 
-            <i class="bi bi-star-fill text-warning"></i>
-            <i class="bi bi-star-fill text-warning"></i>
-            <i class="bi bi-star-fill text-warning"></i>
-            <i class="bi bi-star text-warning"></i>
-            <i class="bi bi-star text-warning"></i>
-          </p>
-          <p><strong>Precio por hora:</strong> S/. 40.00</p>
-          <div class="form-group">
-            <label for="dateSelect">Selecciona una fecha:</label>
-            <select class="form-control fechaReserva">
-
-              <!-- Las opciones se llenarán dinámicamente desde JavaScript -->
-            </select>
-          </div>
-          <!--<p><strong>Horario de atención:</strong> 10:00 AM - 22:00 PM</p>-->
-          <!--<p><strong>Seleccione el Horario de Reserva:</strong>-->
-          <!--<p><strong>Horario de atención:</strong> 10:00 AM - 22:00 PM</p>-->
-          <div class="mt-4">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scheduleModal">Seleccionar Horario</button>
-          </div>
-          <div class="form-group mt-3">
-            <label>Hora de inicio:</label>
-            <input type="time" class="form-control horaInicio">
-          </div>
-          
-          <!--<div class="form-group mt-2">
-            <label>Duración (minutos):</label>
-            <select id="durationSelect" class="form-control">
-              <option value="15">15 minutos</option>
-              <option value="30">30 minutos</option>
-              <option value="60">1 hora</option>
-              <option value="90">1 hora 30 minutos</option>
-              <option value="120">2 horas</option>
-            </select>
-          </div>-->
-          <!--<div class="form-group mt-2">
-            <label>Duración de la reserva:</label>
-            <select class="form-control" id="duracionReserva">
-              <option value="">-- Seleccione duración --</option>
-            </select>
-          </div>-->
-          <div class="form-group mt-2">
-            <label>Duración de la reserva:</label>
-            <select class="form-control duracionReserva">
-              <option value="">-- Selecciona duración --</option>
-            </select>
-          </div>
-          
-          <div class="form-group mt-2">
-            <label>Hora de fin:</label>
-            <input type="time" class="form-control horaFin" readonly>
-
-          </div>
-
-          <div class="caracteristicas">
-            <p>Cuenta con:</p>
-            <ul class="mb-0">
-              <li>Tribuna</li>
-              <li>Iluminación Nocturna</li>
-              <li>Baños</li>
-            </ul>
-          </div>
-
-          <div class="mt-auto pt-3 d-grid gap-2">
-            <a href="https://wa.me/123456789" class="btn btn-whatsapp">
-              <i class="bi bi-whatsapp me-1"></i> Contactar por WhatsApp
-            </a>
-            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#puntuacionModal3">
-              <i class="bi bi-star me-1"></i> Añadir Puntuación
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Repite otras canchas aquí -->
-    <div class="col-md-4">
-      <div class="card reserva-card">
-        <div id="carouselCancha" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <!-- Imagen 1 -->
-            <div class="carousel-item active">
-              <img src="{{ url_for('static', filename='assets/img/cancha1.jpg') }}" class="d-block w-100" alt="Imagen de la cancha 1">
-            </div>
-            <!-- Imagen 2 -->
-            <div class="carousel-item">
-              <img src="{{ url_for('static', filename='assets/img/cancha2.jpg') }}" class="d-block w-100" alt="Imagen de la cancha 2">
-            </div>
-            <!-- Imagen 3 -->
-            <div class="carousel-item">
-              <img src="{{ url_for('static', filename='assets/img/cancha3.jpg') }}" class="d-block w-100" alt="Imagen de la cancha 3">
-            </div>
-          </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselCancha" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselCancha" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title">La Canchita Libre</h5>
-          <blockquote style="font-style: italic; color: #2c3e50; border-left: 4px solid #2980b9; padding-left: 10px;">
-          Ideal para partidos rápidos con amigos. Superficie sintética bien cuidada, perfecta para jugar sin importar el clima
-       </blockquote>
-    <!--<p style="background-color: #e0f7fa; padding: 0.5rem; border-radius: 8px; font-size: 1.1rem; font-weight: 600; color: #333;">
-      Ideal para partidos rápidos con amigos. Superficie sintética bien cuidada, perfecta para jugar sin importar el clima
-   </p> -->
-         <p><strong>Puntuación:</strong> 
-           <i class="bi bi-star-fill text-warning"></i>
-           <i class="bi bi-star-fill text-warning"></i>
-           <i class="bi bi-star-fill text-warning"></i>
-           <i class="bi bi-star text-warning"></i>
-           <i class="bi bi-star text-warning"></i>
-         </p>
-          <p><strong>Precio por hora:</strong> S/. 30.00</p>
+     <p><strong>Puntuación:</strong> 
+      {% set rating = cancha[2] %} <!-- Suponemos que la puntuación está en el tercer valor -->
+      
+      {% set full_stars = rating | int %}
+      {% set half_star = (rating - full_stars) >= 0.5 %}
+      
+      <!-- Mostrar estrellas completas -->
+      {% for i in range(1, full_stars + 1) %}
+        <i class="bi bi-star-fill text-warning"></i>
+      {% endfor %}
+      
+      <!-- Mostrar una estrella media si es necesario -->
+      {% if half_star %}
+        <i class="bi bi-star-half text-warning"></i>
+      {% endif %}
+      
+      <!-- Completar las estrellas vacías hasta 5 -->
+      {% for i in range(full_stars + 1 + (1 if half_star else 0), 6) %}
+        <i class="bi bi-star text-warning"></i>
+      {% endfor %}
+    </p>
+    
+  
+          <p><strong>Precio por hora:</strong> S/. {{ cancha[3] }}</p>
           <div class="form-group">
             <label for="dateSelect">Selecciona una fecha:</label>
             <select class="form-control fechaReserva">
@@ -253,16 +154,36 @@
 
             </div>
 
-         <div class="caracteristicas">
-          <p>Cuenta con:</p>
-          <ul class="mb-0">
-            <li>Tribuna</li>
-            <li>Bar</li>
-            <li>Baños</li>
-          </ul>
-        </div>
+            <!--<<div class="caracteristicas">
+              <p><strong>Cuenta con:</strong></p>
+              <ul>
+                {% for caracteristica in cancha_caracteristicas[cancha[0]] %}
+                  <li>{{ caracteristica }}</li>
+                {% endfor %}
+              </ul>
+            </div>-->
+            <div class="caracteristicas">
+              <!--<p><strong>Cuenta con:</strong></p>-->
+
+              <!-- Botón para mostrar/ocultar la lista -->
+              <button class="btn btn-info" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'">
+                Cuenta con:
+              </button>
+          
+              <!-- Lista desplegable con las características -->
+              <!-- Lista desplegable con las características específicas de la cancha -->
+              <ul style="display: none; margin-top: 5px;">
+                {% for caracteristica in cancha_caracteristicas[cancha[0]] %}
+                    <li>{{ caracteristica }}</li>
+                {% endfor %}
+              </ul>
+
+          </div>
+                
+            
           <div class="mt-auto pt-3 d-grid gap-2">
-           <a href="https://wa.me/123456789" class="btn btn-whatsapp">
+            <a href="https://wa.me/{{ local_info[0][7] }}?text=Hola, quiero reservar la cancha {{ cancha[1] }} del local {{ local_info[0][0] }} para el día {{ fechaSeleccionada }}. Hora de inicio: {{ horaInicio }}. Hora de fin: {{ horaFin }}."
+            class="btn btn-whatsapp">
              <i class="bi bi-whatsapp me-1"></i> Contactar por WhatsApp
            </a>
         
@@ -270,136 +191,13 @@
              <i class="bi bi-star me-1"></i> Añadir Puntuación
            </button>     
          </div>
+
+  
         </div>
       </div>
     </div>
-    
-    <!--<div class="col-md-4">
-      <div class="card">
-        <img src="{{ url_for('static', filename='assets/img/cancha3.jpg') }}" class="card-img-top" alt="Imagen de la cancha">
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title">Cancha 3</h5>
-          <p class="card-text">Descripción breve de la cancha.</p>
-          <p><strong>Puntuación:</strong> <i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i></p>
-          <p><strong>Precio por hora:</strong> S/. 70.00</p>
-          <a href="https://wa.me/123456789" class="btn btn-whatsapp mt-auto">
-            <i class="bi bi-whatsapp me-1"></i> Contactar por WhatsApp
-          </a>
-        </div>
-      </div>
-    </div>-->
-    <div class="col-md-4">
-     <div class="card reserva-card">
-       <!--<img src="{{ url_for('static', filename='assets/img/cancha3.jpg') }}" class="card-img-top img-fluid" alt="Imagen de la cancha">-->
-       <!-- Carrusel de imágenes -->
-    <div id="carouselCancha" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner">
-        <!-- Imagen 1 -->
-        <div class="carousel-item active">
-          <img src="{{ url_for('static', filename='assets/img/cancha1.jpg') }}" class="d-block w-100" alt="Imagen de la cancha 1">
-        </div>
-        <!-- Imagen 2 -->
-        <div class="carousel-item">
-          <img src="{{ url_for('static', filename='assets/img/cancha2.jpg') }}" class="d-block w-100" alt="Imagen de la cancha 2">
-        </div>
-        <!-- Imagen 3 -->
-        <div class="carousel-item">
-          <img src="{{ url_for('static', filename='assets/img/cancha3.jpg') }}" class="d-block w-100" alt="Imagen de la cancha 3">
-        </div>
-      </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselCancha" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselCancha" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </div>
-       <div class="card-body d-flex flex-column">
-         
-         <h5 class="card-title">Sol y Gol</h5>
-         <blockquote style="font-style: italic; color: #2c3e50; border-left: 4px solid #2980b9; padding-left: 10px;">
-          Espacio amplio para sesiones de entranmeinto y partidos de fútbol. Cuenta con servicios higiénicos y zona de hidratación.
-       </blockquote>
-         <p><strong>Puntuación:</strong> 
-           <i class="bi bi-star-fill text-warning"></i>
-           <i class="bi bi-star-fill text-warning"></i>
-           <i class="bi bi-star-fill text-warning"></i>
-           <i class="bi bi-star text-warning"></i>
-           <i class="bi bi-star text-warning"></i>
-         </p>
-         <p><strong>Precio por hora:</strong> S/. 70.00</p>
-         <div class="form-group">
-          <label for="dateSelect">Selecciona una fecha:</label>
-          <select class="form-control fechaReserva">
-            <!-- Las opciones se llenarán dinámicamente desde JavaScript -->
-          </select>
-        </div>
-            <!--<p><strong>Horario de atención:</strong> 10:00 AM - 22:00 PM</p>-->
-            <!--<p><strong>Seleccione el Horario de Reserva:</strong>-->
-              <!-- Botón para seleccionar horario -->
-        
-        <div class="mt-4">
-          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scheduleModal">Seleccionar Horario</button>
-        </div>
-        <div class="form-group mt-3">
-          <label>Hora de inicio:</label>
-          <input type="time" class="form-control horaInicio">
-        </div>
-        
-        <!--<div class="form-group mt-2">
-          <label>Duración (minutos):</label>
-          <select id="durationSelect" class="form-control">
-            <option value="15">15 minutos</option>
-            <option value="30">30 minutos</option>
-            <option value="60">1 hora</option>
-            <option value="90">1 hora 30 minutos</option>
-            <option value="120">2 horas</option>
-          </select>
-        </div>-->
-        <div class="form-group mt-2">
-          <label>Duración de la reserva:</label>
-          <select class="form-control duracionReserva">
-            <option value="">-- Selecciona duración --</option>
-          </select>
-        </div>
-        <div class="form-group mt-2">
-          <label>Hora de fin:</label>
-          <input type="time" class="form-control horaFin" readonly>
-        </div>
-         
-         <!-- Selector de horario -->
-         <!--<div class="form-group">
-           <label>Hora de inicio:</label>
-           <input type="time" class="form-control">
-         </div>
-         <div class="form-group mt-2">
-           <label>Hora de fin:</label>
-           <input type="time" class="form-control">
-         </div>-->
-         <div class="caracteristicas">
-          <p>Cuenta con:</p>
-          <ul class="mb-0">
-            <li>Tribuna</li>
-            <li>Estacionamiento</li>
-            <li>Baños</li>
-          </ul>
-        </div>
-         <div class="mt-auto pt-3 d-grid gap-2">
-           <a href="https://wa.me/123456789" class="btn btn-whatsapp">
-             <i class="bi bi-whatsapp me-1"></i> Contactar por WhatsApp
-           </a>
-           <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#puntuacionModal3">
-             <i class="bi bi-star me-1"></i> Añadir Puntuación
-           </button>                
-           
-         </div>
-       </div>
-     </div>
-   </div>
-  </div>
-</div>
+    {% endfor %}
+  </div>   
 <div class="modal fade" id="puntuacionModal3" tabindex="-1" aria-labelledby="puntuacionModalLabel" aria-hidden="true">
  <div class="modal-dialog">
    <div class="modal-content">
@@ -434,42 +232,29 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        
         <!-- Horario de turno (Mañana, Tarde, Noche) -->
-        <div class="schedule">
+         <!-- Seleccionar la fecha -->
+          <div class="form-group">
+            <label for="fechaSelect">Selecciona la fecha:</label>
+            <input type="date" id="fechaSelect" class="form-control">
+          </div>
+        <div id="turnosContainer" class="schedule">
+          <!--{% for turno in turnos_info %}
           <div class="turno">
-            <h6>Mañana (8:00 AM - 12:00 PM)</h6>
+            <h6>{{ turno[0] }} ({{ turno[1] }} - {{ turno[2] }})</h6>
             <div class="hours">
-              <button class="hour available">8:00 AM</button>
-              <button class="hour available">9:00 AM</button>
-              <button class="hour occupied">10:00 AM</button>
-              <button class="hour available">11:00 AM</button>
-              <button class="hour available">12:00 PM</button>
+              {% set start_hour = turno[1]|int %}
+              {% set end_hour = turno[2]|int %}
+              {% for hour in range(start_hour, end_hour) %}
+                <button class="hour {% if hour in ocupadas %}ocupado{% else %}disponible{% endif %}" data-time="{{ hour }}">
+                  {{ hour }}:00
+                </button>
+              {% endfor %}
             </div>
           </div>
-          <div class="turno">
-            <h6>Tarde (12:00 PM - 06:00 PM)</h6>
-            <div class="hours">
-              <button class="hour occupied">12:00 PM</button>
-              <button class="hour available">1:00 PM</button>
-              <button class="hour available">2:00 PM</button>
-              <button class="hour available">3:00 PM</button>
-              <button class="hour occupied">4:00 PM</button>
-              <button class="hour available">5:00 PM</button>
-              <button class="hour available">6:00 PM</button>
-            </div>
-          </div>
-          <div class="turno">
-            <h6>Noche (06:00 PM - 12:00 AM)</h6>
-            <div class="hours">
-              <button class="hour available">6:00 PM</button>
-              <button class="hour available">7:00 PM</button>
-              <button class="hour occupied">8:00 PM</button>
-              <button class="hour available">9:00 PM</button>
-              <button class="hour available">10:00 PM</button>
-              <button class="hour available">11:00 PM</button>
-              <button class="hour available">12:00 AM</button>
-            </div>
-          </div>
+           {% endfor %}-->
+           
         </div>
       </div>
       <div class="modal-footer">
@@ -546,7 +331,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 // Lógica para seleccionar horas
-const hours = document.querySelectorAll('.hour.available');
+/*const hours = document.querySelectorAll('.hour.available');
 hours.forEach(hour => {
   hour.addEventListener('click', function() {
     this.classList.toggle('selected'); // Cambia el estado al hacer clic
@@ -556,7 +341,75 @@ hours.forEach(hour => {
       this.style.backgroundColor = '#28a745'; // Verde cuando se deselecciona
     }
   });
+});*/
+// Función para manejar la selección del horario
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll(".hour").forEach(button => {
+    button.addEventListener("click", function() {
+      const selectedHour = this.getAttribute("data-time");
+      // Aquí calculamos la hora de fin
+      const endTime = calculateEndTime(selectedHour);
+      document.getElementById("startTime").value = selectedHour + ":00";  // Hora de inicio
+      document.getElementById("endTime").value = endTime;  // Hora de fin
+    });
+  });
 });
+
+// Función para calcular la hora de fin
+function calculateEndTime(startTime) {
+  const start = parseInt(startTime.split(":")[0]); // Convertir a entero
+  const end = start + 1; // Por defecto, la duración es de 1 hora
+  return `${end}:00`;
+}
+// modal horario
+document.getElementById("fechaSelect").addEventListener("change", function() {
+  let fechaSeleccionada = this.value;
+  let idLocal = 15; // Este valor debe ser dinámico según el local
+
+  // Llamada al backend para obtener los horarios disponibles para esa fecha
+  fetch(`/obtener_horas_disponibles?fecha=${fechaSeleccionada}&idLocal=${idLocal}`)
+    .then(response => response.json())
+    .then(data => {
+      let turnos = data.turnos;
+      mostrarHoras(turnos);
+    });
+});
+
+// Función para mostrar las horas en el modal
+function mostrarHoras(turnos) {
+  let container = document.getElementById("turnosContainer");
+  container.innerHTML = ''; // Limpiar los turnos anteriores
+
+  turnos.forEach(turno => {
+    let turnoElement = document.createElement('div');
+    turnoElement.classList.add('turno');
+
+    let turnoHeader = document.createElement('h6');
+    turnoHeader.textContent = `${turno.nombre} (${turno.inicio} - ${turno.fin})`;
+    turnoElement.appendChild(turnoHeader);
+
+    // Mostrar las horas disponibles
+    let hoursContainer = document.createElement('div');
+    hoursContainer.classList.add('hours');
+    turno.horas.forEach(hora => {
+      let button = document.createElement('button');
+      button.classList.add('hour');
+      button.textContent = hora;
+      button.setAttribute('data-time', hora);
+      button.addEventListener("click", function() {
+        // Al hacer click, la hora cambia de estado (disponible a seleccionada)
+        this.classList.toggle("seleccionado");
+      });
+      hoursContainer.appendChild(button);
+    });
+
+    turnoElement.appendChild(hoursContainer);
+    container.appendChild(turnoElement);
+  });
+}
+
+
+
 //seleccionar fecha
 document.addEventListener("DOMContentLoaded", function () {
   // Inicialización de fechas en cada .fechaReserva
@@ -603,8 +456,13 @@ function generarFechasParaSelect(select) {
   }
 }
 
-
 </script>
+<script>
+  // Suponiendo que cancha_caracteristicas es un diccionario de características por cancha
+  
+  
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 {% endblock %}
