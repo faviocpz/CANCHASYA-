@@ -1,7 +1,7 @@
 from conexion import obtener_conexion
 import random
 from hashlib import sha256
-
+from flask import session
 
 def verificar_cuenta(correo, contraseña, tipo):
     conexion = obtener_conexion()
