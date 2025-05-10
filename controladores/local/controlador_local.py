@@ -1,3 +1,6 @@
+from datetime import datetime
+
+from flask import session
 from conexion import obtener_conexion
 
 def registrar_local(data):    

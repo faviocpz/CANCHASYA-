@@ -1,4 +1,5 @@
 from flask import Flask, flash, redirect, render_template, jsonify, request, session, url_for, current_app
+from conexion import obtener_conexion
 from controladores.usuario import controlador_usuario as cuser
 from controladores.local import controlador_local
 from controladores.locales import controlador_locales as local
