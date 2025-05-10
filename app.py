@@ -10,6 +10,7 @@ from werkzeug.utils import secure_filename
 from enviar_correos import enviar_mensajecorreo
 import Routes.local.router_local
 from datetime import datetime, timedelta
+from conexion import obtener_conexion
 
 app = Flask(__name__)
 app.secret_key = 'clavesegura'

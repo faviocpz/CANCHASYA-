@@ -1,7 +1,7 @@
 from conexion import obtener_conexion
 import random
 from hashlib import sha256
-
+from flask import session
 
 def verificar_cuenta(correo, contraseña, tipo):
     conexion = obtener_conexion()
@@ -9,14 +9,14 @@ def verificar_cuenta(correo, contraseña, tipo):
         with conexion.cursor() as cursor:
             if tipo == 2:
                 query = ''' 
-                            select count(*), us.verificacion_cuenta, us.idTipoUsuario, us.nombre, us.token, us.id
+                            select count(*), us.verificacion_cuenta, us.idTipoUsuario, us.nombre, us.token, us.id, us.telefono  AS telefono
                             from usuario as us where us.correo = %s
                             and contraseña = %s
                             and (idTipoUsuario = 1 or idTipoUsuario = 2) and estado_cuenta = 1;
                         '''
             else:
                 query = ''' 
-                            select count(*), us.verificacion_cuenta, us.idTipoUsuario, us.nombre, us.token, us.id
+                            select count(*), us.verificacion_cuenta, us.idTipoUsuario, us.nombre, us.token, us.id, us.telefono  AS telefono
                             from usuario as us where us.correo = %s
                             and contraseña = %s
                             and idTipoUsuario = 3 and estado_cuenta = 1;
