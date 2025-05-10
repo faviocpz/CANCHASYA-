@@ -1,0 +1,108 @@
+from flask import redirect, render_template, jsonify, request, session, url_for, current_app
+from controladores.canchas import cancha as controlador_cancha_admin
+from werkzeug.utils import secure_filename
+import os
+from datetime import datetime, timedelta
+
+def registrar_rutas(app):
+    @app.route('/canchass')
+    def canchass():
+        data = controlador_cancha_admin.consultar_cancha_x_persona(session.get('id'))
+        return render_template('pages/negocio/canchas/cancha.html', data=data)
+
+    @app.route('/api/cancha/<int:id_cancha>')
+    def api_cancha(id_cancha):
+        data = controlador_cancha_admin.consultar_detalle_cancha(id_cancha)
+        if not data:
+            return jsonify({"error": "Cancha no encontrada"}), 404
+        return jsonify(data)
+
+    @app.route('/agregar_cancha')
+    def agregar_cancha():
+        id_local = controlador_cancha_admin.id_local(session.get('id'))
+        canchas = controlador_cancha_admin.tipo_cancha()
+        return render_template('pages/negocio/canchas/agregar_cancha.html', canchas=canchas)
+
+
+    @app.route('/insertar_cancha', methods=['POST'])
+    def insertar_cancha():
+        # 1) Recuperar datos del formulario
+        descripcion = request.form['descripcion_cancha']
+        id_deporte  = request.form['tipo_cancha']
+        precio      = request.form['precio_cancha']
+        puntuacion       = 0.01
+        # dias_sel    = request.form.getlist('dias[]')      # ['Lunes','Martes',...]
+        # hora_inicio = request.form['hora_inicio']         # '08:00'
+        # hora_fin    = request.form['hora_fin']            # '12:00'
+        archivos    = request.files.getlist('foto_cancha')# lista de FileStorage
+
+        # 2) Convertir lista de días a string
+                        # "Lunes,Martes,..."
+
+        # 3) Obtener idLocal asociado al usuario en sesión
+        id_usuario = session.get('id')
+        id_local   = controlador_cancha_admin.id_local(id_usuario)
+
+        # 4) Insertar la CANCHA y obtener su PK
+        id_cancha = controlador_cancha_admin.insertar_cancha(
+            descripcion, precio, puntuacion, id_local, id_deporte
+        )
+
+        # 5) Insertar UN SOLO registro en HORARIO con todos los días
+        # controlador_cancha_admin.insertar_horario(
+        #     id_cancha,
+        #     dias_str,
+        #     hora_inicio,
+        #     hora_fin,
+        #     estado='A'
+        # )
+
+        # 6) Guardar las fotos (hasta 3) en disco y BD
+        for file in archivos:
+            if file and file.filename:
+                filename = secure_filename(file.filename)
+                destino  = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+                file.save(destino)
+                controlador_cancha_admin.insertar_foto(
+                    id_cancha,
+                    nombre=filename,
+                    ruta=filename
+                )
+
+        # 7) Redirigir al listado de canchas
+        return redirect(url_for('canchass'))
+
+
+    @app.route('/ir_a_modificar_cancha/<int:id_cancha>')
+    def ir_a_modificar_cancha(id_cancha):
+        # 1) Consultar la cancha por su id
+        datos = controlador_cancha_admin.consultar_cancha(id_cancha)
+        fotos = controlador_cancha_admin.consultar_fotos(id_cancha)
+        # 2) Consultar los tipos de canchas
+        canchas = controlador_cancha_admin.tipo_cancha()
+
+        # 3) Enviar los datos al template
+        return render_template('pages/negocio/canchas/modificar_cancha.html', datos=datos, canchas=canchas, fotos=fotos)
+
+    @app.route('/agregar_horario_cancha/<id>')
+    def agregar_horario_cancha(id):
+        datos = controlador_cancha_admin.consultar_cancha(id)
+        return render_template('pages/negocio/canchas/agregar_horario_cancha.html', id=id, datos=datos)
+
+
+        
+    @app.route('/pagina_reservas/')
+    def pagina_reservas():
+        listas_canchas = controlador_cancha_admin.listar_canchas_idalquilador(session.get('id'))
+        print(listas_canchas)
+        print(session.get('id'))
+        return render_template('pages/negocio/canchas/lista_cancha.html', listas_canchas = listas_canchas)
+
+    @app.route('/reservar_cancha/<int:id>')
+    def reservar_cancha(id):
+        hoy = datetime.now()
+        dias = [hoy + timedelta(days=i) for i in range(4)]
+        fechas_formateadas = [fecha.strftime('%d/%m/%Y') for fecha in dias]
+        return render_template('pages/negocio/canchas/reserva_canchas.html', days = fechas_formateadas )
+
+
