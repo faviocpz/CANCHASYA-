@@ -4,6 +4,8 @@ from flask import current_app, flash, redirect, render_template, request, sessio
 from datetime import datetime
 import uuid
 from controladores.local import controlador_local
+from flask import abort
+import re   
 
 # Configuración
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
@@ -60,12 +62,22 @@ def registrar_rutas(app):
             facebook = request.form.get('facebook', '').strip()
             instagram = request.form.get('instagram', '').strip()
 
-            # Validación básica de URLs
-            if facebook and not (facebook.startswith('http') or facebook.startswith('@')):
-                facebook = f'https://facebook.com/{facebook.replace("@", "")}'
-            
-            if instagram and not (instagram.startswith('http') or instagram.startswith('@')):
-                instagram = f'https://instagram.com/{instagram.replace("@", "")}'
+            def format_social_url(input, domain):
+                if not input:
+                    return None
+                
+                input = input.replace("@", "")  # Eliminamos @ si existe
+                
+                # Si ya es una URL válida, la dejamos igual
+                if input.startswith(('http://', 'https://')):
+                    return input if domain in input else None
+                
+                # Si es un nombre de usuario, creamos la URL completa
+                return f'https://{domain}.com/{input.split("/")[-1]}'
+
+            # Aplicamos el formato
+            facebook = format_social_url(facebook, 'facebook')
+            instagram = format_social_url(instagram, 'instagram')
 
             if 'logo' not in request.files or 'banner' not in request.files:
                 flash('Debes subir ambas imágenes', 'danger')

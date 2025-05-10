@@ -1,7 +1,6 @@
 from conexion import obtener_conexion
 
-def registrar_local(data):
-    """Registra un nuevo local en la base de datos."""
+def registrar_local(data):    
     conexion = obtener_conexion()
     try:
         with conexion.cursor() as cursor:
@@ -99,9 +98,7 @@ def obtener_informacion_local(id_local):
     # Consulta de la información del local y las canchas asociadas
     cursor.execute("""
         SELECT l.nombre, l.direccion, l. correo, l.tel, l.facebook, l.instagram, l.banner
-        FROM LOCAL l
-        
-     
+        FROM LOCAL l        
         WHERE l.idLocal = %s
     """, (id_local,))
     local_info = cursor.fetchall()

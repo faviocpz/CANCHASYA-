@@ -89,7 +89,28 @@
             </div>
         </div>
     </div>
-
+    <!-- Después del cierre del div class="row" principal -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-map"></i> Ubicación
+            </div>
+            <div class="card-body p-0" style="height: 300px;">
+                <iframe 
+                    width="100%" 
+                    height="100%" 
+                    frameborder="0" 
+                    scrolling="no" 
+                    marginheight="0" 
+                    marginwidth="0" 
+                    src="https://maps.google.com/maps?q={{ local['direccion'] | urlencode }}&output=embed"
+                    style="border-radius: 0 0 .25rem .25rem;">
+                </iframe>
+            </div>
+        </div>
+    </div>
+</div>
     <div class="row">
         <!-- Sección de Imágenes (ahora en horizontal) -->
         <div class="col-12 col-md-6">
@@ -167,6 +188,16 @@
         </div>
     </div>
 </div>
+
+<div class="d-flex justify-content-end mt-4">
+    <button class="btn btn-warning me-2" disabled>
+        <i class="bi bi-pencil-square"></i> Editar
+    </button>
+    <button class="btn btn-danger" disabled>
+        <i class="bi bi-trash"></i> Eliminar
+    </button>
+</div>
+
 {% endblock %} {% block scripts %}
 <script src="/static/assets/js/local/listar_local.js"></script>
 {% endblock %}

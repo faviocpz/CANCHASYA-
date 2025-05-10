@@ -1,7 +1,7 @@
 {% extends 'base_interna.html' %}
 
 {% block titulo_pagina %}
-    Registrar Nueva Cancha Deportiva
+Registrar Nueva Cancha Deportiva
 {% endblock %}
 
 {% block styles %}
@@ -20,11 +20,14 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre del Local</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del local" required>
+                            <input type="text" class="form-control" id="nombre" name="nombre"
+                                placeholder="Nombre del local" maxlength="100" pattern=".{3,100}"
+                                title="El nombre debe tener entre 3 y 100 caracteres" required>
                         </div>
                         <div class="mb-3">
                             <label for="direccion" class="form-label">Dirección</label>
-                            <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Dirección del local" required>
+                            <input type="text" class="form-control" id="direccion" name="direccion"
+                                placeholder="Dirección del local" required>
                         </div>
                     </div>
                 </div>
@@ -38,17 +41,27 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <label for="tel" class="form-label">Teléfono</label>
-                            <input type="text" class="form-control" id="tel" name="tel" placeholder="Número de teléfono" required>
+                            <input type="tel" class="form-control" id="tel" name="tel" 
+       placeholder="Número de teléfono"
+       maxlength="9"
+       oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+       pattern="[0-9]{9}"
+       title="Ingrese un número de 9 dígitos (sin espacios ni guiones)"
+       required>
+
                         </div>
                         <div class="mb-3">
                             <label for="correo" class="form-label">Correo Electrónico</label>
-                            <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo electrónico" required>
+                            <input type="email" class="form-control" id="correo" name="correo"
+                                placeholder="Correo electrónico"
+                                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                                title="Ingrese un correo electrónico válido" required>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <!-- Redes Sociales y Imágenes -->
         <div class="row">
             <div class="col-12 col-md-6">
@@ -59,45 +72,53 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <label for="facebook" class="form-label">Facebook</label>
-                            <input type="text" class="form-control" id="facebook" name="facebook" placeholder="Facebook del local">
+                            <input type="text" class="form-control" id="facebook" name="facebook"
+                                placeholder="Usuario de Facebook (ej: miempresa) o URL completa"
+                                pattern="(?:https?:\/\/)?(?:www\.)?(?:facebook|fb)\.com\/[A-Za-z0-9_.-]+\/?|[A-Za-z0-9_.-]+"
+                                title="Ingrese usuario (ej: miempresa) o URL completa (ej: https://facebook.com/miempresa)">
+
                         </div>
                         <div class="mb-3">
                             <label for="instagram" class="form-label">Instagram</label>
-                            <input type="text" class="form-control" id="instagram" name="instagram" placeholder="Instagram del local">
+                            <input type="text" class="form-control" id="instagram" name="instagram"
+                                placeholder="Usuario de Instagram (ej: miempresa) o URL completa"
+                                pattern="(?:https?:\/\/)?(?:www\.)?(?:instagram\.com|instagr\.am)\/[A-Za-z0-9_.-]+\/?|[A-Za-z0-9_.-]+"
+                                title="Ingrese usuario (ej: miempresa) o URL completa (ej: https://instagram.com/miempresa)">
                         </div>
                     </div>
                 </div>
             </div>
 
-            
-                <div class="col-12 col-md-6">
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-success text-white">
-                            <i class="bi bi-image"></i> Imágenes del Local
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <label for="banner" class="form-label">Banner</label>
-                                <div class="input-group">
-                                    <input type="file" class="form-control" id="banner" name="banner" accept="image/*" required>
-                                    <button type="button" id="viewBannerBtn" class="btn btn-outline-secondary" disabled>
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                </div>
+
+            <div class="col-12 col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-success text-white">
+                        <i class="bi bi-image"></i> Imágenes del Local
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="banner" class="form-label">Banner</label>
+                            <div class="input-group">
+                                <input type="file" class="form-control" id="banner" name="banner" accept="image/*"
+                                    required>
+                                <button type="button" id="viewBannerBtn" class="btn btn-outline-secondary" disabled>
+                                    <i class="bi bi-eye"></i>
+                                </button>
                             </div>
-                            <div class="mb-3">
-                                <label for="logo" class="form-label">Logo</label>
-                                <div class="input-group">
-                                    <input type="file" class="form-control" id="logo" name="logo" accept="image/*" required>
-                                    <button type="button" id="viewLogoBtn" class="btn btn-outline-secondary" disabled>
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="logo" class="form-label">Logo</label>
+                            <div class="input-group">
+                                <input type="file" class="form-control" id="logo" name="logo" accept="image/*" required>
+                                <button type="button" id="viewLogoBtn" class="btn btn-outline-secondary" disabled>
+                                    <i class="bi bi-eye"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
-                </div>            
-    
+                </div>
+            </div>
+
             <!-- Modal para previsualización -->
             <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -105,25 +126,31 @@
                         <!-- Header azul con título y X -->
                         <div class="modal-header bg-azulcy text-blancocy border-0">
                             <h5 class="modal-title fw-bold fst-italic">Vista Previa</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                aria-label="Cerrar"></button>
                         </div>
-                        
+
                         <!-- Cuerpo del modal solo con imagen -->
                         <div class="modal-body p-0 bg-black">
-                            <img id="modalPreviewImage" src="" alt="Vista previa" style="width: 100%; display: block; max-height: 70vh; object-fit: contain; margin: 0 auto;">
+                            <img id="modalPreviewImage" src="" alt="Vista previa"
+                                style="width: 100%; display: block; max-height: 70vh; object-fit: contain; margin: 0 auto;">
                         </div>
-                        
+
                         <!-- Footer con botón de cerrar -->
                         <div class="modal-footer justify-content-end bg-azulcy border-0">
-                            <button type="button" class="btn btn-secondary fw-bold fst-italic px-4" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="button" class="btn btn-secondary fw-bold fst-italic px-4"
+                                data-bs-dismiss="modal">Cerrar</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-        <!-- Botón de Enviar -->
-        <div class="text-center">
-            <button type="submit" class="btn btn-primary btn-lg">Registrar Local</button>
+             <div class="row">
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-primary btn-lg px-5 py-2">
+                    <i class="bi bi-check-circle"></i> Registrar Local
+                </button>
+            </div>
         </div>
     </form>
 </div>
@@ -132,4 +159,3 @@
 {% block scripts %}
 <script src="/static/assets/js/local/registro_local.js"></script>
 {% endblock %}
-
