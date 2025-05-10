@@ -95,16 +95,85 @@ def verificarregistrollocal(id_usuario):
 def obtener_informacion_local(id_local):
     conexion = obtener_conexion()
     cursor = conexion.cursor()
-
     # Consulta de la información del local y las canchas asociadas
     cursor.execute("""
-        SELECT l.nombre, l.direccion, l. correo, l.tel, l.facebook, l.instagram, l.banner
-        FROM LOCAL l
-        
-     
+        SELECT l.nombre, l.direccion, l. correo, l.tel, l.facebook, l.instagram, l.banner, l.tel
+        FROM LOCAL l 
         WHERE l.idLocal = %s
     """, (id_local,))
     local_info = cursor.fetchall()
+     # Consulta para obtener los turnos activos
+    cursor.execute("""
+        SELECT ha.turno, ha.h_inicio, ha.h_fin
+        FROM HORARIO_ATENCION ha
+        WHERE ha.idLocal = %s AND ha.estado = 'A'  # Solo turnos activos
+    """, (id_local,))
+    turnos_info = cursor.fetchall()  # Obtener todos los turnos activos
+    # Formateamos las horas eliminando los segundos
+    for i, turno in enumerate(turnos_info):
+        # Convertimos la tupla a una lista para poder modificar los valores
+        turno = list(turno)
+        
+        # Convertimos los tiempos de 'h_inicio' y 'h_fin' a 'HH:MM'
+        turno[1] = turno[1].strftime('%H:%M') if isinstance(turno[1], datetime) else turno[1]  # Se toma solo HH:MM
+        turno[2] = turno[2].strftime('%H:%M') if isinstance(turno[2], datetime) else turno[2]  # Se toma solo HH:MM
+
+        # Asignamos el nombre del turno (si quieres truncar el nombre)
+        turno[0] = turno[0]
+        print(turno)
+
+    # Consulta para obtener las canchas del local
+    cursor.execute("""
+        SELECT c.idCancha, c.descripcion, c.puntuacion, c.precio
+        FROM CANCHA c
+        WHERE c.idLocal = %s
+    """, (id_local,))
+    canchas_info = cursor.fetchall()
+    # Consulta para obtener las fotos de cada cancha
+    cursor.execute("""
+        SELECT f.idCancha, f.foto
+    FROM FOTO f
+    WHERE f.idCancha IN (SELECT c.idCancha FROM CANCHA c WHERE c.idLocal = %s)
+    """, (id_local,))
+    fotos_info = cursor.fetchall()
+    # Organizar las fotos por cancha
+    canchas_fotos = {}
+    for foto in fotos_info:
+        id_cancha = foto[0]
+        if id_cancha not in canchas_fotos:
+            canchas_fotos[id_cancha] = []
+        canchas_fotos[id_cancha].append(foto[1])  # Añadir el nombre de la foto
+    # Consulta para obtener las características de la cancha
+   # Inicializa un diccionario para almacenar las características por cancha
+    # En la función obtener_informacion_local
+    cancha_caracteristicas = {}
+
+    for cancha in canchas_info:
+        id_cancha = cancha[0]  # Toma el id de la cancha
+        print(f"ID de la cancha: {id_cancha}") 
+        cursor.execute("""
+            SELECT ca.nombre
+            FROM CANCHA_CARACTERISTICA cc
+            JOIN CARACTERISTICA ca ON cc.idCaracteristica = ca.idCaracteristica
+            WHERE cc.idCancha = %s
+        """, (id_cancha,))
+
+        # Obtén las características de esa cancha
+        características = cursor.fetchall()
+
+        # Guarda las características de la cancha
+        cancha_caracteristicas[id_cancha] = [caracteristica[0] for caracteristica in características]
+    
+    telefono = session.get('telefono')
+    if telefono:
+        # úsalo como necesites
+        print (f"El teléfono del usuario es {telefono}")
+    else:
+        print ("No hay usuario logueado.")
+    cursor.close()
+    conexion.close()
+
+    return local_info, turnos_info, canchas_info, canchas_fotos, cancha_caracteristicas
 
     cursor.close()
     conexion.close()
