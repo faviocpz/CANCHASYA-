@@ -1,37 +1,42 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="d-flex">
-  <div class="sidebar-admin">
-    <div class="d-flex align-items-center mt-3 px-3">
-      <img src="/static/assets/img/red.png" alt="Perfil" class="rounded-circle" width="48" height="48">
-      <div class="ms-2">
-        <div class="fw-bold azul_color">{{ session.get('nombre') }}</div>
-        <small class="gris_color">{{ session.get('tipo') }}</small>
-      </div>
-    </div>
-    <hr class="mx-3">
-    <div class="px-3">
-      {% if session.get('tipo') == 'Alquilador' %}
-        <a href="{{ url_for('pagina_registrar') }}" class="btn w-100 btn_sidebar">Locales</a>
-        <a href="{{ url_for('canchass') }}" class="btn w-100 btn_sidebar">Canchas</a>
-        <a href="{{ url_for('pagina_reservas') }}" class="btn w-100 btn_sidebar">Agregar reservas</a>
-      {% elif session.get('tipo') == 'Administrador' %}
-        <a href="{{ url_for('solicitudes') }}" class="btn w-100 btn_sidebar">Solicitudes</a>
-        <a href="#" class="btn w-100 btn_sidebar">Otra opción</a>
-      {% endif %}
-    </div>
-  </div>
-  <div class="main-content flex-grow-1 overflow-auto">
-    <main class="pt-3 px-3 px-lg-4">
-      <h2 class="titulo-pagina-cy">{% block titulo_pagina %}{% endblock %}</h2>
-      {% block contenido %}
-      
-      {% endblock %}
-    </main>
-  </div>
 
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-auto sidebar-admin px-0">
+        <div class="d-flex align-items-center mt-3 px-3">
+          <img src="/static/assets/img/red.png" alt="Perfil" class="rounded-circle" width="48" height="48">
+          <div class="ms-2">
+            <div class="fw-bold azul_color">{{ session.get('nombre') }}</div>
+            <small class="gris_color">{{ session.get('tipo') }}</small>
+          </div>
+        </div>
+        <hr class="mx-3">
+        <div class="px-3">
+          {% if session.get('tipo') == 'Alquilador' %}
+            <a href="{{ url_for('pagina_registrar') }}" class="btn w-100 btn_sidebar">Locales</a>
+            <a href="{{ url_for('canchass') }}" class="btn w-100 btn_sidebar">Canchas</a>
+            <a href="{{ url_for('pagina_reservas') }}" class="btn w-100 btn_sidebar">Agregar reservas</a>
+          {% elif session.get('tipo') == 'Administrador' %}
+            <a href="{{ url_for('solicitudes') }}" class="btn w-100 btn_sidebar">Solicitudes</a>
+            <a href="#" class="btn w-100 btn_sidebar">Otra opción</a>
+          {% endif %}
+        </div>   
+   </div>
+
+    <!-- Main Content -->
+    <div class="col ps-0">
+      <main class="pt-3 px-3 px-lg-4">
+        <h2 class="titulo-pagina-cy">{% block titulo_pagina %}{% endblock %}</h2>
+        {% block contenido %}{% endblock %}
+      </main>
+    </div>
+  </div>
 </div>
+
+
 {% endblock %}
 
 {% block scripts %}

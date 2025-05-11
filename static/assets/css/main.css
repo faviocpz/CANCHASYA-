@@ -166,12 +166,16 @@ table tr.tr-grama-clara td {
 }
 
 .sidebar-admin {
-  width: 18rem;
+  width: 18rem!important;
   height: 100vh; 
   background-color: #161620f2;
   color: white;
   overflow-y: auto;
   position: sticky;
+}
+
+.horas {
+  white-space: nowrap;
 }
 
 

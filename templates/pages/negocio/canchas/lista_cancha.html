@@ -6,7 +6,7 @@
 
     {% if listas_canchas  %}
         <div class=" shadow-lg rounded p-3 bg-white mb-2">
-            <div class="d-flex align-items-center flex-wrap gap-3">
+            <div class="justify-content-center d-flex align-items-center flex-wrap gap-3 ">
 
                 <div class="d-flex align-items-center me-3">
                     <i class="bi bi-funnel-fill fs-4 text-primary me-2"></i>
@@ -61,26 +61,22 @@
 
             </div>
         </div>
-        <div class="table-responsive shadow-sm rounded p-3 bg-white mt-3">
-            <table class="table ">
-                <tbody>
-                    {% for cancha in listas_canchas%}
-                    <tr id="{{ cancha['id_cancha'] }}"> 
+        <div class="shadow-sm rounded p-3 bg-white mt-3 col-12">
+            {% for cancha in listas_canchas%}
+                <div id="{{ cancha['id_cancha'] }}" class="row"> 
+                    <div class="col-2 text-center">
                         <input type="text"  value="{{ cancha['id_cancha'] }}" class="d-none">
-                        <td class="fw-bold text-primary" style="width: 250px;">{{ cancha['nombre'] }}</td>
-                        <td colspan="5">
-                            <div class="d-flex flex-wrap gap-2 ">
-                                {% for horario in lista_horario %}
-                                    <button class="btn btn-secondary m-1 horas" data-inicio="{{ horario['hora_inicio'] }}">
-                                        {{ horario['hora_inicio'] }} - {{ horario['hora_fin'] }}
-                                    </button>
-                                {% endfor %}
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        <span class="fw-bold text-primary">{{ cancha['nombre'] }}</span>
+                    </div>
+                    <div class="col-10" >
+                        {% for horario in lista_horario %}
+                            <button class="btn btn-secondary m-1 horas" data-inicio="{{ horario['hora_inicio'] }}">
+                                {{ horario['hora_inicio'] }} - {{ horario['hora_fin'] }}
+                            </button>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
         </div>
 
     {% else%}
