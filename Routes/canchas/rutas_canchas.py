@@ -8,6 +8,7 @@ def registrar_rutas(app):
     @app.route('/canchass')
     def canchass():
         data = controlador_cancha_admin.consultar_cancha_x_persona(session.get('id'))
+        print(data)
         return render_template('pages/negocio/canchas/cancha.html', data=data)
 
     @app.route('/api/cancha/<int:id_cancha>')
@@ -93,10 +94,15 @@ def registrar_rutas(app):
         
     @app.route('/pagina_reservas/')
     def pagina_reservas():
+        hoy = datetime.now()
+        fechas_listado = list()
+
+        for dia in range(5):
+            fechas_listado.append((hoy + timedelta(days=dia)).strftime('%Y-%m-%d'))
+
         listas_canchas = controlador_cancha_admin.listar_canchas_idalquilador(session.get('id'))
-        print(listas_canchas)
         print(session.get('id'))
-        return render_template('pages/negocio/canchas/lista_cancha.html', listas_canchas = listas_canchas)
+        return render_template('pages/negocio/canchas/lista_cancha.html', listas_canchas = listas_canchas, fechas_listado=fechas_listado)
 
     @app.route('/reservar_cancha/<int:id>')
     def reservar_cancha(id):

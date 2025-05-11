@@ -5,20 +5,81 @@
 {% block contenido %}
 
     {% if listas_canchas  %}
-        {% for cancha in listas_canchas %}
-            <div class="d-flex lista_canchas mt-2">
-                <div class="col-3 ms-2" > {{ cancha[1] }} </div>
-                <div class="col-3 text-center"> {{ cancha[2] }} </div>
-                <div class="col-3 text-center">{{ cancha[3] }} </div>
-        
-                <div class="col-3 text-center">
-                    <a href="{{ url_for('reservar_cancha', id=cancha[0]) }}" class="btn btn-primary">
-                        Reservar
-                    </a>
-                   
+        <div class=" shadow-lg rounded p-3 bg-white mb-2">
+            <div class="d-flex align-items-center flex-wrap gap-3">
+
+                <div class="d-flex align-items-center me-3">
+                    <i class="bi bi-funnel-fill fs-4 text-primary me-2"></i>
+                    <span class="fw-bold text-secondary">Filtros</span>
                 </div>
+
+                <!-- Fecha -->
+                <div class="d-flex align-items-center flex-nowrap">
+                    <i class="bi bi-calendar3 me-2 text-secondary"></i>
+                    <label class="me-2 mb-0 fw-semibold white-space-nowrap">Fecha:</label>
+                    <select class="form-select form-select-sm" style="min-width: 140px;">
+                        {% for fecha in fechas_listado %}
+                            <option value="">{{ fecha }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Estado -->
+                <div class="d-flex align-items-center flex-nowrap">
+                    <i class="bi bi-toggle-on me-2 text-secondary"></i>
+                    <label class="me-2 mb-0 fw-semibold white-space-nowrap">Estado:</label>
+                    <select class="form-select form-select-sm" style="min-width: 120px;">
+                        <option value="T">Ambos</option>
+                        <option value="A">Activo</option>
+                        <option value="I">Inactivo</option>
+                    </select>
+                </div>
+
+                <!-- Hora Inicio -->
+                <div class="d-flex align-items-center flex-nowrap">
+                    <i class="bi bi-clock me-2 text-secondary"></i>
+                    <label class="me-2 mb-0 fw-semibold white-space-nowrap text-nowrap">Hora Inicio:</label>
+                    <select class="form-select form-select-sm" style="min-width: 120px;">
+                        <option value="T">----</option>
+                        {% for i in range(7,24) %}
+                            <option value="{{ i }}">{{ i }}:00</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Hora Fin -->
+                <div class="d-flex align-items-center flex-nowrap">
+                    <i class="bi bi-clock-history me-2 text-secondary"></i>
+                    <label class="me-2 mb-0 fw-semibold white-space-nowrap text-nowrap">Hora Fin:</label>
+                    <select class="form-select form-select-sm" style="min-width: 120px;">
+                        <option value="T">----</option>
+                        {% for i in range(7,24) %}
+                            <option value="{{ i }}">{{ i }}:00</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
             </div>
-        {% endfor %}
+        </div>
+        <div class="table-responsive shadow-sm rounded p-3 bg-white mt-3">
+            <table class="table ">
+                <tbody>
+                    {% for cancha in listas_canchas*2 %}
+                    <tr>
+                        <td class="fw-bold text-primary" style="width: 200px;">{{ cancha[1] }}</td>
+                        <td colspan="5">
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="badge bg-secondary px-3 py-2"><i class="bi bi-clock me-1"></i>7:00 - 8:00</span>
+                                <button class="btn btn-sm btn-outline-primary rounded-pill px-3">2</button>
+                                <button class="btn btn-sm btn-outline-success rounded-pill px-3">3</button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
     {% else%}
         No hay canchas activas, verifique su estado
     {% endif %}

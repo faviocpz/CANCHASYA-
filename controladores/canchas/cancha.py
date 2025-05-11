@@ -53,21 +53,25 @@ def consultar_fotos(id_cancha):
         
 def consultar_cancha_x_persona(id_usuario):
     sql = """
-    SELECT
-      ca.idCancha,
-      ca.descripcion,
-      ca.precio,
-      ca.estado,
-      GROUP_CONCAT(fo.foto SEPARATOR ',') AS fotos
-    FROM CANCHA AS ca
-    INNER JOIN LOCAL  AS lo ON lo.idLocal   = ca.idLocal
-    INNER JOIN FOTO   AS fo ON fo.idCancha  = ca.idCancha
-    WHERE lo.idUsuario = %s
-    GROUP BY
-      ca.idCancha,
-      ca.descripcion,
-      ca.precio,
-      ca.estado
+        SELECT
+            ca.idCancha,
+            ca.descripcion,
+            ca.preciom,
+            ca.preciot,
+            ca.precion,
+            ca.estado,
+            GROUP_CONCAT(fo.foto SEPARATOR ',') AS fotos
+        FROM CANCHA AS ca
+        INNER JOIN LOCAL AS lo ON lo.idLocal = ca.idLocal
+        LEFT JOIN FOTO AS fo ON fo.idCancha = ca.idCancha
+        WHERE lo.idUsuario = %s
+        GROUP BY
+            ca.idCancha,
+            ca.descripcion,
+            ca.preciom,
+            ca.preciot,
+            ca.precion,
+            ca.estado
     """
     conexion = obtener_conexion()
     try:
@@ -75,18 +79,21 @@ def consultar_cancha_x_persona(id_usuario):
             cursor.execute(sql, (id_usuario,))
             filas = cursor.fetchall()
         canchas = []
-        for idCancha, descripcion, precio, estado, fotos_csv in filas:
-            fotos = fotos_csv.split(',')  # ["cancha1.jpg","cancha2.jpg",...]
+        for idCancha, descripcion, preciom, preciot, precion, estado, fotos_csv in filas:
+            fotos = fotos_csv.split(',') if fotos_csv else []
             canchas.append({
                 "idCancha":    idCancha,
                 "descripcion": descripcion,
-                "precio":      precio,
+                "precio":      preciom,
+                "precio_t":    preciot,
+                "precio_n":    precion,
                 "estado":      estado,
                 "fotos":       fotos
             })
         return canchas
     finally:
         conexion.close()
+
 
 
 def consultar_detalle_cancha(id_cancha):
@@ -240,6 +247,23 @@ def insertar_foto(id_cancha, nombre, ruta):
         conn.close()
 
 def listar_canchas_idalquilador(id):
+    try:
+        conexion = obtener_conexion()
+        with conexion.cursor() as cursor:
+            sql = '''
+                select * from CANCHA as ch
+                    where ch.idLocal =  (select lc.idLocal from LOCAL as lc where lc.idUsuario = %s) and ch.estado = 'A';
+            '''
+            cursor.execute(sql,(id))
+            datos = cursor.fetchall()
+            return datos if datos else None
+    except:
+        return None
+    finally:
+        conexion.close()  
+
+
+def retornar_horarioscanchaestado(id):
     try:
         conexion = obtener_conexion()
         with conexion.cursor() as cursor:
