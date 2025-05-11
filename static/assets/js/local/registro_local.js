@@ -138,7 +138,7 @@ s_htf.addEventListener("change", function() {
 s_hni.addEventListener("change", function() {
     let hora_ninicio = this.value;
     if (hora_ninicio != ""){
-        completar_camposoption(parseInt(hora_ninicio)+1 , s_hnf, 25);
+        completar_camposoption(parseInt(hora_ninicio)+1 , s_hnf, 24);
     }else{
         limpiar_select(5);
     }

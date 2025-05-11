@@ -246,35 +246,55 @@ def insertar_foto(id_cancha, nombre, ruta):
     finally:
         conn.close()
 
-def listar_canchas_idalquilador(id):
+def listar_canchas_idalquilador(id,fecha):
     try:
         conexion = obtener_conexion()
+        lista_cancha = []
+
         with conexion.cursor() as cursor:
             sql = '''
-                select * from CANCHA as ch
+                select idCancha,descripcion from CANCHA as ch
                     where ch.idLocal =  (select lc.idLocal from LOCAL as lc where lc.idUsuario = %s) and ch.estado = 'A';
             '''
             cursor.execute(sql,(id))
-            datos = cursor.fetchall()
-            return datos if datos else None
+            canchas = cursor.fetchall()
+            sql2= '''
+                select * from RESERVA
+                    where fecha = %s
+                ORDER BY idCancha ;
+                '''
+            cursor.execute(sql2, fecha)
+            reservas = cursor.fetchall()
+
+            for cancha in canchas:
+                print(canchas)
+                lista_reserva = []
+                dt_cancha = {
+                    'id_cancha': cancha[0],
+                    'nombre': cancha[1],
+                    'fecha': fecha,
+                    'reservas': []
+                }
+
+                for reserva in reservas:
+                    print(reserva)
+                    if reserva[4] == cancha[0]:
+                        dt_cancha['reservas'].append(str(reserva[2]))
+                    
+
+                lista_cancha.append(dt_cancha)
+            print(lista_cancha)
+            sql3 = '''
+                SELECT ha.* FROM LOCAL as lc INNER JOIN HORARIO_ATENCION as ha
+                    on ha.idLocal = lc.idLocal
+                where lc.idUsuario = %s  
+            '''
+            cursor.execute(sql3,(id))
+            horario = cursor.fetchone()
+            return lista_cancha, horario if lista_cancha else None
     except:
         return None
     finally:
         conexion.close()  
 
 
-def retornar_horarioscanchaestado(id):
-    try:
-        conexion = obtener_conexion()
-        with conexion.cursor() as cursor:
-            sql = '''
-                select * from CANCHA as ch
-                    where ch.idLocal =  (select lc.idLocal from LOCAL as lc where lc.idUsuario = %s) and ch.estado = 'A';
-            '''
-            cursor.execute(sql,(id))
-            datos = cursor.fetchall()
-            return datos if datos else None
-    except:
-        return None
-    finally:
-        conexion.close()  

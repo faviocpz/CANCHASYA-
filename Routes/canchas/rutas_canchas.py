@@ -100,9 +100,36 @@ def registrar_rutas(app):
         for dia in range(5):
             fechas_listado.append((hoy + timedelta(days=dia)).strftime('%Y-%m-%d'))
 
-        listas_canchas = controlador_cancha_admin.listar_canchas_idalquilador(session.get('id'))
-        print(session.get('id'))
-        return render_template('pages/negocio/canchas/lista_cancha.html', listas_canchas = listas_canchas, fechas_listado=fechas_listado)
+        listas_canchas, horario = controlador_cancha_admin.listar_canchas_idalquilador(session.get('id'),fechas_listado[0])
+        lista_horario = []
+        hora_imañana = int(str(horario[1]).split(':')[0])
+        hora_fmañana = int(str(horario[2]).split(':')[0])
+        hora_itarde = int(str(horario[3]).split(':')[0])
+        hora_ftarde = int(str(horario[4]).split(':')[0])
+        hora_inoche = int(str(horario[5]).split(':')[0])
+        hora_fnoche = int(str(horario[6]).split(':')[0])
+        for hrm in range(hora_imañana, hora_fmañana):
+            lista_horario.append({
+                'hora_inicio': str(hrm)+':00',
+                'hora_fin': str(hrm+1)+':00',
+                'estado': 'I'
+            })
+        for hrt in range(hora_itarde, hora_ftarde):
+            lista_horario.append({
+                'hora_inicio': str(hrt)+':00',
+                'hora_fin': str(hrt+1)+':00',
+                'estado': 'I'
+            })
+        for hrn in range(hora_inoche, hora_fnoche):
+            lista_horario.append({
+                'hora_inicio': str(hrn)+':00',
+                'hora_fin': str(hrn+1)+':00',
+                'estado': 'I'
+            })
+    
+        return render_template('pages/negocio/canchas/lista_cancha.html', listas_canchas = listas_canchas, fechas_listado=fechas_listado,lista_horario=lista_horario)
+
+
 
     @app.route('/reservar_cancha/<int:id>')
     def reservar_cancha(id):
