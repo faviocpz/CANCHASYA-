@@ -1,4 +1,4 @@
-{% extends 'base_negocio.html' %}
+{% extends 'base_interna.html' %}
 
 {% block titulo_pagina %}
   Agregar Cancha
@@ -6,7 +6,7 @@
 
 {% block contenido %}
 <div class="container mt-5">
-  <form id="insertarCanchaForm" action="/insertar_cancha" method="POST" enctype="multipart/form-data" novalidate>
+  <form id="insertarCanchaForm" action="/moficar_cancha/{{ id_cancha }}" method="POST" enctype="multipart/form-data" novalidate>
     <!-- Descripción -->
     <div class="card mb-3">
       <div class="card-header">Descripción de la cancha</div>
@@ -33,98 +33,64 @@
       
     <!-- Precio por hora -->
     <div class="card mb-3">
-      <div class="card-header">Precio por hora</div>
+      <div class="card-header">Precio por hora en la mañana</div>
       <div class="card-body">
-        <input type="number" class="form-control" id="precio_cancha" name="precio_cancha" required value="{{ datos.precio }}">
+        <input type="number" class="form-control" id="precio_cancha" name="precio_cancha_mañana" required value="{{ datos.precio_manana }}">
       </div>
     </div>
 
-    <!-- Puntuación inicial -->
-    <!-- <div class="card mb-3">
-      <div class="card-header">Puntuación inicial</div>
-      <div class="card-body">
-        <input type="number"
-               class="form-control"
-               id="puntuacion_cancha"
-               name="puntuacion_cancha"
-               min="0" max="5" step="0.1"
-               value="0.0"
-               required>
-      </div>
-    </div> -->
-
-    <!-- Horario disponible -->
-    <!-- <div class="card mb-3">
-      <div class="card-header">Horario disponible</div>
-      <div class="card-body">
-        <div class="row align-items-center">
-          <div class="col-8">
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" id="dia_todos" value="all">
-              <label class="form-check-label" for="dia_todos">Todos</label>
-            </div>
-            <br>
-            {% for dia in ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'] %}
-              <div class="form-check form-check-inline">
-                <input class="form-check-input dia-checkbox"
-                       type="checkbox"
-                       id="dia_{{ dia.lower() }}"
-                       name="dias[]"
-                       value="{{ dia }}">
-                <label class="form-check-label" for="dia_{{ dia.lower() }}">{{ dia }}</label>
-              </div>
-            {% endfor %}
-          </div>
-          <div class="col-2">
-            <label for="hora_inicio" class="form-label">Inicio</label>
-            <input type="time" id="hora_inicio" name="hora_inicio" class="form-control" required>
-          </div>
-          <div class="col-2">
-            <label for="hora_fin" class="form-label">Fin</label>
-            <input type="time" id="hora_fin" name="hora_fin" class="form-control" required>
-          </div>
-        </div>
-      </div>
-    </div> -->
-
-    <!-- Fotos de la cancha -->
     <div class="card mb-3">
-        <div class="card-header">Fotos de la cancha</div>
-        <div class="card-body">
-          <div id="imagesContainer" class="d-flex align-items-start">
-            <div class="image-upload me-3" id="imageUpload1">
-              {% for foto in fotos %}
-              <div class="position-relative d-inline-block">
-                <img src="{{ url_for('static', filename='assets/img/' + foto) }}"
-                     class="img-thumbnail"
-                     style="width:100px; height:100px; object-fit:cover;">
-                <button type="button"
-                        class="btn btn-light position-absolute top-0 end-0 p-1"
-                        onclick="verImagen('{{ foto }}')">
-                  <i class="bi bi-eye"></i>
-                </button>
-              </div>
-              {% endfor %}
-              
-              <!-- Input para cargar nueva imagen -->
-              <input type="file" accept="image/*"
-                     id="foto_cancha_1"
-                     name="foto_cancha"
-                     onchange="previewImage(1)"
-                     hidden>
-              <label for="foto_cancha_1"
-                     class="d-flex justify-content-center align-items-center border rounded"
-                     style="width:100px; height:100px; cursor:pointer;">
-                <span class="text-muted">+</span>
-              </label>
-              <div id="foto_preview_1" class="mt-2"></div>
-            </div>
-          </div>
-        </div>
+      <div class="card-header">Precio por hora en la tarde</div>
+      <div class="card-body">
+        <input type="number" class="form-control" id="precio_cancha" name="precio_cancha_tarde" required value="{{ datos.precio_tarde }}">
       </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-header">Precio por hora en la noche</div>
+      <div class="card-body">
+        <input type="number" class="form-control" id="precio_cancha" name="precio_cancha_noche" required value="{{ datos.precio_noche }}">
+      </div>
+    </div>
+
+    
+    <!-- Fotos de la cancha -->
+<div class="card mb-3">
+  <div class="card-header">Fotos de la cancha</div>
+  <div class="card-body">
+    <div id="imagesContainer" class="d-flex align-items-start flex-wrap gap-3">
+      <!-- Fotos actuales -->
+      {% for foto in fotos %}
+      <div class="position-relative" style="width:100px;">
+        <img src="{{ url_for('static', filename='assets/img/' + foto.foto) }}"
+             class="img-thumbnail"
+             style="width:100px; height:100px; object-fit:cover;">
+        <button type="button"
+                class="btn btn-danger btn-sm position-absolute top-0 end-0 p-1"
+                onclick="eliminarFotoExistente(this, '{{ foto.id }}')">
+          &times;
+        </button>
+        <!-- Cambié el nombre a fotos_nuevas[] para que todo vaya bajo el mismo campo -->
+        <input type="hidden" name="fotos_nuevas[]" value="{{ foto.foto }}">
+      </div>
+      {% endfor %}
+
+      <!-- Botón para añadir nueva imagen -->
+      <div id="botonAgregarFoto" class="image-upload d-flex justify-content-center align-items-center border rounded"
+           style="width:100px; height:100px; cursor:pointer;"
+           onclick="crearInputImagen()">
+        <span class="text-muted">+</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Ya no es necesario este campo, ya que las fotos eliminadas se enviarán por medio de un botón -->
+<input type="hidden" name="fotos_eliminadas" id="fotosEliminadas">
+
       
 
-    <button type="submit" class="btn btn-primary">Agregar cancha</button>
+    <button type="submit" class="btn btn-primary">Modificar cancha</button>
   </form>
 </div>
 
@@ -142,86 +108,98 @@
 
 {% block scripts %}
 <script>
-  let imageCount = 1;
+  let nuevasFotos = 0;
+  const maxFotos = 3;
 
-  function previewImage(index) {
-    const input = document.getElementById(`foto_cancha_${index}`);
+  function contarFotosTotales() {
+    const actuales = document.querySelectorAll('[name="fotos_nuevas[]"]').length;
+    const nuevas = document.querySelectorAll('.foto-nueva').length;
+    return actuales + nuevas;
+  }
+
+  function crearInputImagen() {
+    if (contarFotosTotales() >= maxFotos) return;
+
+    nuevasFotos++;
+    const container = document.getElementById('imagesContainer');
+    const botonAgregar = document.getElementById('botonAgregarFoto');
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'position-relative';
+    wrapper.style.width = '100px';
+
+    const inputId = `nuevaFoto_${nuevasFotos}`;
+
+    wrapper.innerHTML = `
+      <input type="file" accept="image/*" id="${inputId}" name="fotos_nuevas[]" class="foto-nueva d-none" onchange="mostrarPreview(this, ${nuevasFotos})">
+      <label for="${inputId}" class="d-flex justify-content-center align-items-center border rounded"
+            style="width:100px; height:100px; cursor:pointer;">
+        <span class="text-muted">+</span>
+      </label>
+      <div id="preview_${nuevasFotos}" class="mt-1"></div>
+    `;
+
+    container.insertBefore(wrapper, botonAgregar);  // <== Esto es clave
+    document.getElementById(inputId).click();
+  }
+
+  function mostrarPreview(input, index) {
     if (input.files && input.files[0]) {
       const reader = new FileReader();
-      reader.onload = e => {
-        const wrapper = document.getElementById(`imageUpload${index}`);
-        wrapper.querySelector('label').style.display = 'none';
-        const previewDiv = document.getElementById(`foto_preview_${index}`);
+      reader.onload = function (e) {
+        const label = input.nextElementSibling;
+        label.style.display = 'none';
+
+        const previewDiv = document.getElementById(`preview_${index}`);
         previewDiv.innerHTML = `
           <div class="position-relative d-inline-block">
-            <img src="${e.target.result}"
-                 class="img-thumbnail"
-                 style="width:100px; height:100px; object-fit:cover;">
+            <img src="${e.target.result}" class="img-thumbnail"
+                style="width:100px; height:100px; object-fit:cover;">
             <button type="button"
-                    class="btn btn-light position-absolute top-0 end-0 p-1"
-                    onclick="openImageModal('${e.target.result}')">
-              <i class="bi bi-eye"></i>
+                    class="btn btn-danger btn-sm position-absolute top-0 end-0 p-1"
+                    onclick="eliminarNuevaFoto(this)">
+              &times;
             </button>
           </div>
         `;
 
-        // al cargar imagen, auto-agregar siguiente input si cabe
-        if (imageCount < 3 && !document.getElementById(`foto_cancha_${imageCount+1}`)) {
-          addMoreImages();
+        // Verifica si se puede seguir agregando más fotos
+        if (contarFotosTotales() >= maxFotos) {
+          document.getElementById('botonAgregarFoto').style.display = 'none';
         }
       };
       reader.readAsDataURL(input.files[0]);
     }
   }
 
-  function addMoreImages() {
-    if (imageCount >= 3) return;
-    imageCount++;
-    const container = document.getElementById('imagesContainer');
-    const uploadDiv = document.createElement('div');
-    uploadDiv.className = 'image-upload me-3';
-    uploadDiv.id = `imageUpload${imageCount}`;
-    uploadDiv.innerHTML = `
-      <input type="file" accept="image/*"
-             id="foto_cancha_${imageCount}"
-             name="foto_cancha"
-             onchange="previewImage(${imageCount})"
-             hidden>
-      <label for="foto_cancha_${imageCount}"
-             class="d-flex justify-content-center align-items-center border rounded"
-             style="width:100px; height:100px; cursor:pointer;">
-        <span class="text-muted">+</span>
-      </label>
-      <div id="foto_preview_${imageCount}" class="mt-2"></div>
-    `;
-    container.appendChild(uploadDiv);
+  function eliminarFotoExistente(btn, idFoto) {
+    btn.closest('div').remove();
+    const campo = document.getElementById('fotosEliminadas');
+    campo.value += campo.value ? `,${idFoto}` : idFoto;
+
+    if (contarFotosTotales() < maxFotos) {
+      document.getElementById('botonAgregarFoto').style.display = 'flex';
+    }
   }
 
-  function openImageModal(src) {
-    document.getElementById('modalImageSrc').src = src;
-    new bootstrap.Modal(document.getElementById('modalImage')).show();
+  function eliminarNuevaFoto(btn) {
+    const contenedor = btn.closest('.position-relative');
+    contenedor.parentElement.parentElement.remove();
+
+    if (contarFotosTotales() < maxFotos) {
+      document.getElementById('botonAgregarFoto').style.display = 'flex';
+    }
   }
 
-  // “Seleccionar todos” para los checkboxes de días
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('dia_todos').addEventListener('change', function() {
-      document.querySelectorAll('.dia-checkbox')
-              .forEach(ch => ch.checked = this.checked);
-    });
-
-    // Validación personalizada antes de submit
-    document.getElementById('insertarCanchaForm')
-      .addEventListener('submit', function(e) {
-        const fileInputs = Array.from(
-          document.querySelectorAll('input[type="file"][name="foto_cancha"]')
-        );
-        const anySelected = fileInputs.some(inp => inp.files.length > 0);
-        if (!anySelected) {
-          e.preventDefault();
-          alert('Por favor selecciona al menos una imagen de la cancha.');
-        }
-      });
+  // Validar que haya al menos una imagen antes de enviar
+  document.getElementById('insertarCanchaForm').addEventListener('submit', function (e) {
+    const totalFotos = contarFotosTotales();
+    if (totalFotos < 1) {
+      e.preventDefault();
+      alert('Debe haber al menos una imagen para guardar la cancha.');
+    }
   });
+
 </script>
 
 {% endblock %}

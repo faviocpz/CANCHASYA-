@@ -30,7 +30,9 @@ def registrar_rutas(app):
         # 1) Recuperar datos del formulario
         descripcion = request.form['descripcion_cancha']
         id_deporte  = request.form['tipo_cancha']
-        precio      = request.form['precio_cancha']
+        precio_mañana      = request.form['precio_cancha_mañana']
+        precio_tarde       = request.form['precio_cancha_tarde']
+        precio_noche       = request.form['precio_cancha_noche']
         puntuacion       = 0.01
         # dias_sel    = request.form.getlist('dias[]')      # ['Lunes','Martes',...]
         # hora_inicio = request.form['hora_inicio']         # '08:00'
@@ -46,7 +48,7 @@ def registrar_rutas(app):
 
         # 4) Insertar la CANCHA y obtener su PK
         id_cancha = controlador_cancha_admin.insertar_cancha(
-            descripcion, precio, puntuacion, id_local, id_deporte
+            descripcion, precio_mañana, precio_tarde, precio_noche, puntuacion, id_local, id_deporte
         )
 
         # 5) Insertar UN SOLO registro en HORARIO con todos los días
@@ -83,7 +85,7 @@ def registrar_rutas(app):
         canchas = controlador_cancha_admin.tipo_cancha()
 
         # 3) Enviar los datos al template
-        return render_template('pages/negocio/canchas/modificar_cancha.html', datos=datos, canchas=canchas, fotos=fotos)
+        return render_template('pages/negocio/canchas/modificar_cancha.html', datos=datos, canchas=canchas, fotos=fotos, id_cancha=id_cancha)
 
     @app.route('/agregar_horario_cancha/<id>')
     def agregar_horario_cancha(id):
@@ -91,6 +93,53 @@ def registrar_rutas(app):
         return render_template('pages/negocio/canchas/agregar_horario_cancha.html', id=id, datos=datos)
 
 
+    @app.route('/moficar_cancha/<int:id>', methods=['POST'])
+    def moficar_cancha(id):
+    # 1) Recuperar datos del formulario
+        descripcion = request.form['descripcion_cancha']
+        id_deporte = request.form['tipo_cancha']
+        precio_mañana = request.form['precio_cancha_mañana']
+        precio_tarde = request.form['precio_cancha_tarde']
+        precio_noche = request.form['precio_cancha_noche']
+        puntuacion = 0.01
+        archivos = request.files.getlist('fotos_nuevas')  # Asegúrate de que este nombre coincida con el de tu formulario
+
+        # 2) Modificar la cancha
+        controlador_cancha_admin.modificar_cancha(
+            id,
+            descripcion,
+            precio_mañana,
+            precio_tarde,
+            precio_noche,
+            puntuacion,
+            id_deporte
+        )
+
+        # 3) Subir nuevas fotos (si hay)
+        if archivos:
+            for file in archivos:
+                if file and file.filename:
+                    filename = secure_filename(file.filename)  # Asegura un nombre seguro
+                    destino = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+                    file.save(destino)  # Guarda la foto en la carpeta de destino
+
+                    # 4) Insertar la foto en la base de datos
+                    controlador_cancha_admin.insertar_foto(
+                        id,
+                        nombre=filename,
+                        ruta=filename
+                    )
+
+        # 5) Eliminar las fotos actuales solo si hay nuevas fotos
+        # if archivos:
+        #     controlador_cancha_admin.eliminar_foto(id)
+
+        # 6) Redirigir al listado de canchas
+        return redirect(url_for('canchass'))
+
+
+
+        
         
     @app.route('/pagina_reservas/')
     def pagina_reservas():

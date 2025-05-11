@@ -5,9 +5,8 @@ def consultar_cancha(id):
     try:
         with conexion.cursor() as cursor:
             query = """
-            select c.descripcion, c.precio, c.puntuacion, c.estado, fo.nombre, fo.foto , idDeporte
+            select c.descripcion, c.preciom, c.preciot, c.precion, c.puntuacion, c.estado,idDeporte
             from CANCHA c 
-            inner join FOTO fo on c.idCancha = fo.idCancha
             where c.idCancha = %s
             """
             cursor.execute(query, (id,))
@@ -15,11 +14,11 @@ def consultar_cancha(id):
             if result:
                 cancha = {
                     "descripcion": result[0],
-                    "precio": result[1],
-                    "puntuacion": result[2],
-                    "estado": result[3],
-                    "nombre_foto": result[4],
-                    "foto": result[5],
+                    "precio_manana": result[1],
+                    "precio_tarde": result[2],
+                    "precio_noche": result[3],
+                    "puntuacion": result[4],
+                    "estado": result[5],
                     "idDeporte": result[6]
                 }
                 return cancha
@@ -101,33 +100,25 @@ def consultar_detalle_cancha(id_cancha):
     SELECT
       ca.idCancha,
       ca.descripcion,
-      ca.precio,
+      ca.preciom,
+      ca.preciot,
+      ca.precion,
       ca.estado,
       de.nombre AS deporte,
       GROUP_CONCAT(DISTINCT fo.foto
                    ORDER BY fo.idFoto
-                   SEPARATOR ',')      AS fotos_csv,
-      GROUP_CONCAT(DISTINCT ho.dias
-                   ORDER BY FIELD(ho.dias,
-                                  'Lunes','Martes','Miércoles','Jueves',
-                                  'Viernes','Sábado','Domingo')
-                   SEPARATOR ',')      AS dias_csv,
-      GROUP_CONCAT(DISTINCT DATE_FORMAT(ho.h_inicio, '%%H:%%i')
-                   ORDER BY ho.h_inicio
-                   SEPARATOR ',')      AS h_inicio_csv,
-      GROUP_CONCAT(DISTINCT DATE_FORMAT(ho.h_fin,    '%%H:%%i')
-                   ORDER BY ho.h_fin
-                   SEPARATOR ',')      AS h_fin_csv
-    FROM CANCHA    AS ca
-    JOIN LOCAL     AS lo ON lo.idLocal   = ca.idLocal
-    JOIN DEPORTE   AS de ON de.idDeporte = ca.idDeporte
-    LEFT JOIN FOTO     AS fo ON fo.idCancha  = ca.idCancha
-    LEFT JOIN HORARIO  AS ho ON ho.idCancha  = ca.idCancha
+                   SEPARATOR ',') AS fotos_csv
+    FROM CANCHA AS ca
+    JOIN LOCAL AS lo ON lo.idLocal = ca.idLocal
+    JOIN DEPORTE AS de ON de.idDeporte = ca.idDeporte
+    LEFT JOIN FOTO AS fo ON fo.idCancha = ca.idCancha
     WHERE ca.idCancha = %s
     GROUP BY
       ca.idCancha,
       ca.descripcion,
-      ca.precio,
+      ca.preciom,
+      ca.preciot,
+      ca.precion,
       ca.estado,
       de.nombre;
     """
@@ -139,22 +130,21 @@ def consultar_detalle_cancha(id_cancha):
             if not row:
                 return None
 
-            (idC, desc, precio, estado, deporte,
-             fotos_csv, dias_csv, h_inicio_csv, h_fin_csv) = row
-
+            (idC, desc, preciom, preciot, precion, estado, deporte, fotos_csv) = row
+            
             return {
                 "idCancha":    idC,
                 "descripcion": desc,
-                "precio":      float(precio),
+                "preciom":     float(preciom),
+                "preciot":     float(preciot),
+                "precion":     float(precion),
                 "estado":      estado,
                 "deporte":     deporte,
-                "fotos":       fotos_csv.split(',')    if fotos_csv   else [],
-                "dias":        dias_csv     if dias_csv    else [],
-                "h_inicio":    h_inicio_csv if h_inicio_csv else [],
-                "h_fin":       h_fin_csv   if h_fin_csv   else []
+                "fotos":       fotos_csv.split(',') if fotos_csv else []
             }
     finally:
         conn.close()
+
 
 
 
@@ -192,17 +182,17 @@ def id_local(id_usuario):
         
 
 
-def insertar_cancha(descripcion, precio, puntuacion, id_local, id_deporte):
+def insertar_cancha(descripcion, preciom, preciot, precion, puntuacion, id_local, id_deporte):
     sql = """
       INSERT INTO CANCHA
-        (descripcion, precio, puntuacion, estado, idLocal, idDeporte)
+        (descripcion, preciom, preciot, precion, puntuacion, estado, idLocal, idDeporte)
       VALUES
-        (%s,          %s,     %s,         'A',    %s,      %s)
+        (%s, %s, %s, %s, %s, 'A', %s, %s)
     """
     conn = obtener_conexion()
     try:
         with conn.cursor() as cur:
-            cur.execute(sql, (descripcion, precio, puntuacion, id_local, id_deporte))
+            cur.execute(sql, (descripcion, preciom, preciot, precion, puntuacion, id_local, id_deporte))
             conn.commit()
             return cur.lastrowid
     finally:
@@ -298,3 +288,37 @@ def listar_canchas_idalquilador(id,fecha):
         conexion.close()  
 
 
+
+
+def modificar_cancha(id, descripcion, preciom, preciot, precion, puntuacion, estado):
+    sql = """
+      UPDATE CANCHA
+      SET
+        descripcion = %s,
+        preciom     = %s,
+        preciot     = %s,
+        precion     = %s,
+        puntuacion  = %s,
+        estado      = %s
+      WHERE idCancha = %s
+    """
+    conn = obtener_conexion()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(sql, (descripcion, preciom, preciot, precion, puntuacion, estado, id))
+            conn.commit()
+    finally:
+        conn.close()
+        
+def eliminar_foto(id):
+    sql = """
+      DELETE FROM FOTO
+      WHERE idCancha = %s
+    """
+    conn = obtener_conexion()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(sql, (id,))
+            conn.commit()
+    finally:
+        conn.close()
