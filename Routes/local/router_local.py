@@ -104,13 +104,19 @@ def registrar_rutas(app):
                 'instagram': instagram,
                 'idUsuario': session.get('id'),
                 'logo': logo_filename,
-                'banner': banner_filename
+                'banner': banner_filename,
+                'h_minicio': request.form['h_minicio']+ ':00:00',
+                'h_mfin': request.form['h_mfin']+ ':00',
+                'h_tinicio': request.form['h_tinicio']+ ':00:00',
+                'h_tfin': request.form['h_tfin']+ ':00',
+                'h_ninicio': request.form['h_ninicio']+ ':00:00',
+                'h_nfin': request.form['h_nfin']+ ':00:00',
             }
             
             # Registrar en DB
             local_id = controlador_local.registrar_local(data)
 
-            if local_id: 
+            if local_id==1: 
                 flash('Local registrado exitosamente!', 'success')
                 return redirect(url_for('listar_locales'))
             else:

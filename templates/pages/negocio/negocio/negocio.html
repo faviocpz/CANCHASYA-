@@ -119,6 +119,56 @@ Registrar Nueva Cancha Deportiva
                 </div>
             </div>
 
+            
+            <div class="col-12 col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-secondary text-white">
+                        <i class="bi bi-clock-history"></i> Horario de atención
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="">Hora inicio mañana</label>
+                                <select name="h_minicio" id="h_minicio" class="form-select" required>
+                                    <option value="">Seleccione una hora</option>
+                                    <option value="7">7:00</option>
+                                    <option value="8">8:00</option>
+                                    <option value="9">9:00</option>
+                                    <option value="10">10:00</option>
+                                    <option value="11">11:00</option>
+                                </select>
+                            </div>
+                            <div class="col-6"> 
+                                <label for="">Hora fin mañana</label>
+                                <select name="h_mfin" id="h_mfin" class="form-select" disabled required>
+                                </select>
+                            </div>
+                            <div class="col-6"> 
+                                <label for="">Hora incio tarde</label>
+                                <select name="h_tinicio" id="h_tinicio" class="form-select" disabled required>
+                                </select>
+                            </div>
+                            <div class="col-6"> 
+                                <label for="">Hora fin tarde</label>
+                                <select name="h_tfin" id="h_tfin" class="form-select" disabled required>
+                                </select>
+                            </div>
+                            <div class="col-6"> 
+                                <label for="">Hora inicio noche</label>
+                                <select name="h_ninicio" id="h_ninicio" class="form-select" disabled required>
+               
+                                </select>
+                            </div>
+                            <div class="col-6"> 
+                                <label for="">Hora fin noche</label>
+                                <select name="h_nfin" id="h_nfin" class="form-select" disabled required>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Modal para previsualización -->
             <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-xl modal-dialog-centered">

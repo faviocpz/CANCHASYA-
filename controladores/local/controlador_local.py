@@ -4,6 +4,7 @@ from flask import session
 from conexion import obtener_conexion
 from flask import session
 from datetime import datetime
+
 def registrar_local(data):    
     conexion = obtener_conexion()
     try:
@@ -24,11 +25,16 @@ def registrar_local(data):
                 data['logo'],  
                 data['banner'] 
             ))
-
-        conexion.commit()
-        return cursor.lastrowid
+            id_local = cursor.lastrowid
+            query2 = '''
+                INSERT INTO HORARIO_ATENCION (turno_minicio,turno_mfin,turno_tinicio,turno_tfin,turno_ninicio,turno_nfin, idLocal) VALUES (%s,%s,%s,%s,%s,%s,%s)   
+                '''
+            cursor.execute(query2,(data['h_minicio'],data['h_mfin'],data['h_tinicio'],data['h_tfin'],data['h_ninicio'],data['h_nfin'],id_local))
+            conexion.commit()
+        return 1
     except Exception as e:
         print(f"Error al registrar el local: {e}")
+        conexion.rollback()
         return 0  
     finally:
         conexion.close()
