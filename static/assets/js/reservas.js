@@ -34,7 +34,7 @@ const spanEstado = document.getElementById('detalle_estado');
 const footmodal = document.getElementById('foot_modal');
 const spanCliente = document.getElementById('detalle_cliente');
 const boton_eliminarR = `<button class="btn btn-danger w-100" onclick="eliminar_reserva()"> Eliminar Reserva </button>`
-const boton_agregarR = `<button class="btn btn-success w-100" > Agregar Reserva </button>`
+const boton_agregarR = `<button class="btn btn-success w-100" disabled id="btn_rese"> Agregar Reserva </button>`
 const id_rs = document.getElementById('id_rs');
 
 async function  abrir_nodal(button, cancha){
@@ -86,8 +86,35 @@ function eliminar_reserva(){
     const id = id_rs.value;
     console.log(id);
 
-
-
-
-    
 }
+
+async function verificar_usuariodni(){
+    let dni_e  = document.getElementById('numero_dni').value;
+    try {
+        const response = await fetch(`/verificar_usuarioDni/${dni_e}`);
+        const datos = await response.json();
+        if(datos.codigo == 1){
+            let jugador = datos.datos;
+            spanCliente.innerHTML = `
+                <strong>Nombre:</strong> ${jugador.nombre} <br>
+                <strong>Correo:</strong> ${jugador.correo} <br>
+                <strong>Teléfono:</strong> ${jugador.telefono}
+            `;
+            document.getElementById('btn_rese').disabled = false;
+        }else{
+            document.getElementById('btn_rese').disabled = true;
+            spanCliente.innerHTML = '<strong>Nombre:</strong> Anónimo <br>'; 
+        }
+    } catch (error) {
+        console.error('Error al hacer fetch:', error);
+    }
+
+}
+
+document.getElementById('numero_dni').addEventListener('input', function() {
+    let valor = document.getElementById('numero_dni').value;
+    const btn = document.getElementById('btn_search');
+    const btn_a = document.getElementById('btn_rese');
+    btn.disabled = valor.length !== 8;
+    btn_a.disabled = true;
+});

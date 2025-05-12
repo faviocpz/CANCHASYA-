@@ -297,6 +297,19 @@ def actualizar_foto_verificacion(data):
     finally:
         conexion.close()
 
+def verificar_usuarioDni(dni):
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            query = '''
+                    SELECT id, nombre, correo, telefono  FROM usuario WHERE dni = %s;
+                '''
+            cursor.execute(query, (dni,))
+            result = cursor.fetchone()
+        return result if result else None
+    finally:
+        conexion.close()
+
 
 
 

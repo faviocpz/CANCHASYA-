@@ -91,7 +91,12 @@
             <div class="modal-body">
                 <p><strong>Cancha:</strong> <span id="detalle_cancha"></span></p>
                 <p><strong>Estado:</strong> <span  id="detalle_estado"></span></p>
-                <div class="row">
+                <div class="d-flex">
+                   <strong class="text-nowrap">Ingrese el dni:</strong> 
+                        <input type="number" id="numero_dni" class="form-control form-control-sm ms-2 me-2" placeholder="Ingrese un numero de dni" >
+                        <button class="btn btn-sm btn-outline-success ms-2 " id="btn_search" onclick="verificar_usuariodni()" disabled><i class="bi bi-search" ></i> </button>
+                </div>
+                <div class="row mt-3">
                     <div class="col-5">
                         <p><strong>Datos del jugador:</strong> 
                         </p>

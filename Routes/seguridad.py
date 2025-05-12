@@ -201,3 +201,23 @@ def registrar_rutas(app):
                 return jsonify({'codigo': 0, 'mensaje': 'No se pudo actualizar el estado del usuario'})
         except Exception as e:
             return jsonify({'codigo': 0, 'mensaje': f'Error al procesar la solicitud: {str(e)}'}), 500
+        
+    
+    @app.route('/verificar_usuarioDni/<int:id>')
+    def verificar_usuarioDni(id):
+        try:
+            resultado = cuser.verificar_usuarioDni(id)
+            
+            if resultado:
+                datos  = {
+                    'id':resultado[0],
+                    'nombre': resultado[1],
+                    'correo': resultado[2],
+                    'telefono': resultado[3],
+                }
+                return jsonify({'codigo': 1, 'datos': datos})
+            else:
+                return jsonify({'codigo': 0, 'mensaje': 'No se pudo actualizar el estado del usuario'})
+        except Exception as e:
+            print(f"Error en verificar_usuarioDni: {e}")
+            return jsonify({'codigo': 0, 'mensaje': f'Error al procesar la solicitud: {str(e)}'}), 500
