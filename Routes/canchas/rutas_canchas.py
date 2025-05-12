@@ -186,5 +186,19 @@ def registrar_rutas(app):
         dias = [hoy + timedelta(days=i) for i in range(4)]
         fechas_formateadas = [fecha.strftime('%d/%m/%Y') for fecha in dias]
         return render_template('pages/negocio/canchas/reserva_canchas.html', days = fechas_formateadas )
+    
+
+    @app.route('/datos_clientejugador/<int:id>')
+    def datos_clientejugador(id):
+        datos= controlador_cancha_admin.datos_jugadoralquilo(id)
+        mensaje = {}
+        if datos:
+            mensaje['status'] = 1,
+            mensaje['valor'] = datos
+        else:
+            mensaje['status']=0
+        return jsonify(mensaje)
+
+
 
 

@@ -70,7 +70,7 @@
                     </div>
                     <div class="col-10" >
                         {% for horario in lista_horario %}
-                            <button class="btn btn-secondary m-1 horas" data-inicio="{{ horario['hora_inicio'] }}">
+                            <button class="btn btn-success m-1 horas" data-inicio="{{ horario['hora_inicio'] }}" onclick="abrir_nodal(this,`{{ cancha['nombre'] }}`)">
                                 {{ horario['hora_inicio'] }} - {{ horario['hora_fin'] }}
                             </button>
                         {% endfor %}
@@ -78,6 +78,41 @@
                 </div>
             {% endfor %}
         </div>
+        <!-- Modal -->
+        <div class="modal fade" id="modal_detalle" tabindex="-1" aria-labelledby="modalDetalleLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <input type="text" id="id_rs" class="d-none">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalDetalleLabel">Detalle de Reserva</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            
+            <div class="modal-body">
+                <p><strong>Cancha:</strong> <span id="detalle_cancha"></span></p>
+                <p><strong>Estado:</strong> <span  id="detalle_estado"></span></p>
+                <div class="row">
+                    <div class="col-5">
+                        <p><strong>Datos del jugador:</strong> 
+                        </p>
+                    </div>
+                    <div class="col-7" id="detalle_cliente">
+
+                    </div>
+                </div>
+                
+                <p><strong>Hora:</strong> <span id="detalle_hora"></span></p>
+                <!-- Agrega más campos si lo necesitas -->
+            </div>
+            
+            <div class="modal-footer" id="foot_modal">
+                <!-- Sin botones por ahora -->
+            </div>
+            
+            </div>
+        </div>
+        </div>
+
 
     {% else%}
         No hay canchas activas, verifique su estado

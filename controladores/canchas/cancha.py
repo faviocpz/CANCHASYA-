@@ -255,7 +255,7 @@ def listar_canchas_idalquilador(id,fecha):
                 '''
             cursor.execute(sql2, fecha)
             reservas = cursor.fetchall()
-
+            print(reservas)
             for cancha in canchas:
                 print(canchas)
                 lista_reserva = []
@@ -269,7 +269,11 @@ def listar_canchas_idalquilador(id,fecha):
                 for reserva in reservas:
                     print(reserva)
                     if reserva[4] == cancha[0]:
-                        dt_cancha['reservas'].append(str(reserva[2]))
+                        dt_cancha['reservas'].append({
+                            'hr': str(reserva[2]),
+                            'id': reserva[5],
+                            'id_reserva': reserva[0]
+                            })
                     
 
                 lista_cancha.append(dt_cancha)
@@ -320,5 +324,29 @@ def eliminar_foto(id):
         with conn.cursor() as cur:
             cur.execute(sql, (id,))
             conn.commit()
+    finally:
+        conn.close()
+
+def datos_jugadoralquilo(id):
+    sql = """
+      select us.nombre, us.correo, us.telefono from RESERVA as r inner join usuario as us
+        on us.id = r.idUsuario
+        where us.id = %s
+        ;
+    """
+    datos_json = list()
+    conn = obtener_conexion()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(sql, (id,))
+            datos = cur.fetchone()
+            if datos:
+                datos_json.append({
+                    "nombre": datos[0],
+                    "correo": datos[1],
+                    "telefono": datos[2]
+                })
+                return datos_json
+            return None
     finally:
         conn.close()
