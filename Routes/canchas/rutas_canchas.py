@@ -198,6 +198,17 @@ def registrar_rutas(app):
         else:
             mensaje['status']=0
         return jsonify(mensaje)
+    
+    @app.route('/alquiler_cancha/<int:id_usuario>/<string:horario>')
+    def alquiler_cancha(id_usuario,horario):
+        datos= controlador_cancha_admin.cancha_alquilada(id_usuario, horario)
+        mensaje = {}
+        if datos:
+            mensaje['status'] = 1,
+            mensaje['valor'] = datos
+        else:
+            mensaje['status']=0
+        return jsonify(mensaje)
 
 
 

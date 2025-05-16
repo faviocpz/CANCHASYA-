@@ -34,7 +34,7 @@ const spanEstado = document.getElementById('detalle_estado');
 const footmodal = document.getElementById('foot_modal');
 const spanCliente = document.getElementById('detalle_cliente');
 const boton_eliminarR = `<button class="btn btn-danger w-100" onclick="eliminar_reserva()"> Eliminar Reserva </button>`
-const boton_agregarR = `<button class="btn btn-success w-100" disabled id="btn_rese"> Agregar Reserva </button>`
+const boton_agregarR = `<button class="btn btn-success w-100" disabled id="btn_rese" onclick="agregar_reserva()"> Agregar Reserva </button>`
 const id_rs = document.getElementById('id_rs');
 
 async function  abrir_nodal(button, cancha){
@@ -90,16 +90,21 @@ function eliminar_reserva(){
 
 async function verificar_usuariodni(){
     let dni_e  = document.getElementById('numero_dni').value;
+    let  id_j = document.getElementById('id_rs');
+    id_j.value = "";
+
     try {
         const response = await fetch(`/verificar_usuarioDni/${dni_e}`);
         const datos = await response.json();
         if(datos.codigo == 1){
             let jugador = datos.datos;
+            console.log(jugador);
             spanCliente.innerHTML = `
                 <strong>Nombre:</strong> ${jugador.nombre} <br>
                 <strong>Correo:</strong> ${jugador.correo} <br>
                 <strong>Teléfono:</strong> ${jugador.telefono}
             `;
+            id_j.value = jugador.id;
             document.getElementById('btn_rese').disabled = false;
         }else{
             document.getElementById('btn_rese').disabled = true;
@@ -118,3 +123,16 @@ document.getElementById('numero_dni').addEventListener('input', function() {
     btn.disabled = valor.length !== 8;
     btn_a.disabled = true;
 });
+
+
+
+function agregar_reserva(){
+    const id_usuario = document.getElementById('id_rs').value;
+    const detalle_hora = document.getElementById('detalle_hora').textContent.trim();
+    if(id_usuario && detalle_hora){
+        console.log(id_usuario);
+        console.log(detalle_hora);
+    }else{
+        console.log("Verifique los datos del usuario");
+    }
+}
