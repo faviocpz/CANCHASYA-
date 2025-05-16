@@ -36,13 +36,16 @@ const spanCliente = document.getElementById('detalle_cliente');
 const boton_eliminarR = `<button class="btn btn-danger w-100" onclick="eliminar_reserva()"> Eliminar Reserva </button>`
 const boton_agregarR = `<button class="btn btn-success w-100" disabled id="btn_rese" onclick="agregar_reserva()"> Agregar Reserva </button>`
 const id_rs = document.getElementById('id_rs');
+const id_cancha = document.getElementById('id_cancha');
 
-async function  abrir_nodal(button, cancha){
+async function  abrir_nodal(button, cancha, cancha_id){
+    document.getElementById('numero_dni').value = "";
     id_rs.value = '';
+    id_cancha.value = cancha_id;
     spanCancha.textContent = cancha;
     spanHorario.textContent = button.textContent;
-
     if (button.classList.contains('btn-danger')) {
+        document.getElementById('frm_usu').classList.add('d-none');
         let id_jugador = button.dataset.idjugador;
         let id_reserv = button.dataset.idresrva;
         spanEstado.textContent = "Reservado";
@@ -65,9 +68,11 @@ async function  abrir_nodal(button, cancha){
             `;
             id_rs.value = id_reserv;
         }else{
-            spanCliente.innerHTML = '<strong>Nombre:</strong> Anónimo <br>'; 
+            spanCliente.innerHTML = '<strong>Nombre:</strong> Anónimo <br>';
         }
     }else{
+        document.getElementById('frm_usu').classList.remove('d-none');
+
         footmodal.innerHTML = boton_agregarR;
         spanEstado.textContent = "Libre";
         if(spanEstado.classList.contains('bg-danger')){
@@ -122,17 +127,104 @@ document.getElementById('numero_dni').addEventListener('input', function() {
     const btn_a = document.getElementById('btn_rese');
     btn.disabled = valor.length !== 8;
     btn_a.disabled = true;
+    document.getElementById('detalle_cliente').textContent = "";
 });
 
 
 
-function agregar_reserva(){
+async function agregar_reserva(){
     const id_usuario = document.getElementById('id_rs').value;
     const detalle_hora = document.getElementById('detalle_hora').textContent.trim();
+    const fecha = document.getElementById('fecha_actual').value;
+    const datos = {
+        'id_usuario': id_usuario,
+        'hora_inicio': detalle_hora.split('-')[0].trim(),
+        'hora_fin': detalle_hora.split('-')[1].trim(),
+        'fecha': fecha,
+        'id_cancha': document.getElementById('id_cancha').value
+    }
+
     if(id_usuario && detalle_hora){
-        console.log(id_usuario);
-        console.log(detalle_hora);
+        const response = await fetch('/alquiler_cancha', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(datos)
+        });
+
+        const resultado = await response.json();
+        console.log(resultado);
+        if(resultado.status == 1){
+            alert("Reserva registrada correctamente")
+            myModal.hide()
+        }else{
+            boton_agregarR.disabled = false;
+            boton_agregarR.innerHTML = `Agregar reserva`
+
+            alert("No se pudo registrar correctamente la reserva")
+        }
     }else{
         console.log("Verifique los datos del usuario");
     }
+}
+document.addEventListener('DOMContentLoaded', function() {
+    const horaInicioSelect = document.getElementById('hora_inicio_select');
+    const horaFinSelect = document.getElementById('hora_fin_select');
+
+    function actualizarOpcionesFin() {
+        const horaInicio = parseInt(horaInicioSelect.value);
+        
+        if (isNaN(horaInicio)) {            
+            horaFinSelect.querySelectorAll('option').forEach(option => {
+                if (option.value !== "") option.style.display = '';
+            });
+            return;
+        }
+
+        horaFinSelect.querySelectorAll('option').forEach(option => {
+            if (option.value !== "") {
+                const horaOption = parseInt(option.value);
+                option.style.display = horaOption > horaInicio ? '' : 'none';
+            }
+        });
+
+        if (parseInt(horaFinSelect.value) <= horaInicio) {
+            horaFinSelect.value = "";
+        }
+    }
+    
+    function actualizarOpcionesInicio() {
+        const horaFin = parseInt(horaFinSelect.value);
+        
+        if (isNaN(horaFin)) {
+            horaInicioSelect.querySelectorAll('option').forEach(option => {
+                if (option.value !== "") option.style.display = '';
+            });
+            return;
+        }
+
+        horaInicioSelect.querySelectorAll('option').forEach(option => {
+            if (option.value !== "") {
+                const horaOption = parseInt(option.value);
+                option.style.display = horaOption < horaFin ? '' : 'none';
+            }
+        });
+
+        if (parseInt(horaInicioSelect.value) >= horaFin) {
+            horaInicioSelect.value = "";
+        }
+    }
+
+    horaInicioSelect.addEventListener('change', actualizarOpcionesFin);
+    horaFinSelect.addEventListener('change', actualizarOpcionesInicio);
+
+    actualizarOpcionesFin();
+    actualizarOpcionesInicio();
+});
+
+
+
+function filtrar(){
+    
 }

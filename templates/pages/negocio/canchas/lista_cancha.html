@@ -17,9 +17,9 @@
                 <div class="d-flex align-items-center flex-nowrap">
                     <i class="bi bi-calendar3 me-2 text-secondary"></i>
                     <label class="me-2 mb-0 fw-semibold white-space-nowrap">Fecha:</label>
-                    <select class="form-select form-select-sm" style="min-width: 140px;">
+                    <select class="form-select form-select-sm" id="fecha_actual" style="min-width: 140px;">
                         {% for fecha in fechas_listado %}
-                            <option value="">{{ fecha }}</option>
+                            <option value="{{ fecha }}">{{ fecha }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -39,10 +39,9 @@
                 <div class="d-flex align-items-center flex-nowrap">
                     <i class="bi bi-clock me-2 text-secondary"></i>
                     <label class="me-2 mb-0 fw-semibold white-space-nowrap text-nowrap">Hora Inicio:</label>
-                    <select class="form-select form-select-sm" style="min-width: 120px;">
-                        <option value="T">----</option>
+                    <select class="form-select form-select-sm" style="min-width: 120px;" id="hora_inicio_select">
                         {% for i in range(7,24) %}
-                            <option value="{{ i }}">{{ i }}:00</option>
+                            <option value="{{ i }}" {% if i == 7 %}selected{% endif %}>{{ i }}:00</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -51,15 +50,14 @@
                 <div class="d-flex align-items-center flex-nowrap">
                     <i class="bi bi-clock-history me-2 text-secondary"></i>
                     <label class="me-2 mb-0 fw-semibold white-space-nowrap text-nowrap">Hora Fin:</label>
-                    <select class="form-select form-select-sm" style="min-width: 120px;">
-                        <option value="T">----</option>
+                    <select class="form-select form-select-sm" style="min-width: 120px;" id="hora_fin_select">
                         {% for i in range(7,24) %}
-                            <option value="{{ i }}">{{ i }}:00</option>
+                            <option value="{{ i }}"  {% if i == 23 %}selected{% endif %}  >{{ i }}:00</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div>
-                    <button class="btn btn-primary"><i class="bi bi-search"></i></button>
+                    <button class="btn btn-primary" onclick="filtrar()"><i class="bi bi-search"></i></button>
                 </div>
 
             </div>
@@ -73,7 +71,7 @@
                     </div>
                     <div class="col-10" >
                         {% for horario in lista_horario %}
-                            <button class="btn btn-success m-1 horas" data-inicio="{{ horario['hora_inicio'] }}" onclick="abrir_nodal(this,`{{ cancha['nombre'] }}`)">
+                            <button class="btn btn-success m-1 horas" data-inicio="{{ horario['hora_inicio'] }}" onclick="abrir_nodal(this,`{{ cancha['nombre'] }}`, `{{ cancha['id_cancha'] }}`)">
                                 {{ horario['hora_inicio'] }} - {{ horario['hora_fin'] }}
                             </button>
                         {% endfor %}
@@ -86,6 +84,8 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
             <input type="text" id="id_rs" class="d-none">
+            <input type="text" id="id_cancha" class="d-none">
+
             <div class="modal-header">
                 <h5 class="modal-title" id="modalDetalleLabel">Detalle de Reserva</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
@@ -94,7 +94,7 @@
             <div class="modal-body">
                 <p><strong>Cancha:</strong> <span id="detalle_cancha"></span></p>
                 <p><strong>Estado:</strong> <span  id="detalle_estado"></span></p>
-                <div class="d-flex">
+                <div class="d-flex" id="frm_usu">
                    <strong class="text-nowrap">Ingrese el dni:</strong> 
                         <input type="number" id="numero_dni" class="form-control form-control-sm ms-2 me-2" placeholder="Ingrese un numero de dni" >
                         <button class="btn btn-sm btn-outline-success ms-2 " id="btn_search" onclick="verificar_usuariodni()" disabled><i class="bi bi-search" ></i> </button>
@@ -133,7 +133,4 @@
     let datos_canchas = JSON.parse('{{ listas_canchas | tojson | safe }}');
 </script>
 <script src="/static/assets/js/reservas.js"></script>
-
-
-
 {% endblock %}

@@ -350,3 +350,22 @@ def datos_jugadoralquilo(id):
             return None
     finally:
         conn.close()
+
+#reserva
+def registrar_reserva(fecha, horario_inicio, horario_fin, id_cancha, id_usuario):
+    sql = '''
+        INSERT INTO RESERVA (fecha, hora_inicio, hora_fin, idCancha, idUsuario)
+        VALUES (%s, %s, %s, %s, %s)
+    '''
+    conn = obtener_conexion()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(sql, (fecha, horario_inicio, horario_fin, id_cancha, id_usuario))
+            conn.commit()
+        return True
+    except Exception as e:
+        print("Error al registrar reserva:", e)
+        conn.rollback()
+        return False
+    finally:
+        conn.close()
