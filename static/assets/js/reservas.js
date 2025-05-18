@@ -1,8 +1,14 @@
-pintar_horario();
-function pintar_horario(){
+const minimoSelect = document.getElementById('hora_fin_select');
+const maximoSelect = document.getElementById('hora_inicio_select');
+
+const min = minimoSelect.options[0].value;
+const maximo = maximoSelect.options[minimoSelect.options.length - 1].value;
+
+
+pintar_horario(datos_canchas);
+async function pintar_horario(datos_canchas){
 
     Array.from(datos_canchas).forEach(element => {
-        console.log(element);
         const reservado = element.reservas;
         let horas = document.getElementById(element.id_cancha);
         let botones = horas.querySelectorAll('.horas');
@@ -57,7 +63,6 @@ async function  abrir_nodal(button, cancha, cancha_id){
 
         let datos = await fetch(`/datos_clientejugador/${id_jugador}`);
         let response = await datos.json()
-        console.log(response);
 
         if(response.status == 1){
             let jugador = response.valor[0]; 
@@ -87,11 +92,39 @@ async function  abrir_nodal(button, cancha, cancha_id){
 }
 
 
-function eliminar_reserva(){
+async function eliminar_reserva(){
     const id = id_rs.value;
-    console.log(id);
+    const ch = document.getElementById('id_cancha').value;
+    const botones = document.getElementById(ch).querySelectorAll('.horas');
+    const hr = document.getElementById('detalle_hora').textContent.split('-')[0].trim();
+    const boton_r = document.getElementById('modal_detalle').querySelector('.btn-danger');
 
+    try{
+        boton_r.disabled = true;
+        boton_r.innerHTML = `  <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Eliminando reserva...`;
+        const response = await fetch(`/eliminar_reserva/${id}`);
+        const data = await response.json();
+        if(data.status == 1){
+            botones.forEach(boton => {
+                if (boton.dataset.inicio == hr) {
+                    boton.classList.add('btn-success');
+                    boton.classList.remove('btn-danger');
+                }
+            });
+            mensajeOK('Reserva eliminada con éxito');
+            myModal.hide();
+        }else{
+            mensajeNOT('La reserva no se pudo eliminar');
+            boton_r.innerHTML = "Eliminar Reserva";
+        }
+    }catch{
+            mensajeNOT('La reserva no se pudo eliminar');
+    }finally{
+        boton_r.disabled = false;
+    }
 }
+
 
 async function verificar_usuariodni(){
     let dni_e  = document.getElementById('numero_dni').value;
@@ -136,6 +169,9 @@ async function agregar_reserva(){
     const id_usuario = document.getElementById('id_rs').value;
     const detalle_hora = document.getElementById('detalle_hora').textContent.trim();
     const fecha = document.getElementById('fecha_actual').value;
+    const boton_r = document.getElementById('modal_detalle').querySelector('.btn-success');
+    const data_idjugador = 1;
+    const data_idresrva = 1;
     const datos = {
         'id_usuario': id_usuario,
         'hora_inicio': detalle_hora.split('-')[0].trim(),
@@ -143,29 +179,33 @@ async function agregar_reserva(){
         'fecha': fecha,
         'id_cancha': document.getElementById('id_cancha').value
     }
+    try{
+        if(id_usuario && detalle_hora){
+            boton_r.disabled = true;
+            boton_r.innerHTML = `    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Agregando reserva...`;
+            const response = await fetch('/alquiler_cancha', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datos)
+            });
 
-    if(id_usuario && detalle_hora){
-        const response = await fetch('/alquiler_cancha', {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(datos)
-        });
-
-        const resultado = await response.json();
-        console.log(resultado);
-        if(resultado.status == 1){
-            alert("Reserva registrada correctamente")
-            myModal.hide()
+            const resultado = await response.json();
+            if(resultado.status == 1){
+                datos_fecha_nueva('si');
+                mensajeOK("Reserva registrada exitosamente!");
+                myModal.hide();
+            }else{
+                boton_agregarR.innerHTML = `Agregar Reserva`
+                mensajeNOT("No se pudo registrar correctamente la reserva!");            
+            }
         }else{
-            boton_agregarR.disabled = false;
-            boton_agregarR.innerHTML = `Agregar reserva`
-
-            alert("No se pudo registrar correctamente la reserva")
+            console.log("Verifique los datos del usuario");
         }
-    }else{
-        console.log("Verifique los datos del usuario");
+    }finally{
+        boton_r.disabled = false;
     }
 }
 document.addEventListener('DOMContentLoaded', function() {
@@ -226,5 +266,257 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function filtrar(){
+    const filtro_e = document.getElementById('filtro_e').value;
+    const filtro_hi = parseInt(document.getElementById('hora_inicio_select').value);
+    const filtro_hf = parseInt(document.getElementById('hora_fin_select').value);
+    const body = document.querySelectorAll('.listas_canchas');
+
+    Array.from(body).forEach(element => {
+        let hr = element.querySelectorAll('.horarios_cc .horas');
+        Array.from(hr).forEach((button) => {
+            const hora_inicio = parseInt(button.textContent.split('-')[0].slice().split(':')[0]);
+            const hor_fin = parseInt(button.textContent.split('-')[1].slice().split(':')[0]);
+            const estado = button.classList.contains('btn-success');
+
+            if(filtro_e == 'A'){
+                console.log(estado);
+                if(hora_inicio >= filtro_hi && hor_fin <= filtro_hf && estado == true){
+                    button.classList.contains('d-none') ? button.classList.remove('d-none'): 1;
+                }else{
+                    button.classList.contains('d-none') ? 1: button.classList.add('d-none');
+                }
+            }else if(filtro_e == 'I'){
+                if(hora_inicio >= filtro_hi && hor_fin <= filtro_hf && estado == false){
+                    button.classList.contains('d-none') ? button.classList.remove('d-none'): 1;
+                }else{
+                    button.classList.contains('d-none') ? 1: button.classList.add('d-none');
+                }           
+            }else{
+                if(hora_inicio >= filtro_hi && hor_fin <= filtro_hf){
+                    button.classList.contains('d-none') ? button.classList.remove('d-none'): 1;
+                }else{
+                    button.classList.contains('d-none') ? 1: button.classList.add('d-none');
+                }
+            }
+
+        })
+
+    });
+}
+
+
+document.getElementById('fecha_actual').addEventListener('change', function () {
+    let h_ini = document.getElementById('hora_inicio_select');
+    let f_fin = document.getElementById('hora_fin_select');
+    document.getElementById('filtro_e').value = "T";
+    Array.from(h_ini.options).forEach(option => {
+        if (option.style.display === "none") {
+            option.style.display = "";
+        }
+    });
+
+    Array.from(f_fin.options).forEach(option => {
+        if (option.style.display === "none") {
+            option.style.display = "";
+        }
+    });
     
+    //h_ini.value = min;
+    //f_fin.value = maximo;
+    datos_fecha_nueva();
+});
+
+const load = document.querySelector('.loader');
+
+async function datos_fecha_nueva(estado) {
+    if(!estado){
+        load.classList.remove('d-none');
+    }
+    
+    try {
+        const fecha = document.getElementById('fecha_actual').value;
+        const response = await fetch(`/pagina_reservasfiltro/${fecha}`);
+        const data = await response.json();
+
+        if (data.status === 1) {
+            renderCanchas(data.data, data.horario);
+            pintar_horario(data.data);
+            filtrar();
+        } else {
+            document.querySelector('.listas_canchas').innerHTML = "<p class='text-danger'>No hay canchas disponibles.</p>";
+        }
+    } finally {
+        load.classList.add('d-none');
+    }
+}
+
+async function renderCanchas(canchas, horarios) {
+    const contenedor = document.querySelector('.listas_canchas');
+    contenedor.innerHTML = '';
+
+    canchas.forEach(cancha => {
+        const div = document.createElement('div');
+        div.classList.add('row');
+        div.id = cancha.id_cancha;
+
+        div.innerHTML = `
+            <div class="col-2 text-center">
+                <input type="text" value="${cancha.id_cancha}" class="d-none">
+                <span class="fw-bold text-primary">${cancha.nombre}</span>
+            </div>
+            <div class="col-10 horarios_cc">
+                ${horarios.map(h => `
+                    <button class="btn btn-success m-1 horas"
+                        data-inicio="${h.hora_inicio}"
+                        onclick="abrir_nodal(this, '${cancha.nombre}', '${cancha.id_cancha}')">
+                        ${h.hora_inicio} - ${h.hora_fin}
+                    </button>
+                `).join('')}
+            </div>
+        `;
+        contenedor.appendChild(div);
+    });
+}
+
+document.getElementById('filtro_e').addEventListener('change', function(){
+const filtro_e = document.getElementById('filtro_e').value;
+    const filtro_hi = parseInt(document.getElementById('hora_inicio_select').value);
+    const filtro_hf = parseInt(document.getElementById('hora_fin_select').value);
+    const body = document.querySelectorAll('.listas_canchas');
+
+    Array.from(body).forEach(element => {
+        let hr = element.querySelectorAll('.horarios_cc .horas');
+        Array.from(hr).forEach((button) => {
+            const hora_inicio = parseInt(button.textContent.split('-')[0].slice().split(':')[0]);
+            const hor_fin = parseInt(button.textContent.split('-')[1].slice().split(':')[0]);
+            const estado = button.classList.contains('btn-success');
+
+            if(filtro_e == 'A'){
+                console.log(estado);
+                if(hora_inicio >= filtro_hi && hor_fin <= filtro_hf && estado == true){
+                    button.classList.contains('d-none') ? button.classList.remove('d-none'): 1;
+                }else{
+                    button.classList.contains('d-none') ? 1: button.classList.add('d-none');
+                }
+            }else if(filtro_e == 'I'){
+                if(hora_inicio >= filtro_hi && hor_fin <= filtro_hf && estado == false){
+                    button.classList.contains('d-none') ? button.classList.remove('d-none'): 1;
+                }else{
+                    button.classList.contains('d-none') ? 1: button.classList.add('d-none');
+                }           
+            }else{
+                if(hora_inicio >= filtro_hi && hor_fin <= filtro_hf){
+                    button.classList.contains('d-none') ? button.classList.remove('d-none'): 1;
+                }else{
+                    button.classList.contains('d-none') ? 1: button.classList.add('d-none');
+                }
+            }
+
+        })
+
+    });
+});
+
+document.getElementById('hora_inicio_select').addEventListener('change', function() {
+    const filtro_e = document.getElementById('filtro_e').value;
+    const filtro_hi = parseInt(document.getElementById('hora_inicio_select').value);
+    const filtro_hf = parseInt(document.getElementById('hora_fin_select').value);
+    const body = document.querySelectorAll('.listas_canchas');
+
+    Array.from(body).forEach(element => {
+        let hr = element.querySelectorAll('.horarios_cc .horas');
+        Array.from(hr).forEach((button) => {
+            const hora_inicio = parseInt(button.textContent.split('-')[0].slice().split(':')[0]);
+            const hor_fin = parseInt(button.textContent.split('-')[1].slice().split(':')[0]);
+            const estado = button.classList.contains('btn-success');
+
+            if(filtro_e == 'A'){
+                console.log(estado);
+                if(hora_inicio >= filtro_hi && hor_fin <= filtro_hf && estado == true){
+                    button.classList.contains('d-none') ? button.classList.remove('d-none'): 1;
+                }else{
+                    button.classList.contains('d-none') ? 1: button.classList.add('d-none');
+                }
+            }else if(filtro_e == 'I'){
+                if(hora_inicio >= filtro_hi && hor_fin <= filtro_hf && estado == false){
+                    button.classList.contains('d-none') ? button.classList.remove('d-none'): 1;
+                }else{
+                    button.classList.contains('d-none') ? 1: button.classList.add('d-none');
+                }           
+            }else{
+                if(hora_inicio >= filtro_hi && hor_fin <= filtro_hf){
+                    button.classList.contains('d-none') ? button.classList.remove('d-none'): 1;
+                }else{
+                    button.classList.contains('d-none') ? 1: button.classList.add('d-none');
+                }
+            }
+
+        })
+
+    });
+});
+
+document.getElementById('hora_fin_select').addEventListener('change', function() {
+    const filtro_e = document.getElementById('filtro_e').value;
+    const filtro_hi = parseInt(document.getElementById('hora_inicio_select').value);
+    const filtro_hf = parseInt(document.getElementById('hora_fin_select').value);
+    const body = document.querySelectorAll('.listas_canchas');
+
+    Array.from(body).forEach(element => {
+        let hr = element.querySelectorAll('.horarios_cc .horas');
+        Array.from(hr).forEach((button) => {
+            const hora_inicio = parseInt(button.textContent.split('-')[0].slice().split(':')[0]);
+            const hor_fin = parseInt(button.textContent.split('-')[1].slice().split(':')[0]);
+            const estado = button.classList.contains('btn-success');
+
+            if(filtro_e == 'A'){
+                console.log(estado);
+                if(hora_inicio >= filtro_hi && hor_fin <= filtro_hf && estado == true){
+                    button.classList.contains('d-none') ? button.classList.remove('d-none'): 1;
+                }else{
+                    button.classList.contains('d-none') ? 1: button.classList.add('d-none');
+                }
+            }else if(filtro_e == 'I'){
+                if(hora_inicio >= filtro_hi && hor_fin <= filtro_hf && estado == false){
+                    button.classList.contains('d-none') ? button.classList.remove('d-none'): 1;
+                }else{
+                    button.classList.contains('d-none') ? 1: button.classList.add('d-none');
+                }           
+            }else{
+                if(hora_inicio >= filtro_hi && hor_fin <= filtro_hf){
+                    button.classList.contains('d-none') ? button.classList.remove('d-none'): 1;
+                }else{
+                    button.classList.contains('d-none') ? 1: button.classList.add('d-none');
+                }
+            }
+
+        })
+
+    });
+});
+
+
+
+function mensajeOK(mensaje) {
+    Toastify({
+        text: mensaje,
+        duration: 2000, // 2 segundos
+        close: true,
+        gravity: "bottom",
+        position: "right",
+        backgroundColor: "#28a745", // Verde Bootstrap
+        stopOnFocus: true,
+    }).showToast();
+}
+
+function mensajeNOT(mensaje) {
+    Toastify({
+        text: mensaje,
+        duration: 2000, // 2 segundos
+        close: true,
+        gravity: "bottom",
+        position: "right",
+        backgroundColor: "#dc3545", // Rojo Bootstrap
+        stopOnFocus: true,
+    }).showToast();
 }

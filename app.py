@@ -19,6 +19,16 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 def index():
     return render_template('pages/index.html')
 
+
+def error_2013(e):
+    return render_template('/pages/error/error_500.html')
+
+
+@app.errorhandler(404)
+def error_404(e):
+    return render_template('/pages/error/error_404.html')
+
+
 Rcanchas.registrar_rutas(app)
 Rlocal.registrar_rutas(app)
 Rpresentacion.registrar_rutas(app)

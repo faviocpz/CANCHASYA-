@@ -26,6 +26,8 @@ def verificar_cuenta(correo, contraseña, tipo):
             if result and result[0] > 0:
                 session['telefono'] = result[6]
         return result if result[0] > 0 else [0]
+    except Exception as e:
+        print(e)
     finally:
         conexion.close()
 

@@ -27,8 +27,14 @@
    </div>
 
     <!-- Main Content -->
-    <div class="col ps-0">
-      <main class="pt-3 px-3 px-lg-4">
+    <div class="col g-0 position-relative">
+      <div class="loader d-none">
+        <div>
+          <span class="spinner-border text-blue load" role="status">
+          </span>
+        </div>
+      </div>
+      <main class="pt-3 px-3 px-lg-4  h-100 g-0 w-100 " >
         <h2 class="titulo-pagina-cy">{% block titulo_pagina %}{% endblock %}</h2>
         {% block contenido %}{% endblock %}
       </main>

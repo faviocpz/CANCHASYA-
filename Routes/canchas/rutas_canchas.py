@@ -138,8 +138,46 @@ def registrar_rutas(app):
         return redirect(url_for('canchass'))
 
 
+    @app.route('/pagina_reservasfiltro/<string:fecha>')
+    def pagina_reservasfiltro(fecha):
+        print(fecha)
 
+        listas_canchas, horario = controlador_cancha_admin.listar_canchas_idalquilador(session.get('id'),fecha)
+        lista_horario = []
+        hora_imañana = int(str(horario[1]).split(':')[0])
+        hora_fmañana = int(str(horario[2]).split(':')[0])
+        hora_itarde = int(str(horario[3]).split(':')[0])
+        hora_ftarde = int(str(horario[4]).split(':')[0])
+        hora_inoche = int(str(horario[5]).split(':')[0])
+        hora_fnoche = int(str(horario[6]).split(':')[0])
+        for hrm in range(hora_imañana, hora_fmañana):
+            lista_horario.append({
+                'hora_inicio': str(hrm)+':00',
+                'hora_fin': str(hrm+1)+':00',
+                'estado': 'I'
+            })
+        for hrt in range(hora_itarde, hora_ftarde):
+            lista_horario.append({
+                'hora_inicio': str(hrt)+':00',
+                'hora_fin': str(hrt+1)+':00',
+                'estado': 'I'
+            })
+        for hrn in range(hora_inoche, hora_fnoche):
+            lista_horario.append({
+                'hora_inicio': str(hrn)+':00',
+                'hora_fin': str(hrn+1)+':00',
+                'estado': 'I'
+            })
         
+        
+        status = 0
+        if listas_canchas:
+            status = 1
+        return jsonify({
+            'status': status,
+            'data': listas_canchas,
+            'horario': lista_horario
+        })
         
     @app.route('/pagina_reservas/')
     def pagina_reservas():
@@ -202,14 +240,22 @@ def registrar_rutas(app):
     @app.route('/alquiler_cancha', methods=['POST'])
     def alquiler_cancha():
         datos = request.get_json()
-        respuesta = controlador_cancha_admin.registrar_reserva(datos['fecha'], datos['hora_inicio'], datos['hora_fin'], datos['id_cancha'], datos['id_usuario'])
+        respuesta= controlador_cancha_admin.registrar_reserva(datos['fecha'], datos['hora_inicio'], datos['hora_fin'], datos['id_cancha'], datos['id_usuario'])
         mensaje = {}
         if respuesta:
             mensaje['status'] = 1
         else:
             mensaje['status']= 0
         return jsonify(mensaje)
+    
 
+    @app.route('/eliminar_reserva/<int:id_reserva>')
+    def eliminar_reserva(id_reserva):
+        try:
+            respuesta = controlador_cancha_admin.eliminar_reserva(id_reserva)
+            return jsonify({'status': respuesta})
+        except:
+            return jsonify({'status': 0})
 
 
 

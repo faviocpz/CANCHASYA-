@@ -286,7 +286,8 @@ def listar_canchas_idalquilador(id,fecha):
             cursor.execute(sql3,(id))
             horario = cursor.fetchone()
             return lista_cancha, horario if lista_cancha else None
-    except:
+    except Exception as e:
+        print(e)
         return None
     finally:
         conexion.close()  
@@ -358,6 +359,7 @@ def registrar_reserva(fecha, horario_inicio, horario_fin, id_cancha, id_usuario)
         VALUES (%s, %s, %s, %s, %s)
     '''
     conn = obtener_conexion()
+    id_r = 0
     try:
         with conn.cursor() as cur:
             cur.execute(sql, (fecha, horario_inicio, horario_fin, id_cancha, id_usuario))
@@ -367,5 +369,21 @@ def registrar_reserva(fecha, horario_inicio, horario_fin, id_cancha, id_usuario)
         print("Error al registrar reserva:", e)
         conn.rollback()
         return False
+    finally:
+        conn.close()
+
+def eliminar_reserva(id_reserva):
+    sql = '''
+        delete from RESERVA where idReserva = %s
+    '''
+    conn = obtener_conexion()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(sql, (id_reserva))
+            conn.commit()
+        return 1
+    except Exception as e:
+        conn.rollback()
+        return 0
     finally:
         conn.close()
