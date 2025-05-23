@@ -53,193 +53,160 @@
 
 
   <div class="row g-4 pb-5">
-    {% for cancha in canchas_info %}
-    <div class="col-sm-12 col-md-4">
-      <div class="card reserva-card">
-        <div id="carouselCancha{{ cancha[0] }}" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
+  {% for cancha in canchas_info %}
+  <div class="col-12">
+    <div class="card reserva-card flex-md-row shadow">
+      <!-- Carrusel de imágenes al lado izquierdo -->
+      <div class="col-md-7 p-0">
+        <div id="carouselCancha{{ cancha[0] }}" class="carousel slide h-100" data-bs-ride="carousel">
+          <div class="carousel-inner h-100">
             {% for foto in canchas_fotos[cancha[0]] %}
-            <!-- Imagen 1 -->
-            <div class="carousel-item {% if loop.first %} active {% endif %}">
-              <img src="{{ url_for('static', filename='assets/img/' ~ foto) }}" class="d-block w-100" alt="Imagen de la cancha 1">
+            <div class="carousel-item {% if loop.first %} active {% endif %} h-100">
+              <img src="{{ url_for('static', filename='assets/img/' ~ foto) }}" class="d-block w-100 h-100" alt="Imagen de la cancha">
             </div>
-            <!-- Imagen 2 -->
             {% endfor %}
           </div>
           <button class="carousel-control-prev" type="button" data-bs-target="#carouselCancha{{ cancha[0] }}" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
+            <span class="visually-hidden">Anterior</span>
           </button>
           <button class="carousel-control-next" type="button" data-bs-target="#carouselCancha{{ cancha[0] }}" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
+            <span class="visually-hidden">Siguiente</span>
           </button>
         </div>
-        <div class="card-body d-flex flex-column">
-          <!--<h5 class="card-title">{{ cancha[1] }}</h5>-->
-          <blockquote style="font-style: italic; color: #2c3e50; border-left: 4px solid #2980b9; padding-left: 10px;">
-            {{ cancha[1] }} </blockquote>
-            <p><strong>{{ cancha[1] }}</strong></p>
-       <!--<p style="background-color: #e0f7fa; padding: 0.5rem; border-radius: 8px;">
-        Cancha con buena iluminación nocturna. Excelente para partidos en la noche o en días lluviosos, con tribunas para espectadores.
-     </p>-->
-            
+      </div>
 
-     <p><strong>Puntuación:</strong> 
-      {% set rating = cancha[2] %} <!-- Suponemos que la puntuación está en el tercer valor -->
-      
-      {% set full_stars = rating | int %}
-      {% set half_star = (rating - full_stars) >= 0.5 %}
-      
-      <!-- Mostrar estrellas completas -->
-      {% for i in range(1, full_stars + 1) %}
-        <i class="bi bi-star-fill text-warning"></i>
-      {% endfor %}
-      
-      <!-- Mostrar una estrella media si es necesario -->
-      {% if half_star %}
-        <i class="bi bi-star-half text-warning"></i>
-      {% endif %}
-      
-      <!-- Completar las estrellas vacías hasta 5 -->
-      {% for i in range(full_stars + 1 + (1 if half_star else 0), 6) %}
-        <i class="bi bi-star text-warning"></i>
-      {% endfor %}
-    </p>
-    
-  
-          <p><strong>Precio por hora:</strong> S/. {{ cancha[3] }}</p>
-          <div class="form-group">
-            <label for="dateSelect">Selecciona una fecha:</label>
-            <select class="form-control fechaReserva">
+      <!-- Información de la cancha al lado derecho -->
+      <div class="col-md-5 p-4 d-flex flex-column">
+        <blockquote style="font-style: italic; color: #2c3e50; border-left: 4px solid #2980b9; padding-left: 10px;">
+          {{ cancha[1] }}
+        </blockquote>
+        <h3><strong>{{ cancha[1] }}</strong></h3>
 
-              <!-- Las opciones se llenarán dinámicamente desde JavaScript -->
-            </select>
-          </div>
-             <!--<p><strong>Horario de atención:</strong> 10:00 AM - 22:00 PM</p>-->
-             <div class="mt-4">
-              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scheduleModal">Seleccionar Horario</button>
-            </div>
-            <div class="form-group mt-3">
-              <label>Hora de inicio:</label>
-              <input type="time" class="form-control horaInicio">
-            </div>
-            
-            <!--<div class="form-group mt-2">
-              <label>Duración (minutos):</label>
-              <select id="durationSelect" class="form-control">
-                <option value="15">15 minutos</option>
-                <option value="30">30 minutos</option>
-                <option value="60">1 hora</option>
-                <option value="90">1 hora 30 minutos</option>
-                <option value="120">2 horas</option>
-              </select>
-            </div>-->
-            <!--<div class="form-group mt-2">
-              <label>Duración de la reserva:</label>
-              <select class="form-control" id="duracionReserva">
-                <option value="">-- Seleccione duración --</option>
-              </select>
-            </div>-->
-            <div class="form-group mt-2">
-              <label>Duración de la reserva:</label>
-              <select class="form-control duracionReserva">
-                <option value="">-- Selecciona duración --</option>
-              </select>
-            </div>
-            
-            <div class="form-group mt-2">
-              <label>Hora de fin:</label>
-              <input type="time" class="form-control horaFin" readonly>
+        <p><strong>Puntuación:</strong> 
+          {% set rating = cancha[2] %}
+          {% set full_stars = rating | int %}
+          {% set half_star = (rating - full_stars) >= 0.5 %}
+          {% for i in range(1, full_stars + 1) %}
+            <i class="bi bi-star-fill text-warning"></i>
+          {% endfor %}
+          {% if half_star %}
+            <i class="bi bi-star-half text-warning"></i>
+          {% endif %}
+          {% for i in range(full_stars + 1 + (1 if half_star else 0), 6) %}
+            <i class="bi bi-star text-warning"></i>
+          {% endfor %}
+        </p>
 
-            </div>
+        <p><strong>Precio por hora - Turno Mañana:</strong> S/. {{ cancha[3] }}</p>
+        <p><strong>Precio por hora - Turno Tarde:</strong> S/. {{ cancha[4] }}</p>
+        <p><strong>Precio por hora - Turno Noche:</strong> S/. {{ cancha[5] }}</p>
 
-            <!--<<div class="caracteristicas">
-              <p><strong>Cuenta con:</strong></p>
-              <ul>
-                {% for caracteristica in cancha_caracteristicas[cancha[0]] %}
-                  <li>{{ caracteristica }}</li>
-                {% endfor %}
-              </ul>
-            </div>-->
-            <div class="caracteristicas">
-              <!--<p><strong>Cuenta con:</strong></p>-->
+        <!--<div class="form-group">
+          <label for="dateSelect">Selecciona una fecha:</label>
+          <select class="form-control fechaReserva"></select>
+        </div>-->
 
-              <!-- Botón para mostrar/ocultar la lista -->
-              <button class="btn btn-info" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'">
-                Cuenta con:
-              </button>
-          
-              <!-- Lista desplegable con las características -->
-              <!-- Lista desplegable con las características específicas de la cancha -->
-              <ul style="display: none; margin-top: 5px;">
-                {% for caracteristica in cancha_caracteristicas[cancha[0]] %}
-                    <li>{{ caracteristica }}</li>
-                {% endfor %}
-              </ul>
+        <div class="mt-3">
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scheduleModal">Horas Disponibles</button>
+        </div>
 
-          </div>
-                
-            
-          <div class="mt-auto pt-3 d-grid gap-2">
-            <a href="https://wa.me/{{ local_info[0][7] }}?text=Hola, quiero reservar la cancha {{ cancha[1] }} del local {{ local_info[0][0] }} para el día {{ fechaSeleccionada }}. Hora de inicio: {{ horaInicio }}. Hora de fin: {{ horaFin }}."
-            class="btn btn-whatsapp">
-             <i class="bi bi-whatsapp me-1"></i> Contactar por WhatsApp
-           </a>
-        
-           <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#puntuacionModal3">
-             <i class="bi bi-star me-1"></i> Añadir Puntuación
-           </button>     
-         </div>
+        <div class="form-group mt-3">
+          <label for="startTime">Hora de inicio:</label>
+          <input type="time" id="startTime" class="form-control" disabled>
+        </div>
 
-  
+        <div class="form-group mt-2">
+          <label for="endTime">Hora de fin:</label>
+          <input type="time" id="endTime" class="form-control" disabled>
+        </div>
+
+        <div class="caracteristicas mt-3">
+          <button class="btn btn-info" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'">
+            Cuenta con:
+          </button>
+          <ul style="display: none; margin-top: 5px;">
+            {% for caracteristica in cancha_caracteristicas[cancha[0]] %}
+              <li>{{ caracteristica }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="mt-auto pt-3 d-grid gap-2">
+          <a href="javascript:void(0);" id="whatsappBtn" class="btn btn-whatsapp">
+            <i class="bi bi-whatsapp me-1"></i> Contactar por WhatsApp
+          </a>
+          <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#puntuacionModal3" data-id="{{ cancha[0] }}" data-bs-dismiss="modal">
+            <i class="bi bi-star me-1"></i> Añadir Puntuación
+          </button>
         </div>
       </div>
     </div>
-    {% endfor %}
-  </div>   
-<div class="modal fade" id="puntuacionModal3" tabindex="-1" aria-labelledby="puntuacionModalLabel" aria-hidden="true">
- <div class="modal-dialog">
-   <div class="modal-content">
-     <form method="POST" > 
-       <div class="modal-header">
-         <h5 class="modal-title" id="puntuacionModalLabel1">Puntuar Cancha</h5>
-         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-       </div>
-       <div class="modal-body">
-         <label for="puntuacion" class="form-label">Elige tu puntuación</label>
-         <select class="form-select" name="puntuacion" id="puntuacion">
-           <option value="1">⭐</option>
-           <option value="2">⭐⭐</option>
-           <option value="3">⭐⭐⭐</option>
-           <option value="4">⭐⭐⭐⭐</option>
-           <option value="5">⭐⭐⭐⭐⭐</option>
-         </select>
-       </div>
-       <div class="modal-footer">
-         <button type="submit" class="btn btn-primary">Enviar</button>
-       </div>
-     </form>
-   </div>
- </div>
+  </div>
+  {% endfor %}
 </div>
+ 
+<!-- Modal HTML -->
+<!-- Modal HTML -->
+<!-- Modal HTML -->
+<div class="modal fade" id="puntuacionModal3" tabindex="-1" aria-labelledby="puntuacionModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" action="{{ url_for('registrar_puntuacion') }}" id="puntuacionForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="puntuacionModalLabel1">Puntuar Cancha</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <label for="puntuacion" class="form-label">Elige tu puntuación</label>
+          <select class="form-select" name="puntuacion" id="puntuacion">
+            <option value="1">⭐</option>
+            <option value="2">⭐⭐</option>
+            <option value="3">⭐⭐⭐</option>
+            <option value="4">⭐⭐⭐⭐</option>
+            <option value="5">⭐⭐⭐⭐⭐</option>
+          </select>
+        </div>
+        <!-- Campo oculto para el idCancha -->
+        <input type="hidden" name="idCancha" id="idCanchaInput"> <!-- Este es el campo que se actualiza dinámicamente -->
+        <input type="hidden" name="idLocal" id="idLocalInput">
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Enviar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- Success message for confirmation -->
+<div id="confirmationMessage" class="alert alert-success mt-3" style="display: none;">
+  ¡Puntuación registrada correctamente!
+</div>
+
+
 <!-- Modal para mostrar los horarios -->
 <div class="modal fade" id="scheduleModal" tabindex="-1" aria-labelledby="scheduleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="scheduleModalLabel">Seleccionar Horario de Reserva</h5>
+        <h5 class="modal-title" id="scheduleModalLabel">Seleccionar Horario Disponible de Reserva</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         
         <!-- Horario de turno (Mañana, Tarde, Noche) -->
          <!-- Seleccionar la fecha -->
-          <div class="form-group">
+          
+           <div class="form-group">
             <label for="fechaSelect">Selecciona la fecha:</label>
-            <input type="date" id="fechaSelect" class="form-control">
-          </div>
-        <div id="turnosContainer" class="schedule">
+            <select class="form-control" id="modalFechaSelect"></select>
+          </div> 
+          
+        <div id="turnosContainer" class="schedule mt-3">
           <!--{% for turno in turnos_info %}
           <div class="turno">
             <h6>{{ turno[0] }} ({{ turno[1] }} - {{ turno[2] }})</h6>
@@ -259,7 +226,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary">Confirmar Horario</button>
+        <button type="button" id="confirmarHorario" class="btn btn-primary" data-bs-dismiss="modal">Confirmar Horario</button>
       </div>
     </div>
   </div>
@@ -361,10 +328,19 @@ function calculateEndTime(startTime) {
   const end = start + 1; // Por defecto, la duración es de 1 hora
   return `${end}:00`;
 }
-// modal horario
-document.getElementById("fechaSelect").addEventListener("change", function() {
+// MODAL HORARIO
+function obtenerIdLocalDesdeURL() {
+  const path = window.location.pathname; // e.g. /local/50
+  const partes = path.split('/');
+  const idLocal = partes[partes.length - 1]; // obtiene '50'
+  return idLocal;
+}
+let horaSeleccionadaInicio = null;
+let horaSeleccionadaFin = null;
+
+document.getElementById("modalFechaSelect").addEventListener("change", function() {
   let fechaSeleccionada = this.value;
-  let idLocal = 15; // Este valor debe ser dinámico según el local
+  let idLocal = obtenerIdLocalDesdeURL(); // Este valor debe ser dinámico según el local
 
   // Llamada al backend para obtener los horarios disponibles para esa fecha
   fetch(`/obtener_horas_disponibles?fecha=${fechaSeleccionada}&idLocal=${idLocal}`)
@@ -396,9 +372,34 @@ function mostrarHoras(turnos) {
       button.classList.add('hour');
       button.textContent = hora;
       button.setAttribute('data-time', hora);
+     
       button.addEventListener("click", function() {
         // Al hacer click, la hora cambia de estado (disponible a seleccionada)
         this.classList.toggle("seleccionado");
+        // Si la hora es seleccionada, actualizamos la hora seleccionada
+          if (this.classList.contains('seleccionado')) {
+            if (!horaSeleccionadaInicio) {
+              // Si no se ha seleccionado hora de inicio, la guardamos como inicio
+              horaSeleccionadaInicio = hora;
+            } else {
+              // Si ya se ha seleccionado la hora de inicio, la guardamos como fin
+              horaSeleccionadaFin = hora;
+            }
+          } else {
+            // Si la hora es deseleccionada, la eliminamos
+            if (horaSeleccionadaInicio === hora) {
+              horaSeleccionadaInicio = null;
+            }
+            if (horaSeleccionadaFin === hora) {
+              horaSeleccionadaFin = null;
+            }
+          }
+        // Cargar la hora seleccionada en los campos de hora de inicio y fin
+        /*let horaInicio = hora.split(":")[0];  // Obtener solo la hora (sin minutos)
+        let horaFin = (parseInt(horaInicio) + 1) % 24; // Aquí puedes personalizar la duración que desees (ej. +1 hora)
+
+        document.getElementById("startTime").value = horaInicio + ":00"; // Hora de inicio
+        document.getElementById("endTime").value = horaFin + ":00"; // Hora de fin*/
       });
       hoursContainer.appendChild(button);
     });
@@ -408,10 +409,79 @@ function mostrarHoras(turnos) {
   });
 }
 
+// Función para confirmar la hora seleccionada
+document.getElementById("confirmarHorario").addEventListener("click", function() {
+  if (horaSeleccionadaInicio && horaSeleccionadaFin) {
+    // Si se han seleccionado ambas horas, actualizamos los campos
+    document.getElementById("startTime").value = horaSeleccionadaInicio + ":00";
+    document.getElementById("endTime").value = horaSeleccionadaFin + ":00";
+   
+  } else {
+    alert("Por favor, selecciona un rango de hora válido.");
+  }
+});
+document.addEventListener("DOMContentLoaded", function() {
+  // Establecer la fecha mínima para el selector de fecha
+  const fechaSelect = document.getElementById("fechaSelect");
+  const today = new Date();
+  
+  // Formatear la fecha en formato YYYY-MM-DD
+  const formattedDate = today.toISOString().split('T')[0];
+  
+  // Establecer el atributo min del input para que no se puedan seleccionar fechas pasadas
+  fechaSelect.setAttribute("min", formattedDate);
+});
+
+// MENSAJE WSP
+// Seleccionar los elementos de fecha y hora
+const fechaSelect = document.getElementById("modalFechaSelect");
+const startTime = document.getElementById("startTime");
+const endTime = document.getElementById("endTime");
+
+// Botón de WhatsApp
+const whatsappButton = document.getElementById("whatsappBtn");
+
+// Actualiza el enlace de WhatsApp cuando se seleccione la fecha y las horas
+document.getElementById("confirmarHorario").addEventListener("click", function() {
+  // Obtener la fecha y horas seleccionadas
+  const fechaSeleccionada = fechaSelect.value;
+  const horaInicio = startTime.value;
+  const horaFin = endTime.value;
+
+  if (fechaSeleccionada && horaInicio && horaFin) {
+    // Construir el mensaje de WhatsApp con la información seleccionada
+    const mensaje = `Hola, quiero reservar la cancha del local para el día ${fechaSeleccionada}. Hora de inicio: ${horaInicio}. Hora de fin: ${horaFin}.`;
+
+    // Codificar el mensaje para ser usado en la URL
+    const mensajeCodificado = encodeURIComponent(mensaje);
+
+    // Establecer el enlace dinámico de WhatsApp
+    whatsappButton.setAttribute("href", `https://wa.me/{{ local_info[0][7] }}?text=${mensajeCodificado}`);
+  } else {
+    alert("Por favor, selecciona una fecha y las horas de inicio y fin.");
+  }
+});
+//confirmacion puntuacion
+// Este JavaScript asegura que el modal reciba el idCancha correcto
+document.querySelectorAll('[data-bs-target="#puntuacionModal3"]').forEach(button => {
+  button.addEventListener('click', function() {
+    var idCancha = this.getAttribute('data-id'); // Capturamos el idCancha
+    document.getElementById('idCanchaInput').value = idCancha; // Asignamos el idCancha al input oculto
+    let idLocal1 = obtenerIdLocalDesdeURL();
+    document.getElementById('idLocalInput').value = idLocal1;
+  });
+});
 
 
+
+
+
+
+
+//------------------
 //seleccionar fecha
 document.addEventListener("DOMContentLoaded", function () {
+generarFechasParaSelect(document.getElementById("modalFechaSelect"));
   // Inicialización de fechas en cada .fechaReserva
   document.querySelectorAll('.fechaReserva').forEach(select => {
     generarFechasParaSelect(select); // Genera fechas en cada tarjeta
