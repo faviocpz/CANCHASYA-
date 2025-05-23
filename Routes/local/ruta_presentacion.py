@@ -34,18 +34,24 @@ def registrar_rutas(app):
 
             # Consultamos los turnos de ese local
             cursor.execute("""
-                SELECT ha.turno, ha.h_inicio, ha.h_fin
-                FROM HORARIO_ATENCION ha
-                WHERE ha.idLocal = %s AND ha.estado = 'A'  # Solo turnos activos
+                SELECT turno_minicio, turno_mfin, turno_tinicio, turno_tfin, turno_ninicio, turno_nfin
+                FROM HORARIO_ATENCION
+                WHERE idLocal = %s
             """, (id_local,))
-            turnos_info = cursor.fetchall() 
+            turnos_brutos = cursor.fetchone()
+
+            turnos_info = [
+                ('Mañana', turnos_brutos[0], turnos_brutos[1]),
+                ('Tarde', turnos_brutos[2], turnos_brutos[3]),
+                ('Noche', turnos_brutos[4], turnos_brutos[5]),
+            ]
+
             
             # Consultar las reservas para ese día
             cursor.execute("""
-                SELECT h.h_inicio, h.h_fin
-                FROM HORARIO h 
-                JOIN RESERVA r ON h.idHorario = r.idHorario
-                WHERE r.fecha = %s AND h.idCancha IN (SELECT idCancha FROM CANCHA WHERE idLocal = %s)
+                SELECT r.hora_inicio, r.hora_fin
+                FROM RESERVA r 
+                WHERE r.fecha = %s AND r.idCancha IN (SELECT idCancha FROM CANCHA WHERE idLocal = %s)
             """, (fecha, id_local))
             reservas = cursor.fetchall()
 
@@ -68,7 +74,7 @@ def registrar_rutas(app):
                 
                 print(f"Valor de turno[2]: {inicio_turno}")
                 # Crear una lista con las horas del turno
-                turno_horas = [inicio_turno]
+                turno_horas = []
                 
                 hora = datetime.strptime(inicio_turno, '%H:%M')
                 
@@ -91,12 +97,33 @@ def registrar_rutas(app):
                 turnos.append(turno_data)
 
             return jsonify({'turnos': turnos})
-        
-    def format_timedelta(td):
-        # Obtenemos las horas y minutos desde el timedelta
-        total_minutes = int(td.total_seconds() // 60)  # Convertir todo a minutos
-        hours = total_minutes // 60  # Dividir para obtener las horas
-        minutes = total_minutes % 60  # Obtener los minutos restantes
-        
-        # Formateamos las horas y minutos en HH:MM
-        return f"{hours:02}:{minutes:02}"
+    @app.route('/registrar_puntuacion', methods=['POST'])
+    def registrar_puntuacion():
+        id_cancha = request.form.get('idCancha')  # Ahora capturamos el idCancha del formulario
+        puntuacion = request.form.get('puntuacion')  # Puntuación seleccionada
+        idLocal = request.form.get('idLocal')  
+        # Lógica para almacenar la puntuación en la base de datos
+        if id_cancha and puntuacion:
+            conexion = obtener_conexion()
+            cursor = conexion.cursor()
+            cursor.execute("""
+                INSERT INTO PUNTUACION_CANCHA (idCancha, puntaje)
+                VALUES (%s, %s)
+            """, (id_cancha, puntuacion))
+            conexion.commit()
+            cursor.close()
+            conexion.close()
+
+            # Si todo está bien, enviar una respuesta de éxito
+            #return jsonify({'success': True})
+            return redirect(url_for('obtener_local', idLocal=idLocal))
+
+        return jsonify({'success': False, 'message': 'Puntuación inválida.'})
+def format_timedelta(td):
+    # Obtenemos las horas y minutos desde el timedelta
+    total_minutes = int(td.total_seconds() // 60)  # Convertir todo a minutos
+    hours = total_minutes // 60  # Dividir para obtener las horas
+    minutes = total_minutes % 60  # Obtener los minutos restantes
+    
+    # Formateamos las horas y minutos en HH:MM
+    return f"{hours:02}:{minutes:02}"    
