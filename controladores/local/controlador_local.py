@@ -111,13 +111,18 @@ def obtener_informacion_local(id_local):
         WHERE l.idLocal = %s
     """, (id_local,))
     local_info = cursor.fetchall()
-     # Consulta para obtener los turnos activos
     cursor.execute("""
-        SELECT ha.turno, ha.h_inicio, ha.h_fin
-        FROM HORARIO_ATENCION ha
-        WHERE ha.idLocal = %s AND ha.estado = 'A'  # Solo turnos activos
+        SELECT turno_minicio, turno_mfin, turno_tinicio, turno_tfin, turno_ninicio, turno_nfin
+        FROM HORARIO_ATENCION
+        WHERE idLocal = %s
     """, (id_local,))
-    turnos_info = cursor.fetchall()  # Obtener todos los turnos activos
+    turnos_brutos = cursor.fetchone()
+    turnos_info = [
+    ('Mañana', format_timedelta(turnos_brutos[0]), format_timedelta(turnos_brutos[1])),
+    ('Tarde', format_timedelta(turnos_brutos[2]), format_timedelta(turnos_brutos[3])),
+    ('Noche', format_timedelta(turnos_brutos[4]), format_timedelta(turnos_brutos[5])),
+]
+
     # Formateamos las horas eliminando los segundos
     for i, turno in enumerate(turnos_info):
         # Convertimos la tupla a una lista para poder modificar los valores
@@ -133,7 +138,7 @@ def obtener_informacion_local(id_local):
 
     # Consulta para obtener las canchas del local
     cursor.execute("""
-        SELECT c.idCancha, c.descripcion, c.puntuacion, c.precio
+        SELECT c.idCancha, c.descripcion, c.puntuacion, c.preciom, c.preciot, c.precion
         FROM CANCHA c
         WHERE c.idLocal = %s
     """, (id_local,))
@@ -184,7 +189,12 @@ def obtener_informacion_local(id_local):
 
     return local_info, turnos_info, canchas_info, canchas_fotos, cancha_caracteristicas
 
-    cursor.close()
-    conexion.close()
+def format_timedelta(td):
+    # Obtenemos las horas y minutos desde el timedelta
+    total_minutes = int(td.total_seconds() // 60)  # Convertir todo a minutos
+    hours = total_minutes // 60  # Dividir para obtener las horas
+    minutes = total_minutes % 60  # Obtener los minutos restantes
+    
+    # Formateamos las horas y minutos en HH:MM
+    return f"{hours:02}:{minutes:02}"  
 
-    return local_info
