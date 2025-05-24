@@ -285,7 +285,7 @@ def listar_canchas_idalquilador(id,fecha):
             '''
             cursor.execute(sql3,(id))
             horario = cursor.fetchone()
-            return lista_cancha, horario if lista_cancha else None
+            return [lista_cancha, horario] if lista_cancha else None
     except Exception as e:
         print(e)
         return None

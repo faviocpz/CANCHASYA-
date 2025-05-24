@@ -7,9 +7,13 @@ from datetime import datetime, timedelta
 def registrar_rutas(app):
     @app.route('/canchass')
     def canchass():
-        data = controlador_cancha_admin.consultar_cancha_x_persona(session.get('id'))
-        print(data)
-        return render_template('pages/negocio/canchas/cancha.html', data=data)
+        if session.get('tipo') == "Alquilador":
+            data = controlador_cancha_admin.consultar_cancha_x_persona(session.get('id'))
+        
+            return render_template('pages/negocio/canchas/cancha.html', data=data)
+        
+        return render_template('pages/negocio/canchas/cancha.html')
+
 
     @app.route('/api/cancha/<int:id_cancha>')
     def api_cancha(id_cancha):
@@ -187,34 +191,39 @@ def registrar_rutas(app):
         for dia in range(5):
             fechas_listado.append((hoy + timedelta(days=dia)).strftime('%Y-%m-%d'))
 
-        listas_canchas, horario = controlador_cancha_admin.listar_canchas_idalquilador(session.get('id'),fechas_listado[0])
-        lista_horario = []
-        hora_imañana = int(str(horario[1]).split(':')[0])
-        hora_fmañana = int(str(horario[2]).split(':')[0])
-        hora_itarde = int(str(horario[3]).split(':')[0])
-        hora_ftarde = int(str(horario[4]).split(':')[0])
-        hora_inoche = int(str(horario[5]).split(':')[0])
-        hora_fnoche = int(str(horario[6]).split(':')[0])
-        for hrm in range(hora_imañana, hora_fmañana):
-            lista_horario.append({
-                'hora_inicio': str(hrm)+':00',
-                'hora_fin': str(hrm+1)+':00',
-                'estado': 'I'
-            })
-        for hrt in range(hora_itarde, hora_ftarde):
-            lista_horario.append({
-                'hora_inicio': str(hrt)+':00',
-                'hora_fin': str(hrt+1)+':00',
-                'estado': 'I'
-            })
-        for hrn in range(hora_inoche, hora_fnoche):
-            lista_horario.append({
-                'hora_inicio': str(hrn)+':00',
-                'hora_fin': str(hrn+1)+':00',
-                'estado': 'I'
-            })
-    
-        return render_template('pages/negocio/canchas/lista_cancha.html', listas_canchas = listas_canchas, fechas_listado=fechas_listado,lista_horario=lista_horario)
+
+        respuesta  = controlador_cancha_admin.listar_canchas_idalquilador(session.get('id'),fechas_listado[0])
+        if respuesta:
+            listas_canchas = respuesta[0]
+            horario = respuesta[1]        
+            lista_horario = []
+            hora_imañana = int(str(horario[1]).split(':')[0])
+            hora_fmañana = int(str(horario[2]).split(':')[0])
+            hora_itarde = int(str(horario[3]).split(':')[0])
+            hora_ftarde = int(str(horario[4]).split(':')[0])
+            hora_inoche = int(str(horario[5]).split(':')[0])
+            hora_fnoche = int(str(horario[6]).split(':')[0])
+            for hrm in range(hora_imañana, hora_fmañana):
+                lista_horario.append({
+                    'hora_inicio': str(hrm)+':00',
+                    'hora_fin': str(hrm+1)+':00',
+                    'estado': 'I'
+                })
+            for hrt in range(hora_itarde, hora_ftarde):
+                lista_horario.append({
+                    'hora_inicio': str(hrt)+':00',
+                    'hora_fin': str(hrt+1)+':00',
+                    'estado': 'I'
+                })
+            for hrn in range(hora_inoche, hora_fnoche):
+                lista_horario.append({
+                    'hora_inicio': str(hrn)+':00',
+                    'hora_fin': str(hrn+1)+':00',
+                    'estado': 'I'
+                })
+            return render_template('pages/negocio/canchas/lista_cancha.html', listas_canchas = listas_canchas, fechas_listado=fechas_listado,lista_horario=lista_horario)
+        else:
+            return render_template('pages/negocio/canchas/lista_cancha.html',listas_canchas = {})
 
 
 
