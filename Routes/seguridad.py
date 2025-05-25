@@ -1,5 +1,6 @@
 from flask import render_template, jsonify, request, session
 from controladores.local import controlador_local as local
+from controladores.locales import controlador_locales as locals
 from controladores.usuario import controlador_usuario as cuser
 from enviar_correos import enviar_mensajecorreo
 from hashlib import sha256
@@ -18,12 +19,12 @@ def registrar_rutas(app):
 
     @app.route('/canchas')
     def canchas():
-        locales = local.obtener_locales()
+        locales = locals.obtener_locales()
         return render_template('pages/canchas.html', locales=locales)
 
     @app.route('/api_canchas')
     def api_canchas():
-        locales = local.obtener_locales()
+        locales = locals.obtener_locales()
         return jsonify(locales)
 
     @app.route('/cancha')
