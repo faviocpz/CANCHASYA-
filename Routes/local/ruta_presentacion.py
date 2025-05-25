@@ -25,9 +25,11 @@ def registrar_rutas(app):
             # Obtener la fecha seleccionada desde el frontend
             fecha_str = request.args.get('fecha')  # Formato: 'YYYY-MM-DD'
             id_local = request.args.get('idLocal')
+            id_cancha = request.args.get('idCancha')
         
             print (f"la fecha es {fecha_str}")
             print (f"id del local es {id_local}")
+            print (f"id de la cancha es {id_cancha}")
             print("frwjoifjoi")
             # Convertir la fecha a un objeto datetime
             fecha = datetime.strptime(fecha_str, '%Y-%m-%d')
@@ -51,15 +53,15 @@ def registrar_rutas(app):
             cursor.execute("""
                 SELECT r.hora_inicio, r.hora_fin
                 FROM RESERVA r 
-                WHERE r.fecha = %s AND r.idCancha IN (SELECT idCancha FROM CANCHA WHERE idLocal = %s)
-            """, (fecha, id_local))
+                WHERE r.fecha = %s AND r.idCancha = %s
+            """, (fecha, id_cancha))
             reservas = cursor.fetchall()
 
             # Filtrar las horas ocupadas
             horas_ocupadas = set()
             for reserva in reservas:
-                horas_ocupadas.add(reserva[0].strftime('%H:%M'))  # Hora de inicio
-                horas_ocupadas.add(reserva[1].strftime('%H:%M'))  # Hora de fin
+                horas_ocupadas.add(format_timedelta(reserva[0]))  # Hora de inicio
+                horas_ocupadas.add(format_timedelta(reserva[1]))  # Hora de fin
 
             # Preparar las horas disponibles
             turnos = []
