@@ -55,10 +55,59 @@
 
 
 <script>
+
+  function obtenerHoraPeru() {
+    // Obtiene la hora actual de Perú (UTC-5)
+    const now = new Date();
+    const offsetPeru = -5; // Perú es UTC-5
+    const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+    const peruTime = new Date(utc + (3600000 * offsetPeru));
+
+    const dia = String(peruTime.getDate()).padStart(2, '0');
+    const mes = String(peruTime.getMonth() + 1).padStart(2, '0');
+    const anio = peruTime.getFullYear();
+
+    const hora = String(peruTime.getHours()).padStart(2, '0');
+    const minuto = String(peruTime.getMinutes()).padStart(2, '0');
+    const segundo = String(peruTime.getSeconds()).padStart(2, '0');
+
+    const fecha = `${dia}/${mes}/${anio}`;
+    const horaActual = `${hora}:${minuto}:${segundo}`;
+
+    return { hora: horaActual, fecha: fecha };
+  }
+
+  function obtenerSiguienteHorario(horarios, horaActualDate, anio, mes, dia) {
+    const tramos = ['Mañana', 'Tarde', 'Noche'];
+    for (let i = 0; i < horarios.length; i++) {
+      const tramo = horarios[i];
+      const [hInicio, mInicio] = tramo.inicio.split(':');
+      const [hFin, mFin] = tramo.fin.split(':');
+
+      let horaInicioDate = new Date(anio, mes - 1, dia, hInicio, mInicio);
+      let horaFinDate = new Date(anio, mes - 1, dia, hFin, mFin);
+
+      if (horaFinDate <= horaInicioDate) {
+        horaFinDate.setDate(horaFinDate.getDate() + 1);
+      }
+
+      if (horaActualDate < horaInicioDate) {
+        return `${tramos[i]}: ${tramo.inicio} - ${tramo.fin}`;
+      }
+    }
+
+    // Si no hay turnos futuros hoy, se muestra el primer turno del día siguiente
+    const t = horarios[0];
+    return `Mañana: ${t.inicio} - ${t.fin}`;
+  }
+
   function cargarLocales() {
     fetch('/api_canchas')
       .then(response => response.json())
       .then(data => {
+
+         console.log("Locales obtenidos:", data);
+
         const container = document.getElementById('cards-container');
 
         container.innerHTML = '';
@@ -66,6 +115,16 @@
           container.innerHTML = '<p>No hay canchas disponibles.</p>';
           return;
         }
+
+        // Obtener hora y fecha actual de Perú
+        const { hora, fecha } = obtenerHoraPeru();
+        const [horaActual, minutoActual, segundoActual] = hora.split(':'); // Separar hora, minuto y segundo
+        const [dia, mes, anio] = fecha.split('/'); // Separar día, mes y año
+
+        //la hora y fecha actuales de Perú
+        const horaActualDate = new Date(anio, mes - 1, dia, horaActual, minutoActual, segundoActual);
+
+        console.log('Hora actual en Perú:', horaActualDate);  // Verificando la hora actual
 
         data.forEach(local => {
           const col = document.createElement('div');
@@ -81,6 +140,41 @@
           }
           deportesHtml += '</div>';
 
+          let estadoHorario = "Cerrado"; // Por defecto, cerrado
+
+          // Verificamos si el local tiene un horario definido
+          if (typeof local.horario === 'string' && local.horario.includes(':')) {
+            const partes = local.horario.match(/(\d{2}:\d{2})/g);
+
+            if (partes && partes.length >= 6) {
+              const horarios = [
+                { inicio: partes[0], fin: partes[1] },
+                { inicio: partes[2], fin: partes[3] },
+                { inicio: partes[4], fin: partes[5] }
+              ];
+
+              for (let tramo of horarios) {
+                const [hInicio, mInicio] = tramo.inicio.split(':');
+                const [hFin, mFin] = tramo.fin.split(':');
+
+                const horaInicioDate = new Date(anio, mes - 1, dia, hInicio, mInicio);
+                let horaFinDate = new Date(anio, mes - 1, dia, hFin, mFin);
+
+                if (horaFinDate <= horaInicioDate) {
+                  horaFinDate.setDate(horaFinDate.getDate() + 1);
+                }
+
+                if (horaActualDate >= horaInicioDate && horaActualDate <= horaFinDate) {
+                  estadoHorario = "Abierto";
+                  break;
+                }
+              }
+              if (estadoHorario === "Cerrado") {
+                proximoHorario = obtenerSiguienteHorario(horarios, horaActualDate, anio, mes, dia);
+              }
+            }
+          }
+
           col.innerHTML = `
             <a href="/local/${local.idLocal}"  style="text-decoration: none; color: inherit;">
               <div class="card" id="card-${local.idLocal}">
@@ -89,8 +183,9 @@
                   ${deportesHtml}
                   <h5 class="card-title">${local.nombre}</h5>
                   <p class="mb-1">
-                    <i class="bi bi-clock-history" style="color: ${local.estado === 'A' ? 'green' : 'red'};"></i>
-                    <span> ${local.estado === 'A' ? 'Abierto' : 'Cerrado'}</span>
+                    <i class="bi bi-clock-history" style="color: ${estadoHorario === 'Abierto' ? 'green' : 'red'};"></i>
+                    <span> ${estadoHorario}</span>
+                    ${estadoHorario === 'Cerrado' && proximoHorario ? `<br><small>Próximo horario turno ${proximoHorario}</small>` : ''}
                   </p>
                   <p class="mb-1">
                     <i class="bi bi-geo-alt" style="color: blue;"></i>

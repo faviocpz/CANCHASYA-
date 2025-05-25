@@ -3,10 +3,10 @@ import pymysql
 def obtener_conexion():
     try:
         conexion = pymysql.connect(
-            host="shuttle.proxy.rlwy.net",
-            port=48036,
+            host="metro.proxy.rlwy.net",
+            port=48170,
             user="root",
-            password="eIBwKZTAxcXWewZFzNAfIgmgFAUjRBGN",
+            password="ADspxDQchOVQAknDNlcPyJfzYgSQptEO",
             db="CanchasYa"
         )
         return conexion

@@ -238,13 +238,14 @@ def insertar_foto(id_cancha, nombre, ruta):
 
 def listar_canchas_idalquilador(id,fecha):
     try:
+
         conexion = obtener_conexion()
         lista_cancha = []
 
         with conexion.cursor() as cursor:
             sql = '''
                 select idCancha,descripcion from CANCHA as ch
-                    where ch.idLocal =  (select lc.idLocal from LOCAL as lc where lc.idUsuario = %s) and ch.estado = 'A';
+                    where ch.idLocal =  (select lc.idLocal from LOCAL as lc where lc.idUsuario = %s limit 1) and ch.estado = 'A';
             '''
             cursor.execute(sql,(id))
             canchas = cursor.fetchall()
@@ -255,9 +256,7 @@ def listar_canchas_idalquilador(id,fecha):
                 '''
             cursor.execute(sql2, fecha)
             reservas = cursor.fetchall()
-            print(reservas)
             for cancha in canchas:
-                print(canchas)
                 lista_reserva = []
                 dt_cancha = {
                     'id_cancha': cancha[0],
@@ -265,19 +264,18 @@ def listar_canchas_idalquilador(id,fecha):
                     'fecha': fecha,
                     'reservas': []
                 }
-
-                for reserva in reservas:
-                    print(reserva)
-                    if reserva[4] == cancha[0]:
-                        dt_cancha['reservas'].append({
-                            'hr': str(reserva[2]),
-                            'id': reserva[5],
-                            'id_reserva': reserva[0]
-                            })
+                
+                if len(reservas) > 0:
+                    for reserva in reservas:
+                        print(reserva)
+                        if reserva[4] == cancha[0]:
+                            dt_cancha['reservas'].append({
+                                'hr': str(reserva[2]),
+                                'id': reserva[5],
+                                'id_reserva': reserva[0]
+                                })
                     
-
                 lista_cancha.append(dt_cancha)
-            print(lista_cancha)
             sql3 = '''
                 SELECT ha.* FROM LOCAL as lc INNER JOIN HORARIO_ATENCION as ha
                     on ha.idLocal = lc.idLocal
@@ -285,7 +283,7 @@ def listar_canchas_idalquilador(id,fecha):
             '''
             cursor.execute(sql3,(id))
             horario = cursor.fetchone()
-            return lista_cancha, horario if lista_cancha else None
+            return [lista_cancha, horario] if lista_cancha else None
     except Exception as e:
         print(e)
         return None
