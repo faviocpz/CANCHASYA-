@@ -79,9 +79,9 @@
 
       <!-- Información de la cancha al lado derecho -->
       <div class="col-md-5 p-4 d-flex flex-column">
-        <blockquote style="font-style: italic; color: #2c3e50; border-left: 4px solid #2980b9; padding-left: 10px;">
+        <!--<blockquote style="font-style: italic; color: #2c3e50; border-left: 4px solid #2980b9; padding-left: 10px;">
           {{ cancha[1] }}
-        </blockquote>
+        </blockquote>-->
         <h3><strong>{{ cancha[1] }}</strong></h3>
 
         <p><strong>Puntuación:</strong> 
@@ -108,18 +108,20 @@
           <select class="form-control fechaReserva"></select>
         </div>-->
 
-        <div class="mt-3">
+        <div class="mt-2">
           <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scheduleModal">Horas Disponibles</button>
         </div>
 
         <div class="form-group mt-3">
           <label for="startTime">Hora de inicio:</label>
-          <input type="time" id="startTime" class="form-control" disabled>
+          <!--<input type="time" id="startTime" class="form-control" disabled>-->
+          <input type="time" class="startTime form-control" data-id="{{ cancha[0] }}" disabled>
         </div>
 
         <div class="form-group mt-2">
           <label for="endTime">Hora de fin:</label>
-          <input type="time" id="endTime" class="form-control" disabled>
+          <!--<input type="time" id="endTime" class="form-control" disabled>-->
+          <input type="time" class="endTime form-control" data-id="{{ cancha[0] }}" disabled>
         </div>
 
         <div class="caracteristicas mt-3">
@@ -134,9 +136,23 @@
         </div>
 
         <div class="mt-auto pt-3 d-grid gap-2">
-          <a href="javascript:void(0);" id="whatsappBtn" class="btn btn-whatsapp">
+          <!--<a href="javascript:void(0);" id="whatsappBtn" class="btn btn-whatsapp">
             <i class="bi bi-whatsapp me-1"></i> Contactar por WhatsApp
-          </a>
+          </a>-->
+          <!--<a class="btn btn-whatsapp whatsappBtn" data-id="{{ cancha[0] }}"  href="#" target="_blank"
+   rel="noopener">
+  <i class="bi bi-whatsapp me-1"></i> Contactar por WhatsApp
+</a>-->
+<a class="btn btn-whatsapp whatsappBtn"
+   data-id="{{ cancha[0] }}"
+   href="javascript:void(0);"
+   target="_blank"
+   rel="noopener noreferrer">
+  <i class="bi bi-whatsapp me-1"></i> Contactar por WhatsApp
+</a>
+
+
+
           <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#puntuacionModal3" data-id="{{ cancha[0] }}" data-bs-dismiss="modal">
             <i class="bi bi-star me-1"></i> Añadir Puntuación
           </button>
@@ -239,6 +255,8 @@
   </div>
 </div>
 <script>
+   const numeroWhatsapp = "51{{ local_info[0][3] }}";  // Esto será reemplazado en el servidor por el número real
+
 document.addEventListener("DOMContentLoaded", function () {
     // 1. Llenar opciones de duración en todos los selects
     document.querySelectorAll('.duracionReserva').forEach(select => {
@@ -343,64 +361,96 @@ document.getElementById("modalFechaSelect").addEventListener("change", function(
   let idLocal = obtenerIdLocalDesdeURL(); // Este valor debe ser dinámico según el local
 
   // Llamada al backend para obtener los horarios disponibles para esa fecha
-  fetch(`/obtener_horas_disponibles?fecha=${fechaSeleccionada}&idLocal=${idLocal}`)
+  fetch(`/obtener_horas_disponibles?fecha=${fechaSeleccionada}&idLocal=${idLocal}&idCancha=${idCanchaSeleccionada}`)
     .then(response => response.json())
     .then(data => {
-      let turnos = data.turnos;
-      mostrarHoras(turnos);
-    });
+  const card = document.querySelector(`.reserva-card[data-id='${idCanchaSeleccionada}']`);
+  const hIni = card?.getAttribute('data-hora-inicio');
+  const hFin = card?.getAttribute('data-hora-fin');
+  mostrarHoras(data.turnos, hIni, hFin);
+});
+
 });
 
 // Función para mostrar las horas en el modal
-function mostrarHoras(turnos) {
-  let container = document.getElementById("turnosContainer");
-  container.innerHTML = ''; // Limpiar los turnos anteriores
+function mostrarHoras(turnos, horaInicioGuardada = null, horaFinGuardada = null) {
+  const container = document.getElementById("turnosContainer");
+  container.innerHTML = '';
 
   turnos.forEach(turno => {
-    let turnoElement = document.createElement('div');
+    const turnoElement = document.createElement('div');
     turnoElement.classList.add('turno');
 
-    let turnoHeader = document.createElement('h6');
-    turnoHeader.textContent = `${turno.nombre} (${turno.inicio} - ${turno.fin})`;
-    turnoElement.appendChild(turnoHeader);
+    const titulo = document.createElement('h6');
+    titulo.textContent = `${turno.nombre} (${turno.inicio} - ${turno.fin})`;
+    turnoElement.appendChild(titulo);
 
-    // Mostrar las horas disponibles
-    let hoursContainer = document.createElement('div');
+    const hoursContainer = document.createElement('div');
     hoursContainer.classList.add('hours');
+
     turno.horas.forEach(hora => {
-      let button = document.createElement('button');
+      const button = document.createElement('button');
       button.classList.add('hour');
       button.textContent = hora;
       button.setAttribute('data-time', hora);
-     
-      button.addEventListener("click", function() {
-        // Al hacer click, la hora cambia de estado (disponible a seleccionada)
-        this.classList.toggle("seleccionado");
-        // Si la hora es seleccionada, actualizamos la hora seleccionada
-          if (this.classList.contains('seleccionado')) {
-            if (!horaSeleccionadaInicio) {
-              // Si no se ha seleccionado hora de inicio, la guardamos como inicio
-              horaSeleccionadaInicio = hora;
-            } else {
-              // Si ya se ha seleccionado la hora de inicio, la guardamos como fin
-              horaSeleccionadaFin = hora;
-            }
-          } else {
-            // Si la hora es deseleccionada, la eliminamos
-            if (horaSeleccionadaInicio === hora) {
-              horaSeleccionadaInicio = null;
-            }
-            if (horaSeleccionadaFin === hora) {
-              horaSeleccionadaFin = null;
-            }
-          }
-        // Cargar la hora seleccionada en los campos de hora de inicio y fin
-        /*let horaInicio = hora.split(":")[0];  // Obtener solo la hora (sin minutos)
-        let horaFin = (parseInt(horaInicio) + 1) % 24; // Aquí puedes personalizar la duración que desees (ej. +1 hora)
 
-        document.getElementById("startTime").value = horaInicio + ":00"; // Hora de inicio
-        document.getElementById("endTime").value = horaFin + ":00"; // Hora de fin*/
-      });
+      // 🔵 Preselección
+      if (hora === horaInicioGuardada || hora === horaFinGuardada) {
+        button.classList.add("seleccionado");
+        button.style.backgroundColor = "#0d6efd";
+        if (hora === horaInicioGuardada) horaSeleccionadaInicio = hora;
+        if (hora === horaFinGuardada) horaSeleccionadaFin = hora;
+      } else {
+        button.style.backgroundColor = "#28a745";
+      }
+
+      button.addEventListener("click", function () {
+  const botones = Array.from(document.querySelectorAll('#turnosContainer .hour'));
+
+  // Toggle visual
+  if (this.classList.contains("seleccionado")) {
+    this.classList.remove("seleccionado");
+    this.style.backgroundColor = "#28a745";
+  } else {
+    this.classList.add("seleccionado");
+    this.style.backgroundColor = "#0d6efd";
+  }
+
+  // Recolectar todas las seleccionadas y ordenarlas
+  const seleccionados = botones
+    .filter(btn => btn.classList.contains("seleccionado"))
+    .map(btn => btn.getAttribute("data-time"))
+    .sort((a, b) => a.localeCompare(b));
+
+  // Recolorear todos según selección
+  botones.forEach(btn => {
+    const hora = btn.getAttribute("data-time");
+    if (seleccionados.includes(hora)) {
+      btn.classList.add("seleccionado");
+      btn.style.backgroundColor = "#0d6efd";
+    } else {
+      btn.classList.remove("seleccionado");
+      btn.style.backgroundColor = "#28a745";
+    }
+  });
+
+  // Actualizar variables globales
+  if (seleccionados.length >= 2) {
+    horaSeleccionadaInicio = seleccionados[0];
+    horaSeleccionadaFin = seleccionados[seleccionados.length - 1];
+  } else if (seleccionados.length === 1) {
+    horaSeleccionadaInicio = seleccionados[0];
+    horaSeleccionadaFin = null;
+  } else {
+    horaSeleccionadaInicio = null;
+    horaSeleccionadaFin = null;
+  }
+});
+
+
+
+
+
       hoursContainer.appendChild(button);
     });
 
@@ -410,7 +460,7 @@ function mostrarHoras(turnos) {
 }
 
 // Función para confirmar la hora seleccionada
-document.getElementById("confirmarHorario").addEventListener("click", function() {
+/*document.getElementById("confirmarHorario").addEventListener("click", function() {
   if (horaSeleccionadaInicio && horaSeleccionadaFin) {
     // Si se han seleccionado ambas horas, actualizamos los campos
     document.getElementById("startTime").value = horaSeleccionadaInicio + ":00";
@@ -419,7 +469,7 @@ document.getElementById("confirmarHorario").addEventListener("click", function()
   } else {
     alert("Por favor, selecciona un rango de hora válido.");
   }
-});
+});*/
 document.addEventListener("DOMContentLoaded", function() {
   // Establecer la fecha mínima para el selector de fecha
   const fechaSelect = document.getElementById("fechaSelect");
@@ -434,33 +484,160 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // MENSAJE WSP
 // Seleccionar los elementos de fecha y hora
-const fechaSelect = document.getElementById("modalFechaSelect");
+/*const fechaSelect = document.getElementById("modalFechaSelect");
+ if (fechaSelect.options.length > 1) {
+    // Si la opción actual no es la de "Selecciona una fecha"
+    const primeraFechaValida = fechaSelect.options[1].value;
+    fechaSelect.selectedIndex = 1;
+
+    // Ejecuta manualmente el change
+    fechaSelect.dispatchEvent(new Event('change'));
+  }*/
 const startTime = document.getElementById("startTime");
 const endTime = document.getElementById("endTime");
 
 // Botón de WhatsApp
-const whatsappButton = document.getElementById("whatsappBtn");
+//const whatsappButton = document.getElementById("whatsappBtn");
+// Este botón será el que corresponde a la cancha que esté visible o activa idCanchaSeleccionada 
+let whatsappButton = null;
+let idCanchaSeleccionada = null;
 
-// Actualiza el enlace de WhatsApp cuando se seleccione la fecha y las horas
-document.getElementById("confirmarHorario").addEventListener("click", function() {
-  // Obtener la fecha y horas seleccionadas
-  const fechaSeleccionada = fechaSelect.value;
-  const horaInicio = startTime.value;
-  const horaFin = endTime.value;
+/*document.querySelectorAll('[data-bs-target="#scheduleModal"]').forEach(button => {
+  button.addEventListener("click", function () {
+    idCanchaSeleccionada = this.closest('.reserva-card').getAttribute('data-id');
+    document.getElementById("idCanchaInput").value = idCanchaSeleccionada;
+  });
+});*/
+document.querySelectorAll('[data-bs-target="#scheduleModal"]').forEach(button => {
+  button.addEventListener("click", function () {
+    const card = this.closest(".reserva-card");
+    const id = this.closest(".reserva-card").querySelector(".startTime").getAttribute("data-id");
+      idCanchaSeleccionada = id; 
+    document.getElementById("idCanchaInput").value = id;
+       // 🟡 NUEVO: Limpiar selección previa del modal
+    horaSeleccionadaInicio = null;
+    horaSeleccionadaFin = null;
+    document.getElementById("turnosContainer").innerHTML = "";
+    const fechaSelect = document.getElementById("modalFechaSelect");
+    if (fechaSelect) {
+      // Si el card tiene datos previos, los usamos
+      if (card.hasAttribute('data-fecha')) {
+        const fechaGuardada = card.getAttribute('data-fecha');
+        const horaInicioGuardada = card.getAttribute('data-hora-inicio');
+        const horaFinGuardada = card.getAttribute('data-hora-fin');
 
-  if (fechaSeleccionada && horaInicio && horaFin) {
-    // Construir el mensaje de WhatsApp con la información seleccionada
-    const mensaje = `Hola, quiero reservar la cancha del local para el día ${fechaSeleccionada}. Hora de inicio: ${horaInicio}. Hora de fin: ${horaFin}.`;
+        // Seleccionamos la fecha en el select
+        for (let i = 0; i < fechaSelect.options.length; i++) {
+          if (fechaSelect.options[i].value === fechaGuardada) {
+            fechaSelect.selectedIndex = i;
+            break;
+          }
+        }
 
-    // Codificar el mensaje para ser usado en la URL
-    const mensajeCodificado = encodeURIComponent(mensaje);
+        // Asignamos las horas guardadas para que se muestren al cargar
+        horaSeleccionadaInicio = horaInicioGuardada;
+        horaSeleccionadaFin = horaFinGuardada;
 
-    // Establecer el enlace dinámico de WhatsApp
-    whatsappButton.setAttribute("href", `https://wa.me/{{ local_info[0][7] }}?text=${mensajeCodificado}`);
+        // Ejecutamos el cambio para que se carguen las horas
+        fechaSelect.dispatchEvent(new Event('change'));
+      } else {
+        // Si no hay datos guardados, reinicia
+        fechaSelect.selectedIndex = 0;
+      }
+    }
+// Limpiar visualmente los botones seleccionados (si ya estaban pintados)
+    /*const horas = document.querySelectorAll("#turnosContainer .hour.seleccionado");
+    horas.forEach(h => {
+      h.classList.remove("seleccionado");
+      h.style.backgroundColor = "#28a745";
+    });
+
+    // 🟡 NUEVO: Reiniciar el select de fecha
+    const fechaSelect = document.getElementById("modalFechaSelect");
+    if (fechaSelect) {
+      fechaSelect.selectedIndex = 0; // vuelve a "Selecciona una fecha"
+      document.getElementById("turnosContainer").innerHTML = ""; // limpia horas del modal
+    }*/
+  });
+});
+
+/*document.getElementById("confirmarHorario").addEventListener("click", function () {
+  if (horaSeleccionadaInicio && horaSeleccionadaFin) {
+    // Obtener los inputs específicos por ID de cancha
+    const startInput = document.querySelector(`.startTime[data-id='${idCanchaSeleccionada}']`);
+    const endInput = document.querySelector(`.endTime[data-id='${idCanchaSeleccionada}']`);
+    const whatsappButton = document.querySelector(`.whatsappBtn[data-id='${idCanchaSeleccionada}']`);
+
+    startInput.value = horaSeleccionadaInicio + ":00";
+    endInput.value = horaSeleccionadaFin + ":00";
+
+    // Habilitar el botón y poner el link
+    const fecha = document.getElementById("modalFechaSelect").value;
+    if (fecha) {
+      const mensaje = `Hola, quiero reservar la cancha del local para el día ${fecha}. Hora de inicio: ${horaSeleccionadaInicio}. Hora de fin: ${horaSeleccionadaFin}.`;
+      const link = `https://wa.me/{{ local_info[0][7] }}?text=${encodeURIComponent(mensaje)}`;
+      whatsappButton.removeAttribute('disabled');
+      whatsappButton.setAttribute('href', link);
+    }
   } else {
-    alert("Por favor, selecciona una fecha y las horas de inicio y fin.");
+    alert("Por favor, selecciona un rango de hora válido.");
+  }
+});/*
+
+
+/**/
+//calcula el enlace de WhatsApp cuando se seleccione la fecha y las horas
+document.getElementById("confirmarHorario").addEventListener("click", function () {
+  const fechaSeleccionada = document.getElementById("modalFechaSelect").value;
+  const idCancha = document.getElementById("idCanchaInput").value;
+
+  const inputHoraInicio = document.querySelector(`.startTime[data-id='${idCancha}']`);
+  const inputHoraFin = document.querySelector(`.endTime[data-id='${idCancha}']`);
+  const btnWhatsApp = document.querySelector(`.whatsappBtn[data-id='${idCancha}']`);
+  const card = document.querySelector(`.reserva-card[data-id='${idCancha}']`);
+
+
+  if (horaSeleccionadaInicio && horaSeleccionadaFin && fechaSeleccionada) {
+    inputHoraInicio.value = horaSeleccionadaInicio + ":00";
+    inputHoraFin.value = horaSeleccionadaFin + ":00";
+  // ✅ Guardar selección en atributos del card
+   // card.setAttribute('data-fecha', fechaSeleccionada);
+    //card.setAttribute('data-hora-inicio', horaSeleccionadaInicio);
+    //card.setAttribute('data-hora-fin', horaSeleccionadaFin);
+     
+    const mensaje = `Hola, quiero reservar la cancha del local para el día ${fechaSeleccionada}. Hora de inicio: ${horaSeleccionadaInicio}. Hora de fin: ${horaSeleccionadaFin}.`;
+    const mensajeCodificado = encodeURIComponent(mensaje);
+    const link = `https://wa.me/${numeroWhatsapp}?text=${mensajeCodificado}`;
+    btnWhatsApp.removeAttribute('disabled');
+    console.log("✅ LINK generado:", link);
+
+    btnWhatsApp.setAttribute("href", link);
+   
+    const modal = bootstrap.Modal.getInstance(document.getElementById('scheduleModal'));
+    modal.hide();
+    //btnWhatsApp.setAttribute("href", `https://wa.me/{{ local_info[0][7] }}?text=${mensajeCodificado}`);
+  } else {
+    alert("Por favor, selecciona una fecha y un rango de horas.");
   }
 });
+// Validar que solo se pueda hacer clic si se ha confirmado antes
+document.querySelectorAll(".whatsappBtn").forEach(btn => {
+  btn.addEventListener("click", function (event) {
+    const fechaSeleccionada = document.getElementById("modalFechaSelect").value;
+  const idCancha = document.getElementById("idCanchaInput").value;
+
+  const inputHoraInicio = document.querySelector(`.startTime[data-id='${idCancha}']`);
+  const inputHoraFin = document.querySelector(`.endTime[data-id='${idCancha}']`);
+  const btnWhatsApp = document.querySelector(`.whatsappBtn[data-id='${idCancha}']`);
+  const card = document.querySelector(`.reserva-card[data-id='${idCancha}']`);
+
+    if (!horaSeleccionadaInicio || !horaSeleccionadaFin || !fechaSeleccionada) {
+      event.preventDefault(); // ❌ evita que abra WhatsApp
+      alert("Por favor, selecciona una fecha y un rango de horas.");
+    }
+  });
+});
+
 //confirmacion puntuacion
 // Este JavaScript asegura que el modal reciba el idCancha correcto
 document.querySelectorAll('[data-bs-target="#puntuacionModal3"]').forEach(button => {
@@ -508,7 +685,13 @@ fechaBase.setHours(0, 0, 0, 0);
 // Función que llena fechas en un <select>
 function generarFechasParaSelect(select) {
   select.innerHTML = '';
-
+  // Agrega una opción inicial por defecto
+  const opcionInicial = document.createElement('option');
+  opcionInicial.value = '';
+  opcionInicial.textContent = 'Selecciona una fecha';
+  opcionInicial.disabled = true;
+  opcionInicial.selected = true;
+  select.appendChild(opcionInicial);
   for (let i = 0; i <= 4; i++) {
     const fecha = new Date();
     fecha.setDate(fecha.getDate() + i);
