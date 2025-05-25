@@ -25,3 +25,9 @@
     color: var(--bs-primary) !important;
     text-decoration: underline !important;
 }
+
+#iconos-nombre button {
+  padding: 0.25rem 0.4rem;
+  font-size: 1rem;
+  line-height: 1;
+}

@@ -13,38 +13,112 @@
                     <!-- Nombre -->
                     <div class="d-flex align-items-center mb-3">
                         <i class="bi bi-building fs-5 text-primary me-3"></i>
-                        <div>
+
+                        <div class="flex-grow-1">
                             <h6 class="mb-0">Nombre del Local</h6>
-                            <p class="text-muted">{{ local['nombre'] }}</p>
+                            <span id="nombre-text" class="text-muted">{{ local['nombre'] }}</span>
+                            <input id="nombre-input" type="text" class="form-control d-none"
+                                value="{{ local['nombre'] }}" maxlength="100" />
+                        </div>
+
+                        <div id="iconos-nombre" class="d-flex align-items-center ms-3">
+                            <button id="edit-nombre-btn" type="button" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button id="save-nombre-btn" type="button"
+                                class="btn btn-sm btn-outline-success d-none ms-1">
+                                <i class="bi bi-check"></i>
+                            </button>
+                            <button id="cancel-nombre-btn" type="button"
+                                class="btn btn-sm btn-outline-danger d-none ms-1">
+                                <i class="bi bi-x"></i>
+                            </button>
                         </div>
                     </div>
-                    
+
+
                     <!-- Dirección (como te gustó) -->
                     <div class="d-flex align-items-center mb-3">
                         <i class="bi bi-geo-alt fs-5 text-primary me-3"></i>
-                        <div>
+
+                        <div class="flex-grow-1">
                             <h6 class="mb-0">Dirección</h6>
-                            <p class="text-muted">{{ local['direccion'] }}</p>
+                            <span id="direccion-text" class="text-muted">{{ local['direccion'] }}</span>
+                            <input id="direccion-input" type="text" class="form-control d-none"
+                                value="{{ local['direccion'] }}" maxlength="255" />
+                        </div>
+
+                        <div id="iconos-direccion" class="d-flex align-items-center ms-3">
+                            <button id="edit-direccion-btn" type="button" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button id="save-direccion-btn" type="button"
+                                class="btn btn-sm btn-outline-success d-none ms-1">
+                                <i class="bi bi-check"></i>
+                            </button>
+                            <button id="cancel-direccion-btn" type="button"
+                                class="btn btn-sm btn-outline-danger d-none ms-1">
+                                <i class="bi bi-x"></i>
+                            </button>
                         </div>
                     </div>
-                    
+
+
+
                     <!-- Teléfono -->
+
                     <div class="d-flex align-items-center mb-3">
                         <i class="bi bi-telephone fs-5 text-primary me-3"></i>
-                        <div>
+
+                        <div class="flex-grow-1">
                             <h6 class="mb-0">Teléfono</h6>
-                            <p class="text-muted">{{ local['tel'] }}</p>
+                            <span id="tel-text" class="text-muted">{{ local['tel'] }}</span>
+                            <input id="tel-input" type="tel" class="form-control d-none" value="{{ local['tel'] }}"
+                                maxlength="9" pattern="[0-9]{9}" />
+                        </div>
+
+                        <div id="iconos-telefono" class="d-flex align-items-center ms-3">
+                            <button id="edit-tel-btn" type="button" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button id="save-tel-btn" type="button" class="btn btn-sm btn-outline-success d-none ms-1">
+                                <i class="bi bi-check"></i>
+                            </button>
+                            <button id="cancel-tel-btn" type="button" class="btn btn-sm btn-outline-danger d-none ms-1">
+                                <i class="bi bi-x"></i>
+                            </button>
                         </div>
                     </div>
-                    
+
+
                     <!-- Correo -->
                     <div class="d-flex align-items-center mb-3">
                         <i class="bi bi-envelope fs-5 text-primary me-3"></i>
-                        <div>
+
+                        <div class="flex-grow-1">
                             <h6 class="mb-0">Correo Electrónico</h6>
-                            <p class="text-muted">{{ local['correo'] }}</p>
+                            <span id="correo-text" class="text-muted">{{ local['correo'] }}</span>
+                            <input id="correo-input" type="email" class="form-control d-none"
+                                value="{{ local['correo'] }}" maxlength="100" />
+                        </div>
+
+                        <div id="iconos-correo" class="d-flex align-items-center ms-3">
+                            <button id="edit-correo-btn" type="button" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button id="save-correo-btn" type="button"
+                                class="btn btn-sm btn-outline-success d-none ms-1">
+                                <i class="bi bi-check"></i>
+                            </button>
+                            <button id="cancel-correo-btn" type="button"
+                                class="btn btn-sm btn-outline-danger d-none ms-1">
+                                <i class="bi bi-x"></i>
+                            </button>
                         </div>
                     </div>
+
+
+
                 </div>
             </div>
         </div>
@@ -56,61 +130,97 @@
                 </div>
                 <div class="card-body">
                     <!-- Facebook -->
-<div class="d-flex align-items-center mb-3">
-    <i class="bi bi-facebook fs-5 text-primary me-3"></i>
-    <div>
-        <h6 class="mb-0">Facebook</h6>
-        {% if local['facebook'] %}
-        <a href="{{ local['facebook'] }}" target="_blank" class="text-decoration-none">
-            <p class="text-muted mb-0">Ver página</p>
-        </a>
-        {% else %}
-        <p class="text-muted mb-0">No disponible</p>
-        {% endif %}
-    </div>
-</div>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-facebook fs-5 text-primary me-3"></i>
 
-<!-- Instagram -->
-<div class="d-flex align-items-center mb-3">
-    <i class="bi bi-instagram fs-5 text-danger me-3"></i>
-    <div>
-        <h6 class="mb-0">Instagram</h6>
-        {% if local['instagram'] %}
-        <a href="{{ local['instagram'] }}" target="_blank" class="text-decoration-none">
-            <p class="text-muted mb-0">Ver perfil</p>
-        </a>
-        {% else %}
-        <p class="text-muted mb-0">No disponible</p>
-        {% endif %}
-    </div>
-</div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0">Facebook</h6>
+                            <span id="facebook-text" class="text-muted" data-url="{{ local['facebook'] or '' }}">
+                                {% if local['facebook'] %}
+                                <a href="{{ local['facebook'] }}" target="_blank" class="text-decoration-none">Ver
+                                    página</a>
+                                {% else %}
+                                No disponible
+                                {% endif %}
+                            </span>
+
+                            <input id="facebook-input" type="text" class="form-control d-none"
+                                value="{{ local['facebook'] or '' }}" maxlength="255" />
+                        </div>
+
+                        <div id="iconos-facebook" class="d-flex align-items-center ms-3">
+                            <button id="edit-facebook-btn" type="button" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button id="save-facebook-btn" type="button"
+                                class="btn btn-sm btn-outline-success d-none ms-1">
+                                <i class="bi bi-check"></i>
+                            </button>
+                            <button id="cancel-facebook-btn" type="button"
+                                class="btn btn-sm btn-outline-danger d-none ms-1">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Instagram -->
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-instagram fs-5 text-danger me-3"></i>
+
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0">Instagram</h6>
+                            <span id="instagram-text" class="text-muted" data-url="{{ local['instagram'] or '' }}">
+                                {% if local['instagram'] %}
+                                <a href="{{ local['instagram'] }}" target="_blank" class="text-decoration-none">Ver
+                                    perfil</a>
+                                {% else %}
+                                No disponible
+                                {% endif %}
+                            </span>
+
+                            <input id="instagram-input" type="text" class="form-control d-none"
+                                value="{{ local['instagram'] or '' }}" maxlength="255" />
+                        </div>
+
+                        <div id="iconos-instagram" class="d-flex align-items-center ms-3">
+                            <button id="edit-instagram-btn" type="button" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button id="save-instagram-btn" type="button"
+                                class="btn btn-sm btn-outline-success d-none ms-1">
+                                <i class="bi bi-check"></i>
+                            </button>
+                            <button id="cancel-instagram-btn" type="button"
+                                class="btn btn-sm btn-outline-danger d-none ms-1">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+                    </div>
+
 
                 </div>
             </div>
         </div>
     </div>
+
+
+
     <!-- Después del cierre del div class="row" principal -->
-<div class="row mt-4">
-    <div class="col-12">
-        <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white">
-                <i class="bi bi-map"></i> Ubicación
-            </div>
-            <div class="card-body p-0" style="height: 300px;">
-                <iframe 
-                    width="100%" 
-                    height="100%" 
-                    frameborder="0" 
-                    scrolling="no" 
-                    marginheight="0" 
-                    marginwidth="0" 
-                    src="https://maps.google.com/maps?q={{ local['direccion'] | urlencode }}&output=embed"
-                    style="border-radius: 0 0 .25rem .25rem;">
-                </iframe>
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <i class="bi bi-map"></i> Ubicación
+                </div>
+                <div class="card-body p-0" style="height: 300px;">
+                    <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                        src="https://maps.google.com/maps?q={{ local['direccion'] | urlencode }}&output=embed"
+                        style="border-radius: 0 0 .25rem .25rem;">
+                    </iframe>
+                </div>
             </div>
         </div>
     </div>
-</div>
     <div class="row">
         <!-- Sección de Imágenes (ahora en horizontal) -->
         <div class="col-12 col-md-6">
@@ -125,16 +235,10 @@
                         <div class="col-6 text-center">
                             <h6 class="fw-bold">Logo</h6>
                             <div class="image-container">
-                                {% if local['logo'] %}
-                                <img src="{{ url_for('static', filename='assets/img_locales/logos/' + local['logo']) }}"
+                                <img id="logo-preview"
+                                    src="{{ url_for('static', filename='assets/img_locales/logos/' + local['logo']) }}"
                                     class="img-fluid rounded border" style="max-height: 120px; width: auto"
                                     onclick="openModal(this.src)" />
-                                {% else %}
-                                <div class="no-image-placeholder">
-                                    <i class="bi bi-building"></i>
-                                    <p class="text-muted small mt-1">No disponible</p>
-                                </div>
-                                {% endif %}
                             </div>
                         </div>
 
@@ -142,25 +246,23 @@
                         <div class="col-6 text-center">
                             <h6 class="fw-bold">Banner</h6>
                             <div class="image-container">
-                                {% if local['banner'] %}
-                                <img src="{{ url_for('static', filename='assets/img_locales/banners/' + local['banner']) }}"
+                                <img id="banner-preview"
+                                    src="{{ url_for('static', filename='assets/img_locales/banners/' + local['banner']) }}"
                                     class="img-fluid rounded border" style="max-height: 120px; width: auto"
                                     onclick="openModal(this.src)" />
-                                {% else %}
-                                <div class="no-image-placeholder">
-                                    <i class="bi bi-image"></i>
-                                    <p class="text-muted small mt-1">No disponible</p>
-                                </div>
-                                {% endif %}
                             </div>
                         </div>
+
+
+
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    
+
     <!-- Modal para Imagen Ampliada -->
     <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -178,24 +280,24 @@
                         style="max-height: 70vh; width: auto; object-fit: contain" />
                 </div>
 
-                <!-- Footer con botón de cerrar -->
-                <div class="modal-footer justify-content-end bg-azulcy border-0">
-                    <button type="button" class="btn btn-secondary fw-bold fst-italic px-4" data-bs-dismiss="modal">
-                        <i class="bi bi-x-circle"></i> Cerrar
+
+                <div class="modal-footer justify-content-end bg-azulcy border-0 gap-2">
+                    <button id="change-image-btn" type="button" class="btn btn-outline-light fw-bold fst-italic px-4">
+                        <i class="bi bi-pencil"></i> Cambiar imagen
+                    </button>
+                    <input type="file" id="image-file-input" accept="image/*" class="d-none" />
+                    <button id="save-image-btn" type="button" class="btn btn-success fw-bold fst-italic px-4 d-none">
+                        <i class="bi bi-check-circle"></i> Guardar
+                    </button>
+                    <button id="cancel-image-btn" type="button" class="btn btn-danger fw-bold fst-italic px-4 d-none">
+                        <i class="bi bi-x-circle"></i> Cancelar
                     </button>
                 </div>
+
+
             </div>
         </div>
     </div>
-</div>
-
-<div class="d-flex justify-content-end mt-4">
-    <button class="btn btn-warning me-2" disabled>
-        <i class="bi bi-pencil-square"></i> Editar
-    </button>
-    <button class="btn btn-danger" disabled>
-        <i class="bi bi-trash"></i> Eliminar
-    </button>
 </div>
 
 {% endblock %} {% block scripts %}

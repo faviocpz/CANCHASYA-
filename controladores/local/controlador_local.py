@@ -1,9 +1,12 @@
 from datetime import datetime
 
-from flask import session
+from flask import current_app, session
+from Routes.local.router_local import save_uploaded_file
 from conexion import obtener_conexion
 from flask import session
 from datetime import datetime
+from werkzeug.utils import secure_filename
+import os
 
 def registrar_local(data):    
     conexion = obtener_conexion()
@@ -38,7 +41,6 @@ def registrar_local(data):
         return 0  
     finally:
         conexion.close()
-
 
 def obtener_locales():
     """Obtiene todos los locales registrados en la base de datos."""
@@ -197,4 +199,26 @@ def format_timedelta(td):
     
     # Formateamos las horas y minutos en HH:MM
     return f"{hours:02}:{minutes:02}"  
+
+
+def actualizar_campo_bd(usuario_id, campo, valor):
+    local = verificarregistrollocal(usuario_id)
+    if not local:
+        return False, 'No tienes un local registrado'
+
+    id_local = local['idLocal']
+
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            query = f"UPDATE LOCAL SET {campo} = %s WHERE idLocal = %s AND idUsuario = %s"
+            cursor.execute(query, (valor, id_local, usuario_id))
+            conexion.commit()
+        return True, None
+    except Exception as e:
+        print(f"Error actualizando {campo}: {e}")
+        conexion.rollback()
+        return False, 'Error interno del servidor'
+    finally:
+        conexion.close()
 

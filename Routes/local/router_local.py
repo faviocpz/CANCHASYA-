@@ -1,8 +1,9 @@
 import os
 from werkzeug.utils import secure_filename
-from flask import current_app, flash, redirect, render_template, request, session, url_for
+from flask import current_app, flash, jsonify, redirect, render_template, request, session, url_for, session 
 from datetime import datetime
 import uuid
+from conexion import obtener_conexion
 from controladores.local import controlador_local
 from flask import abort
 import re   
@@ -52,7 +53,16 @@ def registrar_rutas(app):
     @app.route('/pagina_registrar')
     def pagina_registrar():
         id = session.get('id')
+        if not id:
+            flash('Debes iniciar sesión primero.', 'danger')
+            return redirect(url_for('login'))
+
         datos = controlador_local.verificarregistrollocal(id)
+        
+        if datos:  
+            flash('Ya tienes un local registrado. No puedes registrar otro.', 'info')
+            return redirect(url_for('listar_locales'))
+                
         return render_template('pages/negocio/negocio/negocio.html', datos=datos)
 
     @app.route('/registrar_local', methods=['POST'])
@@ -66,16 +76,14 @@ def registrar_rutas(app):
                 if not input:
                     return None
                 
-                input = input.replace("@", "")  # Eliminamos @ si existe
-                
-                # Si ya es una URL válida, la dejamos igual
+                input = input.replace("@", "") 
+                                
                 if input.startswith(('http://', 'https://')):
                     return input if domain in input else None
                 
-                # Si es un nombre de usuario, creamos la URL completa
+                
                 return f'https://{domain}.com/{input.split("/")[-1]}'
-
-            # Aplicamos el formato
+            
             facebook = format_social_url(facebook, 'facebook')
             instagram = format_social_url(instagram, 'instagram')
 
@@ -94,7 +102,7 @@ def registrar_rutas(app):
                 flash('Formato de imagen no válido (solo: png, jpg, jpeg, gif, webp)', 'danger')
                 return redirect(url_for('pagina_registrar'))
 
-            # Preparar datos
+        
             data = {
                 'nombre': request.form['nombre'],
                 'direccion': request.form['direccion'],
@@ -141,3 +149,54 @@ def registrar_rutas(app):
         else:
             flash('No tienes locales registrados', 'info')
             return redirect(url_for('pagina_registrar'))
+        
+
+
+    @app.route('/api/local/editar', methods=['POST'])
+    def api_local_editar():
+        if 'id' not in session:
+            return jsonify({'success': False, 'error': 'No autenticado'}), 401
+
+        usuario_id = session['id']
+        data = request.get_json()
+        campo = data.get('campo')
+        valor = data.get('valor', '').strip()
+
+        # Campos permitidos y reglas básicas
+        campos_permitidos = {
+            'nombre': (3, 100),
+            'direccion': (5, 255),
+            'tel': (9, 9),
+            'correo': (5, 100),
+            'facebook': (0, 255),
+            'instagram': (0, 255)
+        }
+
+        if campo not in campos_permitidos:
+            return jsonify({'success': False, 'error': 'Campo no permitido'}), 400
+
+        min_len, max_len = campos_permitidos[campo]
+        if not (min_len <= len(valor) <= max_len):
+            return jsonify({'success': False, 'error': f'El campo {campo} debe tener entre {min_len} y {max_len} caracteres'}), 400
+
+        
+        if campo == 'telefono' and not valor.isdigit():
+            return jsonify({'success': False, 'error': 'Teléfono inválido'}), 400
+
+        if campo == 'correo':
+            if not re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', valor):
+                return jsonify({'success': False, 'error': 'Correo inválido'}), 400
+        
+
+        exito, error = controlador_local.actualizar_campo_bd(usuario_id, campo, valor)
+        if exito:
+            return jsonify({'success': True})
+        else:
+            return jsonify({'success': False, 'error': error}), 500
+
+
+
+
+
+
+
