@@ -126,6 +126,7 @@ def registrar_rutas(app):
 
             if local_id==1: 
                 flash('Local registrado exitosamente!', 'success')
+                session.update({'local': 1})
                 return redirect(url_for('listar_locales'))
             else:
                 flash('Error al guardar en la base de datos', 'danger')
