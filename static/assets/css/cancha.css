@@ -19,13 +19,17 @@ html, body {
 }
 
 .banner-box {
-  width: 400px; /* El tamaño de la imagen de banner */
-  height: auto;
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .banner-img {
   width: 100%;
-  height: auto;
+  max-width: 500px;  /* puedes ajustar esto según tu diseño */
+  height: 370px;  
   object-fit: cover;
   border-radius: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
