@@ -28,10 +28,20 @@
         <p><strong>Instagram:</strong> @elesfericofutbol</p>
       </div>-->
       <div class="social-buttons">
-        <a href="https://www.facebook.com/{{ local_info[0][4] }}" class="facebook" target="_blank">
+        <a href="{% if local_info[0][4] %}
+                    {{ 'https://www.facebook.com/' + local_info[0][4] if 'facebook.com' not in local_info[0][4] else local_info[0][4] }}
+                  {% else %}
+                    javascript:void(0);
+                  {% endif %}" 
+          class="facebook" target="_blank">
           <i class="bi bi-facebook"></i> Facebook
         </a>
-        <a href="https://www.instagram.com{{ local_info[0][5] }}" class="instagram" target="_blank">
+                <a href="{% if local_info[0][5] %}
+                    {{ 'https://www.instagram.com/' + local_info[0][5] if 'instagram.com' not in local_info[0][5] else local_info[0][5] }}
+                  {% else %}
+                    javascript:void(0);
+                  {% endif %}" 
+          class="instagram" target="_blank">
           <i class="bi bi-instagram"></i> Instagram
         </a>
       </div>
