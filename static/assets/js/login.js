@@ -94,7 +94,6 @@ function mostrar_imagen(imagen){
     modal.show();
 }
 
-
 async function enviar() {
     const radio_seleccionado = document.querySelector('input[name="tipo_usuario"]:checked').value;
     var form_data = new FormData(document.getElementById('formulario_registro'));

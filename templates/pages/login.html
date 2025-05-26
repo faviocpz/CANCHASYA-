@@ -43,16 +43,17 @@
         <form  id="frm_iniciosesion">
           <div class="mb-3">
             <label for="correo" class="form-label">Correo electrónico</label>
-            <input type="email" name="correo" class="form-control" id="correo" placeholder="usuario@correo.com" required>
+            <input type="email" name="correo" onkeydown="if (event.keyCode === 13) iniciar_sesion()" class="form-control" id="correo" placeholder="usuario@correo.com" required>
           </div>
 
           <div class="mb-3">
             <label for="clave" class="form-label">Contraseña</label>
-            <input type="password" name="password" class="form-control" id="clave" placeholder="********" required>
+            <input type="password" name="password" onkeydown="if (event.keyCode === 13) iniciar_sesion()" class="form-control" id="clave" placeholder="********" required>
           </div>
 
           <div class="d-grid gap-2">
             <button type="button" onclick="iniciar_sesion()" class="btn bg-verdecy text-blancocy fw-bold">Ingresar</button>
+            <span id="carga-ingresar" class="carga"></span>
           </div>
         </form>
 
