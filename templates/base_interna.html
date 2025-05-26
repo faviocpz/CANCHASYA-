@@ -15,10 +15,15 @@
         </div>
         <hr class="mx-3">
         <div class="px-3">
+          <a href="{{ url_for('perfil') }}" class="btn w-100 btn_sidebar">Perfil</a>  
           {% if session.get('tipo') == 'Alquilador' %}
-            <a href="{{ url_for('pagina_registrar') }}" class="btn w-100 btn_sidebar">Locales</a>
-            <a href="{{ url_for('canchass') }}" class="btn w-100 btn_sidebar">Canchas</a>
-            <a href="{{ url_for('pagina_reservas') }}" class="btn w-100 btn_sidebar">Agregar reservas</a>
+            {% if session.get('vc') == 'V' %}
+              <a href="{{ url_for('pagina_registrar') }}" class="btn w-100 btn_sidebar">Locales</a>
+              {% if session.get('local') == 1 %}    
+                <a href="{{ url_for('canchass') }}" class="btn w-100 btn_sidebar">Canchas</a>
+                <a href="{{ url_for('pagina_reservas') }}" class="btn w-100 btn_sidebar">Agregar reservas</a>
+              {% endif %}
+            {% endif %}
           {% elif session.get('tipo') == 'Administrador' %}
             <a href="{{ url_for('solicitudes') }}" class="btn w-100 btn_sidebar">Solicitudes</a>
             <a href="#" class="btn w-100 btn_sidebar">Otra opción</a>

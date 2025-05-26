@@ -9,8 +9,10 @@ def verificar_cuenta(correo, contraseña, tipo):
         with conexion.cursor() as cursor:
             if tipo == 2:
                 query = ''' 
-                            select count(*), us.verificacion_cuenta, us.idTipoUsuario, us.nombre, us.token, us.id, us.telefono  AS telefono
-                            from usuario as us where us.correo = %s
+                            select count(*), us.verificacion_cuenta, us.idTipoUsuario, us.nombre, us.token, us.id, us.telefono  AS telefono,
+                            (SELECT CASE WHEN l.idUsuario IS NOT NULL THEN TRUE ELSE FALSE END) as local
+                            from usuario as us left join LOCAL as l ON us.id = l.idUsuario
+                            where us.correo = %s
                             and contraseña = %s
                             and (idTipoUsuario = 1 or idTipoUsuario = 2) and estado_cuenta = 1;
                         '''

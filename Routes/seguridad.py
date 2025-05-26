@@ -169,9 +169,10 @@ def registrar_rutas(app):
                     session['vc'] = respuesta[1]
                     session['tipo'] = "Alquilador"
                     session['token'] = 'x'
+                    session['local'] = respuesta[7]
 
                 rpt['codigo'] = 1
-                rpt['ruta'] = '/canchass'
+                rpt['ruta'] = '/maestra_interna'
             else:
                 rpt['codigo'] = 0
         else:
