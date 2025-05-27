@@ -21,12 +21,12 @@ def index():
 
 
 def error_2013(e):
-    return render_template('/pages/error/error_500.html')
+    return render_template('pages/error/error_500.html')
 
 
 @app.errorhandler(404)
 def error_404(e):
-    return render_template('/pages/error/error_404.html')
+    return render_template('pages/error/error_400.html')
 
 
 Rcanchas.registrar_rutas(app)

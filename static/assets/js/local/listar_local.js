@@ -1,3 +1,5 @@
+
+
 function getCookie(name) {
   let cookieValue = null;
   if (document.cookie && document.cookie !== "") {
@@ -202,3 +204,5 @@ document.getElementById("cancel-image-btn").addEventListener("click", () => {
   document.getElementById("cancel-image-btn").classList.add("d-none");
   document.getElementById("change-image-btn").classList.remove("d-none");
 });
+
+
