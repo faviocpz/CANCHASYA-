@@ -81,6 +81,13 @@ function setupInlineEdit(prefix, validateFn, alertMsg) {
           } else {
             textElem.textContent = newValue;
           }
+
+          if (prefix === "direccion") {
+            const mapaIframe = document.querySelector("iframe");
+            const nuevaDireccion = encodeURIComponent(newValue);
+            mapaIframe.src = `https://maps.google.com/maps?q=${nuevaDireccion}&output=embed`;
+          }
+
           cancelBtn.click();
         } else {
           alert("Error al guardar: " + (data.error || "Error desconocido"));
@@ -130,10 +137,68 @@ document.addEventListener("DOMContentLoaded", function () {
   );
 });
 
+let currentImageField = null;
 
-function openModal(src) {
-    const modal = new bootstrap.Modal(document.getElementById('imageModal'));
-    document.getElementById('modalImage').src = src;
-    modal.show();
+function openModal(src, field) {
+  currentImageField = field;
+  const modal = new bootstrap.Modal(document.getElementById("imageModal"));
+  document.getElementById("modalImage").src = src;
+  document.getElementById("save-image-btn").classList.add("d-none");
+  document.getElementById("cancel-image-btn").classList.add("d-none");
+  modal.show();
 }
 
+document.getElementById("change-image-btn").addEventListener("click", () => {
+  document.getElementById("image-file-input").click();
+});
+
+document.getElementById("image-file-input").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (file && file.type.startsWith("image/")) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      document.getElementById("modalImage").src = e.target.result;
+      document.getElementById("save-image-btn").classList.remove("d-none");
+      document.getElementById("cancel-image-btn").classList.remove("d-none");
+      document.getElementById("change-image-btn").classList.add("d-none");
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+document.getElementById("save-image-btn").addEventListener("click", () => {
+  const fileInput = document.getElementById("image-file-input");
+  const file = fileInput.files[0];
+  if (!file) return alert("No se ha seleccionado ninguna imagen");
+
+  const formData = new FormData();
+  formData.append("campo", currentImageField);
+  formData.append("imagen", file);
+
+  fetch("/api/local/editar_imagen", {
+    method: "POST",
+    body: formData,
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success) {
+        const previewId =
+          currentImageField === "logo" ? "logo-preview" : "banner-preview";
+        document.getElementById(previewId).src =
+          document.getElementById("modalImage").src;
+        bootstrap.Modal.getInstance(
+          document.getElementById("imageModal")
+        ).hide();
+      } else {
+        alert("Error: " + (data.error || "Error desconocido"));
+      }
+    })
+    .catch(() => alert("Error en la conexión con el servidor."));
+});
+
+document.getElementById("cancel-image-btn").addEventListener("click", () => {
+  document.getElementById("image-file-input").value = "";
+  document.getElementById("save-image-btn").classList.add("d-none");
+  document.getElementById("cancel-image-btn").classList.add("d-none");
+  document.getElementById("change-image-btn").classList.remove("d-none");
+});

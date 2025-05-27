@@ -197,6 +197,33 @@ def registrar_rutas(app):
 
 
 
+    @app.route('/api/local/editar_imagen', methods=['POST'])
+    def editar_imagen_local():
+        if 'id' not in session:
+            return jsonify({'success': False, 'error': 'No autenticado'}), 401
+
+        usuario_id = session['id']
+        campo = request.form.get('campo')
+
+        if campo not in ['logo', 'banner']:
+            return jsonify({'success': False, 'error': 'Campo inválido'}), 400
+
+        archivo = request.files.get('imagen')
+        if not archivo or not allowed_file(archivo.filename):
+            return jsonify({'success': False, 'error': 'Archivo inválido'}), 400
+
+        # Elegir subcarpeta correcta
+        subcarpeta = 'logos' if campo == 'logo' else 'banners'
+        nuevo_nombre = save_uploaded_file(archivo, subcarpeta)
+
+        if not nuevo_nombre:
+            return jsonify({'success': False, 'error': 'Error al guardar imagen'}), 500
+
+        exito, error = controlador_local.actualizar_campo_bd(usuario_id, campo, nuevo_nombre)
+        if exito:
+            return jsonify({'success': True, 'filename': nuevo_nombre})
+        else:
+            return jsonify({'success': False, 'error': error}), 500
 
 
 

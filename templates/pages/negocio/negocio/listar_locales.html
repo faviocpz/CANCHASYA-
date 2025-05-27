@@ -36,7 +36,6 @@
                         </div>
                     </div>
 
-
                     <!-- Dirección (como te gustó) -->
                     <div class="d-flex align-items-center mb-3">
                         <i class="bi bi-geo-alt fs-5 text-primary me-3"></i>
@@ -63,10 +62,7 @@
                         </div>
                     </div>
 
-
-
                     <!-- Teléfono -->
-
                     <div class="d-flex align-items-center mb-3">
                         <i class="bi bi-telephone fs-5 text-primary me-3"></i>
 
@@ -89,7 +85,6 @@
                             </button>
                         </div>
                     </div>
-
 
                     <!-- Correo -->
                     <div class="d-flex align-items-center mb-3">
@@ -116,15 +111,12 @@
                             </button>
                         </div>
                     </div>
-
-
-
                 </div>
             </div>
         </div>
 
-        <div class="col-12 col-md-6">
-            <div class="card shadow-sm mb-4">
+        <div class="col-12 col-md-6 d-flex flex-column">
+            <div class="card shadow-sm mb-4 flex-grow-1">
                 <div class="card-header bg-info text-white">
                     <i class="bi bi-facebook"></i> Redes Sociales
                 </div>
@@ -196,35 +188,10 @@
                             </button>
                         </div>
                     </div>
-
-
                 </div>
             </div>
-        </div>
-    </div>
 
-
-
-    <!-- Después del cierre del div class="row" principal -->
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <i class="bi bi-map"></i> Ubicación
-                </div>
-                <div class="card-body p-0" style="height: 300px;">
-                    <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-                        src="https://maps.google.com/maps?q={{ local['direccion'] | urlencode }}&output=embed"
-                        style="border-radius: 0 0 .25rem .25rem;">
-                    </iframe>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <!-- Sección de Imágenes (ahora en horizontal) -->
-        <div class="col-12 col-md-6">
-            <div class="card shadow-sm mb-4">
+            <div class="card shadow-sm flex-grow-1">
                 <div class="card-header bg-success text-white">
                     <i class="bi bi-images"></i> Imágenes del Local
                 </div>
@@ -238,7 +205,7 @@
                                 <img id="logo-preview"
                                     src="{{ url_for('static', filename='assets/img_locales/logos/' + local['logo']) }}"
                                     class="img-fluid rounded border" style="max-height: 120px; width: auto"
-                                    onclick="openModal(this.src)" />
+                                    onclick="openModal(this.src, 'logo')" />
                             </div>
                         </div>
 
@@ -249,14 +216,34 @@
                                 <img id="banner-preview"
                                     src="{{ url_for('static', filename='assets/img_locales/banners/' + local['banner']) }}"
                                     class="img-fluid rounded border" style="max-height: 120px; width: auto"
-                                    onclick="openModal(this.src)" />
+                                    onclick="openModal(this.src, 'banner')" />
                             </div>
                         </div>
 
-
-
-
                     </div>
+                </div>
+            </div>
+
+
+
+
+
+
+        </div>
+    </div>
+
+    <!-- Después del cierre del div class="row" principal -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <i class="bi bi-map"></i> Ubicación
+                </div>
+                <div class="card-body p-0" style="height: 300px;">
+                    <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                        src="https://maps.google.com/maps?q={{ local['direccion'] | urlencode }}&output=embed"
+                        style="border-radius: 0 0 .25rem .25rem;">
+                    </iframe>
                 </div>
             </div>
         </div>
