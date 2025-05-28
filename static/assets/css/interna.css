@@ -1,7 +1,7 @@
 /* Variables para colores y tamaños */
 :root {
   --sidebar-width: 250px;
-  --navbar-height: 56px;
+  --navbar-height: 100px;  
 
   --color-bg-sidebar: #0D192C;
   --color-sidebar-link-hover: #146b2c;
@@ -133,3 +133,12 @@ html, body {
   }
 }
 
+main.scrollable {
+  padding-top: 56px;
+}
+
+@media (max-width: 576px) {
+  main.scrollable {
+    padding-top: 100px; /* más espacio si el navbar cambia de altura en móviles */
+  }
+}
