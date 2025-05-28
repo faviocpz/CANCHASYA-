@@ -1,58 +1,56 @@
 {% extends "base.html" %}
 
+{% block estilos %}
+  {{ super() }}
+  <link rel="stylesheet" href="/static/assets/css/interna.css">
+{% endblock %}
+
 {% block content %}
 
-<div class="container-fluid">
-  <div class="row">
-    <!-- Sidebar -->
-    <div class="col-auto sidebar-admin px-0">
-        <div class="d-flex align-items-center mt-3 px-3">
-          <img src="/static/assets/img/red.png" alt="Perfil" class="rounded-circle" width="48" height="48">
-          <div class="ms-2">
-            <div class="fw-bold azul_color">{{ session.get('nombre') }}</div>
-            <small class="gris_color">{{ session.get('tipo') }}</small>
-          </div>
-        </div>
-        <hr class="mx-3">
-        <div class="px-3">
-          <a href="{{ url_for('perfil') }}" class="btn w-100 btn_sidebar">Perfil</a>  
-          {% if session.get('tipo') == 'Alquilador' %}
-            {% if session.get('vc') == 'V' %}
-              <a href="{{ url_for('pagina_registrar') }}" class="btn w-100 btn_sidebar">Locales</a>
-              {% if session.get('local') == 1 %}    
-                <a href="{{ url_for('canchass') }}" class="btn w-100 btn_sidebar">Canchas</a>
-                <a href="{{ url_for('pagina_reservas') }}" class="btn w-100 btn_sidebar">Agregar reservas</a>
-              {% endif %}
-            {% endif %}
-          {% elif session.get('tipo') == 'Administrador' %}
-            <a href="{{ url_for('solicitudes') }}" class="btn w-100 btn_sidebar">Solicitudes</a>
-            <a href="#" class="btn w-100 btn_sidebar">Otra opción</a>
-          {% endif %}
-        </div>   
-   </div>
-
-    <!-- Main Content -->
-    <div class="col g-0 position-relative">
-      <div class="loader d-none">
-        <div>
-          <span class="spinner-border text-blue load" role="status">
-          </span>
-        </div>
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar bg-azulcy text-white d-flex flex-column" aria-label="Menú lateral">
+    <div class="sidebar-header d-flex align-items-center p-3 border-bottom">
+      <img src="/static/assets/img/red.png" alt="Perfil de {{ session.get('nombre') }}" class="rounded-circle me-2" width="48" height="48" />
+      <div class="flex-grow-1 text-truncate">
+        <div class="fw-bold">{{ session.get('nombre') }}</div>
+        <small class="text-light">{{ session.get('tipo') }}</small>
       </div>
-      <main class="pt-3 px-3 px-lg-4  h-100 g-0 w-100 " >
-        <h2 class="titulo-pagina-cy">{% block titulo_pagina %}{% endblock %}</h2>
-        {% block contenido %}{% endblock %}
-      </main>
     </div>
-  </div>
-</div>
 
+    <nav class="flex-grow-1 overflow-auto px-2 pt-3" role="navigation">
+      <a href="{{ url_for('perfil') }}" class="sidebar-link rounded py-2 px-3 d-block text-white text-decoration-none">Perfil</a>
+
+      {% if session.get('tipo') == 'Alquilador' %}
+        {% if session.get('vc') == 'V' %}
+          <a href="{{ url_for('pagina_registrar') }}" class="sidebar-link rounded py-2 px-3 d-block text-white text-decoration-none">Locales</a>
+          {% if session.get('local') == 1 %}
+            <a href="{{ url_for('canchass') }}" class="sidebar-link rounded py-2 px-3 d-block text-white text-decoration-none">Canchas</a>
+            <a href="{{ url_for('pagina_reservas') }}" class="sidebar-link rounded py-2 px-3 d-block text-white text-decoration-none">Agregar reservas</a>
+          {% endif %}
+        {% endif %}
+      {% elif session.get('tipo') == 'Administrador' %}
+        <a href="{{ url_for('solicitudes') }}" class="sidebar-link rounded py-2 px-3 d-block text-white text-decoration-none">Solicitudes</a>
+        <a href="#" class="sidebar-link rounded py-2 px-3 d-block text-white text-decoration-none">Otra opción</a>
+      {% endif %}
+    </nav>
+  </aside>
+
+  <!-- Botón toggle para móviles -->
+  <button id="sidebarToggle" class="btn btn-primary d-lg-none position-fixed top-0 start-0 m-3" aria-label="Abrir menú" aria-expanded="false" aria-controls="sidebar" style="z-index: 1050;">
+    <i class="bi bi-list fs-3" aria-hidden="true"></i>
+  </button>
+
+  <!-- Contenido principal -->
+  <main id="mainContent" class="content-area p-4" tabindex="-1">
+    <h2 class="mb-4">{% block titulo_pagina %}Título{% endblock %}</h2>
+    {% block contenido %}{% endblock %}
+  </main>
 
 {% endblock %}
+
+{% block foot %}{% endblock %}
 
 {% block scripts %}
-<script src="/static/assets/js/interna.js"></script>
-{% endblock %}
-{% block foot %}
-
+  {{ super() }}
+  <script src="/static/assets/js/interna.js"></script>
 {% endblock %}

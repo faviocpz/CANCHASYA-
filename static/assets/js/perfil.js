@@ -1,62 +1,85 @@
-document.getElementById('btn_nuevo_intento').addEventListener('click', function() {
-  const modal = new bootstrap.Modal(document.getElementById('modalFoto'));
-  modal.show();
+document.addEventListener('DOMContentLoaded', () => {
+  // Botón para abrir modal nuevo intento
+  const btnNuevoIntento = document.getElementById('btn_nuevo_intento');
+  if (btnNuevoIntento) {
+    btnNuevoIntento.addEventListener('click', function() {
+      const modalElement = document.getElementById('modalFoto');
+      if (modalElement) {
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+      }
 
-  // Limpiar el input y la imagen de vista previa cuando se abre el modal
-  document.getElementById('foto_perfil').value = ''; 
-  document.getElementById('foto_previa').style.display = 'none';
-  document.getElementById('foto_previa').src = '';
-});
+      // Limpiar input y vista previa
+      const fotoPerfilInput = document.getElementById('foto_perfil');
+      const fotoPreviaImg = document.getElementById('foto_previa');
+      if (fotoPerfilInput) fotoPerfilInput.value = '';
+      if (fotoPreviaImg) {
+        fotoPreviaImg.style.display = 'none';
+        fotoPreviaImg.src = '';
+      }
+    });
+  }
 
-function previewImage(event) {
-  const file = event.target.files[0];
-  const reader = new FileReader();
+  // Función para vista previa de imagen
+  window.previewImage = function(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
 
-  reader.onload = function(e) {
-    const preview = document.getElementById('foto_previa');
-    preview.style.display = 'block';
-    preview.src = e.target.result;
+    reader.onload = function(e) {
+      const preview = document.getElementById('foto_previa');
+      if (preview) {
+        preview.style.display = 'block';
+        preview.src = e.target.result;
+      }
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
-  if (file) {
-    reader.readAsDataURL(file);
-  }
-}
+  // Enviar formulario de foto
+  const formFoto = document.getElementById('form_foto');
+  if (formFoto) {
+    formFoto.addEventListener('submit', function(event) {
+      event.preventDefault();  // Evitar recarga
 
-// Al hacer clic en el botón "Enviar", enviamos la foto al servidor
-document.getElementById('form_foto').addEventListener('submit', function(event) {
-  event.preventDefault();  // Prevenir el comportamiento por defecto del formulario (que hace un POST y recarga la página automáticamente)
-
-  const inputFile = document.getElementById('foto_perfil');
-  const formData = new FormData();
-
-  // Verificar si hay un archivo seleccionado
-  if (inputFile.files.length > 0) {
-    formData.append('foto_perfil', inputFile.files[0]);  // Agregar archivo al FormData
-    formData.append('correo', document.getElementById('correo').value);  // Agregar correo al FormData
-
-    // Enviar solicitud al servidor para actualizar la foto
-    fetch('/actualizar_foto_verificacion', {
-      method: 'POST',
-      body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.codigo_rpt === 1) {
-        // Foto subida correctamente
-        alert('Foto actualizada correctamente.');
-
-        // Recargar la página para ver los cambios reflejados
-        window.location.reload();
-      } else {
-        alert('Hubo un error al subir la foto.');
+      const inputFile = document.getElementById('foto_perfil');
+      if (!inputFile) {
+        alert('Input de foto no encontrado.');
+        return;
       }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      alert('Hubo un problema con la solicitud.');
+
+      if (inputFile.files.length === 0) {
+        alert('Por favor selecciona una foto para subir.');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('foto_perfil', inputFile.files[0]);
+
+      const correoInput = document.getElementById('correo');
+      if (correoInput) {
+        formData.append('correo', correoInput.value);
+      }
+
+      fetch('/actualizar_foto_verificacion', {
+        method: 'POST',
+        body: formData,
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.codigo_rpt === 1) {
+          alert('Foto actualizada correctamente.');
+          window.location.reload();
+        } else {
+          alert('Hubo un error al subir la foto.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Hubo un problema con la solicitud.');
+      });
     });
-  } else {
-    alert('Por favor selecciona una foto para subir.');
   }
 });
