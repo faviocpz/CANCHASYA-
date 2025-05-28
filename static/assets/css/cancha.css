@@ -381,3 +381,25 @@ button {
 button:hover {
   background-color: #138496;
 }
+.horas-badges {
+  margin-top: 10px;
+  font-family: 'Arial', sans-serif;
+}
+
+.listaHorasSeleccionadas {
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.listaHorasSeleccionadas li {
+  background-color: #f0f4ff;
+  color: #1a237e;
+  border: 1px solid #cfd8dc;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
