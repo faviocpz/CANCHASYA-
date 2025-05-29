@@ -41,3 +41,51 @@ def obtener_locales():
         return locales
     finally:
         conexion.close()
+
+def obtener_deportes():
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            query = """
+
+            SELECT d.idDeporte, d.nombre AS deportes FROM DEPORTE d
+
+            """
+            cursor.execute(query)
+            result = cursor.fetchall()
+        
+        deportes = []
+        for result in result:
+            deportes.append({
+                    "idDeporte": result[0],
+                    "Deportes": result[1] if result[1] else []
+                    
+            })
+        return deportes
+    finally:
+        conexion.close()
+
+def buscar_locales(nombre):
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            query = """
+
+            SELECT l.idLocal, l.nombre
+            FROM LOCAL l 
+            where l.nombre = %s
+
+            """
+            cursor.execute(query, (nombre,))
+            result = cursor.fetchall()
+        
+        local = []
+        for result in result:
+            local.append({
+                    "idLocal": result[0],
+                    "Nombre": result[1] if result[1] else None
+                    
+            })
+        return local
+    finally:
+        conexion.close()

@@ -23,12 +23,18 @@ def registrar_rutas(app):
     @app.route('/canchas')
     def canchas():
         locales = locals.obtener_locales()
-        return render_template('pages/canchas.html', locales=locales)
+        deportes = locals.obtener_deportes()
+        return render_template('pages/canchas.html', locales=locales, deportes=deportes)
 
     @app.route('/api_canchas')
     def api_canchas():
         locales = locals.obtener_locales()
         return jsonify(locales)
+    
+    @app.route('/api_deportes')
+    def api_deportes():
+        deportes = locals.obtener_deportes()
+        return jsonify(deportes)
 
     @app.route('/cancha')
     def cancha():
