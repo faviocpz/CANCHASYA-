@@ -30,9 +30,14 @@ def error_2013(e):
 def error_404(e):
     return render_template('pages/error/error_400.html')
 
+@app.route('/dashboard_ventasAdmin')
+def dashboard_ventas():
+    return render_template('pages/negocio/negocio/dashboard_ventas.html')
 
 
-
+@app.route('/pagos_suscripcion')
+def pagos_suscripcion():
+    return render_template('pages/negocio/negocio/pagos.html')
 
 Rcanchas.registrar_rutas(app)
 Rlocal.registrar_rutas(app)

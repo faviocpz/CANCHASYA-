@@ -1,0 +1,71 @@
+{% extends 'base_interna.html' %} 
+{% block titulo_pagina %} 
+    Detalles del Local
+{% endblock %} 
+{% block styles %}
+
+{% endblock %} 
+
+{% block contenido %}
+        <div class="card mt-4">
+            <div class="card-header">
+                Filtros
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="fechaInicio" class="form-label">Fecha Inicio</label>
+                            <input type="date" class="form-control" id="fechaInicio" name="fechaInicio">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="fechaFin" class="form-label">Fecha Fin</label>
+                            <input type="date" class="form-control" id="fechaFin" name="fechaFin">
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Aplicar Filtros</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    <div class="container mt-4">
+        <h2 class="mb-4">Dashboard de Ventas</h2>
+        <div class="row">
+            <!-- Total Reservas -->
+            <div class="col-md-4">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Reservas</h5>
+                        <p class="card-text display-4">120</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Reservas Confirmadas -->
+            <div class="col-md-4">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Reservas Confirmadas</h5>
+                        <p class="card-text display-4">100</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Reservas Canceladas -->
+            <div class="col-md-4">
+                <div class="card text-white bg-danger mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Reservas Canceladas</h5>
+                        <p class="card-text display-4">5</p>
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+{% endblock %} 
