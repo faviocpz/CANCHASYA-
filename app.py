@@ -6,6 +6,8 @@ from flask import session, redirect, url_for
 import Routes.local.router_local as Rlocal
 import Routes.canchas.rutas_canchas as Rcanchas
 import Routes.deportista.deportistas as Rdeportista
+import Routes.administrador.administrador as Rdashboard
+
 import Routes.local.suscripcion as Rsuscripcion
 
 app = Flask(__name__)
@@ -30,7 +32,7 @@ def error_2013(e):
 def error_404(e):
     return render_template('pages/error/error_400.html')
 
-@app.route('/dashboard_ventasAdmin')
+@app.route('/dashboard_ventas')
 def dashboard_ventas():
     return render_template('pages/negocio/negocio/dashboard_ventas.html')
 
@@ -41,6 +43,7 @@ Rlocal.registrar_rutas(app)
 Rpresentacion.registrar_rutas(app)
 Rseguridad.registrar_rutas(app)
 Rdeportista.registrar_rutas(app)
+Rdashboard.registrar_rutas_dashboard(app)
 Rsuscripcion.registrar_rutas(app)
 
 if __name__ == '__main__':
