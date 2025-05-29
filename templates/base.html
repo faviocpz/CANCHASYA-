@@ -46,12 +46,13 @@
           <span class="d-none d-sm-inline">Inicio</span>
           <i class="bi bi-house d-inline d-sm-none"></i>
         </a>
-
+        {% if session.get('tipo') != "Alquilador" and session.get('tipo') != "Administrador" %}
         <!-- Canchas -->
         <a class="nav-link text-white text-center" href="/canchas" title="Canchas">
           <span class="d-none d-sm-inline">Canchas</span>
           <i class="bi bi-calendar-week d-inline d-sm-none"></i>
         </a>
+        {% endif %}
 
         {% if session.get('usuario') %}
         <!-- Usuario autenticado -->
