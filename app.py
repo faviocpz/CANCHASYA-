@@ -2,6 +2,7 @@ from flask import Flask, render_template
 import Routes.local.ruta_presentacion as Rpresentacion
 import Routes.seguridad as Rseguridad
 import os
+from flask import session, redirect, url_for
 import Routes.local.router_local as Rlocal
 import Routes.canchas.rutas_canchas as Rcanchas
 import Routes.deportista.deportistas as Rdeportista
@@ -28,6 +29,9 @@ def error_2013(e):
 @app.errorhandler(404)
 def error_404(e):
     return render_template('pages/error/error_400.html')
+
+
+
 
 
 Rcanchas.registrar_rutas(app)

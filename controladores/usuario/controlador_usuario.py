@@ -418,3 +418,18 @@ def actualizar_campo_perfil(usuario_id, campo, valor):
         conexion.close()
 
 
+def estado_token_correo(id, token):
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            query = '''SELECT COUNT(*) FROM usuario WHERE id = %s AND token = %s'''
+            cursor.execute(query, (id, token))
+            result = cursor.fetchone()
+        return result[0] > 0
+    except Exception as e:
+        print("Error al verificar token:", e)
+        return False
+    finally:
+        conexion.close()
+
+

@@ -1,4 +1,4 @@
-from flask import render_template, jsonify, request, session
+from flask import render_template, jsonify, request, session, redirect, url_for
 from controladores.local import controlador_local as local
 from controladores.locales import controlador_locales as locals
 from controladores.usuario import controlador_usuario as cuser
@@ -42,7 +42,18 @@ def registrar_rutas(app):
     def panel():
         return render_template('pages/panel.html')
 
+
+    def verificar_cuenta_activa(f):
+        def wrapper(*args, **kwargs):
+            if cuser.estado_token_correo(session.get('id'), session.get('token')):
+                return f(*args, **kwargs)
+            else:
+                return redirect(url_for('login'))
+        wrapper.__name__ = f.__name__
+        return wrapper
+
     @app.route('/perfil')
+    @verificar_cuenta_activa
     def perfil():
         if 'usuario' not in session:
             return render_template('pages/login.html')
@@ -158,7 +169,7 @@ def registrar_rutas(app):
         if (respuesta[0] > 0):
             session['usuario'] = correo
             if(tipo == 'deportista'):
-                print("entro")
+                session['id'] = respuesta[5]
                 session['tipo'] = "Deportista"
                 session['nombre'] = respuesta[3]
                 session['token'] = respuesta[4]
@@ -261,5 +272,6 @@ def registrar_rutas(app):
             return jsonify({'success': True})
         else:
             return jsonify({'success': False, 'error': error}), 500
+
 
 
