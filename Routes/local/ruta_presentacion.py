@@ -67,8 +67,8 @@ def registrar_rutas(app):
             turnos = []
             # Verifica si la fecha seleccionada es hoy
             es_hoy = fecha.date() == datetime.now().date()
-            #hora_actual = datetime.now().time()
-            hora_actual = datetime.strptime('09:30', '%H:%M').time()  # Simula las 9:30am
+            hora_actual = datetime.now().time()
+            #hora_actual = datetime.strptime('09:30', '%H:%M').time()  # Simula las 9:30am
             for turno in turnos_info:
                 
                 inicio_turno = format_timedelta(turno[1])
