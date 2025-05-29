@@ -58,30 +58,68 @@
         </div>
     </div>
 
-    <!-- Ingresos mensuales -->
-    <div class="card mb-4">
-        <div class="card-header">Ingresos por Mes</div>
-        <div class="card-body">
-            {% if ingresos %}
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Mes</th>
-                            <th>Ingresos Totales</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for ingreso in ingresos %}
-                        <tr>
-                            <td>{{ ingreso.mes }}</td>
-                            <td>${{ "%.2f"|format(ingreso.total) }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p>No hay ingresos registrados en este período.</p>
-            {% endif %}
+    <!-- Ingresos mensuales y Alertas próximos a vencer en la misma fila -->
+    <div class="row mb-4">
+        <!-- Ingresos mensuales -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Ingresos por Mes</div>
+                <div class="card-body">
+                    {% if ingresos %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Mes</th>
+                                    <th>Ingresos Totales</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ingreso in ingresos %}
+                                <tr>
+                                    <td>{{ ingreso.mes }}</td>
+                                    <td>${{ "%.2f"|format(ingreso.total) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>No hay ingresos registrados en este período.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Alertas de próximos vencimientos -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Suscripciones Próximas a Vencer (7 días)</div>
+                <div class="card-body">
+                    {% if alertas %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Usuario</th>
+                                    <th>Plan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for alerta in alertas %}
+                                <tr>
+                                    <td>{{ alerta.idSuscripcion }}</td>
+                                    <td>{{ alerta.fecha_fin }}</td>
+                                    <td>{{ alerta.usuario }}</td>
+                                    <td>{{ alerta.plan }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>No hay suscripciones próximas a vencer.</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 
@@ -125,9 +163,9 @@
     <!-- Suscripciones filtradas -->
     <div class="card mb-4">
         <div class="card-header">Suscripciones en el Período Seleccionado</div>
-        <div class="card-body">
+        <div class="card-body" style="max-height: 400px; overflow-y: auto;">
             {% if suscripciones_filtro %}
-                <table class="table table-striped">
+                <table class="table table-striped mb-0">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -161,37 +199,6 @@
                 </table>
             {% else %}
                 <p>No hay suscripciones en este período.</p>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- Alertas de próximos vencimientos -->
-    <div class="card mb-4">
-        <div class="card-header">Suscripciones Próximas a Vencer (7 días)</div>
-        <div class="card-body">
-            {% if alertas %}
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Fecha Fin</th>
-                            <th>Usuario</th>
-                            <th>Plan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for alerta in alertas %}
-                        <tr>
-                            <td>{{ alerta.idSuscripcion }}</td>
-                            <td>{{ alerta.fecha_fin }}</td>
-                            <td>{{ alerta.usuario }}</td>
-                            <td>{{ alerta.plan }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p>No hay suscripciones próximas a vencer.</p>
             {% endif %}
         </div>
     </div>
