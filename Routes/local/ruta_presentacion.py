@@ -56,7 +56,7 @@ def registrar_rutas(app):
                 WHERE r.fecha = %s AND r.idCancha = %s
             """, (fecha, id_cancha))
             reservas = cursor.fetchall()
-
+            
             # Filtrar las horas ocupadas
             horas_ocupadas = set()
             for reserva in reservas:
@@ -65,28 +65,32 @@ def registrar_rutas(app):
 
             # Preparar las horas disponibles
             turnos = []
+            # Verifica si la fecha seleccionada es hoy
+            es_hoy = fecha.date() == datetime.now().date()
+            #hora_actual = datetime.now().time()
+            hora_actual = datetime.strptime('09:30', '%H:%M').time()  # Simula las 9:30am
             for turno in turnos_info:
-                #print(f"Tipo de turno[1]: {type(turno[1])}")
-                #print(f"Valor de turno[1]: {turno[1]}")
-                #print(f"Tipo de turno[2]: {type(turno[2])}")
-                #print(f"Valor de turno[2]: {turno[2]}")
-                # Convertir el timedelta a formato HH:MM
+                
                 inicio_turno = format_timedelta(turno[1])
                 fin_turno = format_timedelta(turno[2])
                 
                 print(f"Valor de turno[2]: {inicio_turno}")
                 # Crear una lista con las horas del turno
                 turno_horas = []
-                
                 hora = datetime.strptime(inicio_turno, '%H:%M')
-                
-            
                 while hora.strftime('%H:%M') != fin_turno:
-                    turno_horas.append(hora.strftime('%H:%M'))
-                    # Sumar 30 minutos
+                    hora_str = hora.strftime('%H:%M')
+                    hora_time = hora.time()
+
+                    # Solo agrega si no está ocupada
+                    if hora_str not in horas_ocupadas:
+                        # Si es hoy, solo agregar horas que no hayan pasado
+                        if not es_hoy or hora_time >= hora_actual:
+                            turno_horas.append(hora_str)
+
                     hora += timedelta(minutes=60)
-                # Filtrar las horas disponibles (si no están ocupadas)
-                turno_horas = [h for h in turno_horas if h not in horas_ocupadas]
+            
+                
 
                 # Crear el objeto turno
                 turno_data = {
@@ -95,10 +99,12 @@ def registrar_rutas(app):
                     'fin': format_timedelta(turno[2]),
                     'horas': turno_horas
                 }
-
+                #print(format_timedelta(turno[1]))
                 turnos.append(turno_data)
+                
 
             return jsonify({'turnos': turnos})
+        
     @app.route('/registrar_puntuacion', methods=['POST'])
     def registrar_puntuacion():
         id_cancha = request.form.get('idCancha')  # Ahora capturamos el idCancha del formulario
