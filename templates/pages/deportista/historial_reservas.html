@@ -1,0 +1,77 @@
+{% extends 'base_interna.html' %}
+
+{% block titulo_pagina %}
+    Historial de Reservas
+{% endblock %}
+
+{% block contenido %}
+<div class="container mt-4">
+    <h2 class="mb-4">Mis Reservas</h2>
+
+    {% if reservas %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID Reserva</th>
+                <th>Fecha</th>
+                <th>Local</th>
+                <th>Deporte</th>
+                <th>Precio (S/.)</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reserva in reservas %}
+            <tr>
+                <td>{{ reserva.idReserva }}</td>
+                <td>{{ reserva.fecha }}</td>
+                <td>{{ reserva.nombre_local }}</td>
+                <td>{{ reserva.deporte }}</td>
+                <td>{{ "%.2f"|format(reserva.precio) }}</td>
+                <td>
+                    <a href="{{ url_for('detalle_reserva', id_reserva=reserva.idReserva) }}" class="btn btn-primary btn-sm">Ver detalle</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <nav aria-label="Paginación historial reservas">
+        <ul class="pagination justify-content-center">
+            {% if pagina_actual > 1 %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('historial_reservas', page=pagina_actual -1) }}" aria-label="Anterior">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&laquo;</span>
+            </li>
+            {% endif %}
+
+            {% for p in range(1, total_paginas + 1) %}
+            <li class="page-item {% if p == pagina_actual %}active{% endif %}">
+                <a class="page-link" href="{{ url_for('historial_reservas', page=p) }}">{{ p }}</a>
+            </li>
+            {% endfor %}
+
+            {% if pagina_actual < total_paginas %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('historial_reservas', page=pagina_actual +1) }}" aria-label="Siguiente">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&raquo;</span>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    {% else %}
+    <p>No tienes reservas registradas.</p>
+    {% endif %}
+</div>
+{% endblock %}
