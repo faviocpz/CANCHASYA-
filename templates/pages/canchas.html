@@ -3,43 +3,53 @@
 {% block content %}
 
 <!-- Filtro -->
-<div class="mt-5 me-5 ms-5">
-  <div class="me-5 ms-5">
-    <div class="me-5 ms-5">
-      <label for="rangoDistancia" class="form-label">
-        Buscar canchas en un radio de (km): <span id="distanciaSeleccionada">0</span>
-      </label>
-      <input type="range" id="rangoDistancia" class="form-range" min="0" max="10" step="0.5" value="0">
-      <p class="text-muted me-5">Ajusta el radio para filtrar canchas cercanas.</p>
-    </div>
+<div class="container my-4">
+  <form>
+    <div class="shadow rounded p-3 bg-white">
+      <!-- Rango de distancia y búsqueda nombre en fila -->
+      <div class="row g-3 align-items-center mb-3">
+        <div class="col-md-6">
+          <label for="rangoDistancia" class="form-label fw-semibold mb-1">
+            Buscar canchas en un radio (km): <span id="distanciaSeleccionada">0</span>
+          </label>
+          <input type="range" id="rangoDistancia"  onchange="aplicarFiltros()" class="form-range" min="0" max="15" step="0.5" value="0">
+        </div> 
 
-    <div class="me-5 ms-5 mb-3">
-      <label for="busquedaNombre" class="form-label">Buscar por nombre del local:</label>
-      <input type="text" id="busquedaNombre" class="form-control" placeholder="Escribe el nombre...">
-    </div>
-
-    <div class="me-5 ms-5">
-      <label for="deportesFiltro" class="form-label">Filtrar por deportes:</label>
-      <div id="deportesFiltro" class="d-flex flex-wrap gap-2">
-
-      </div>
-    </div>
-
-    <div class="me-5 ms-5">
-      <label class="form-label">Estado de la cancha:</label>
-      <div id="estadoFiltro" class="d-flex flex-row gap-3 align-items-center">
-        <div class="form-check mb-0">
-          <input type="checkbox" id="estadoTodos" name="estado" value="todos" checked class="form-check-input me-1">
-          <label for="estadoTodos" class="form-check-label">Todos</label>
-        </div>
-        <div class="form-check mb-0">
-          <input type="checkbox" id="estadoAbierto" name="estado" value="A" class="form-check-input me-1">
-          <label for="estadoAbierto" class="form-check-label">Abierto</label>
+        <div class="col-md-6">
+          <label for="busquedaNombre" class="form-label fw-semibold mb-1">Buscar por nombre del local:</label>
+          <input type="text" id="busquedaNombre" class="form-control form-control-sm" placeholder="Escribe el nombre...">
         </div>
       </div>
+
+      <!-- Deportes y estado en fila compacta -->
+      <div class="row g-3 align-items-center">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold mb-1">Filtrar por deportes:</label>
+          <div id="deportesFiltro" class="d-flex flex-wrap gap-2">
+            <button type="button" class="btn btn-outline-primary btn-sm">Fútbol</button>
+            <button type="button" class="btn btn-outline-primary btn-sm">Vóley</button>
+            <button type="button" class="btn btn-outline-primary btn-sm">Basket</button>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold mb-1">Estado de la cancha:</label>
+          <div id="estadoFiltro" class="d-flex gap-3">
+            <div class="form-check form-check-inline">
+              <input type="checkbox" id="estadoTodos" name="estado" value="todos" checked class="form-check-input">
+              <label for="estadoTodos" class="form-check-label small">Todos</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input type="checkbox" id="estadoAbierto" name="estado" value="A" class="form-check-input">
+              <label for="estadoAbierto" class="form-check-label small">Abierto</label>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
+  </form>
 </div>
+
 
 <div class="container mt-5">
   <div class="row" id="cards-container">
@@ -273,6 +283,7 @@
     const filtrarPorDeportes = !deportesSeleccionados.includes('deporteTodos');
 
     const filtrados = localesData.filter(local => {
+      if (local.cantidad_cancha < 1) return false;
       if (nombreFiltro && !local.nombre.toLowerCase().includes(nombreFiltro)) return false;
 
       if (filtrarPorDeportes) {
@@ -311,6 +322,20 @@
     });
 
     renderizarLocales(filtrados);
+
+    const direccion = "Amautas 235 - Chiclayo";
+
+    obtenerCoordenadas(direccion).then(coords => {
+      if (coords) {
+        console.log("Coordenadas:", coords.lat, coords.lon);
+      } else {
+        console.log("No se pudo obtener coordenadas");
+      }
+    });
+
+
+
+    console.log(filtrados);
   }
 
   function cargarDatos() {
@@ -358,6 +383,11 @@
       aplicarFiltros();
     });
 
+
+
+
+
+
     setInterval(() => {
       fetch('/api_canchas')
         .then(res => res.json())
@@ -367,6 +397,27 @@
         });
     }, 10000);
   });
+  async function obtenerCoordenadas(direccion) {
+  const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(direccion)}&format=json&limit=1`;
+
+  try {
+    const response = await fetch(url, {
+      headers: { 'User-Agent': 'TuApp/1.0' } // Es recomendable poner un user-agent identificativo
+    });
+    const data = await response.json();
+
+    if (data && data.length > 0) {
+      const { lat, lon } = data[0];
+      return { lat: parseFloat(lat), lon: parseFloat(lon) };
+    } else {
+      return null; // No encontró resultados
+    }
+  } catch (error) {
+    console.error('Error geocoding:', error);
+    return null;
+  }
+}
+
 </script>
 
 

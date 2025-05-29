@@ -9,6 +9,20 @@ import Routes.deportista.deportistas as Rdeportista
 import Routes.administrador.administrador as Rdashboard
 
 import Routes.local.suscripcion as Rsuscripcion
+from geopy.geocoders import Nominatim
+
+from geopy.geocoders import Nominatim
+
+def geocode_address(address):
+    geolocator = Nominatim(user_agent="myGeocoder")
+    location = geolocator.geocode(address)
+    if location:
+        return (location.latitude, location.longitude)
+    else:
+        return None
+
+
+
 
 app = Flask(__name__)
 app.secret_key = 'clavesegura'
@@ -21,6 +35,9 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 @app.route('/')
 def index():
+    direccion = "Los Amautas 235 - Chiclayo"
+    coords = geocode_address(direccion)
+    print(coords)
     return render_template('pages/index.html')
 
 
