@@ -40,12 +40,20 @@
     <i class="bi bi-list fs-3" aria-hidden="true"></i>
   </button>
 
-  <!-- Contenido principal -->
-  <main id="mainContent" class="content-area p-4" tabindex="-1">
-    <h2 class="mb-4">{% block titulo_pagina %}Título{% endblock %}</h2>
-    {% block contenido %}{% endblock %}
-  </main>
+<div class="col g-0 position-relative">
+      <div class="loader d-none">
+        <div>
+          <span class="spinner-border text-blue load" role="status">
+          </span>
+        </div>
+      </div>
+      <main class="pt-3 px-3 px-lg-4  h-100 g-0 w-100 " >
+        <h2 class="titulo-pagina-cy">{% block titulo_pagina %}{% endblock %}</h2>
+        {% block contenido %}{% endblock %}
+      </main>
+    </div>
 
+  
 {% endblock %}
 
 {% block foot %}

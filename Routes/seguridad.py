@@ -153,7 +153,7 @@ def registrar_rutas(app):
         tipo = request.form.get('tipo')
         id_tipo = 3 if tipo == 'deportista' else 2
         respuesta = cuser.verificar_cuenta(correo,password, id_tipo)
-        print(tipo)
+        print(respuesta)
         rpt = {}
         if (respuesta[0] > 0):
             session['usuario'] = correo
@@ -161,6 +161,7 @@ def registrar_rutas(app):
                 print("entro")
                 session['tipo'] = "Deportista"
                 session['nombre'] = respuesta[3]
+                session['token'] = respuesta[4]
                 rpt['codigo'] = 1
                 rpt['ruta'] = '/maestra_interna'
             elif(tipo == 'aliado'):
@@ -168,13 +169,13 @@ def registrar_rutas(app):
                     session['id'] = respuesta[5]
                     session['tipo'] = "Administrador"
                     session['nombre'] = respuesta[3]
-                    session['token'] = 'x'
+                    session['token'] = respuesta[4]
                 else:
                     session['id'] = respuesta[5]
                     session['nombre'] = respuesta[3]
                     session['vc'] = respuesta[1]
                     session['tipo'] = "Alquilador"
-                    session['token'] = 'x'
+                    session['token'] = respuesta[4]
                     session['local'] = respuesta[7]
 
                 rpt['codigo'] = 1

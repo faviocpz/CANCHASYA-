@@ -34,6 +34,13 @@ def verificar_cuenta(correo, contraseña, tipo):
             result = cursor.fetchone()
             if result and result[0] > 0:
                 session['telefono'] = result[6]
+                nuevo_token = creador_token()
+                update_query = "UPDATE usuario SET token = %s WHERE correo = %s"
+                cursor.execute(update_query, (nuevo_token, correo))
+                conexion.commit()
+                result = list(result)
+                result[4] = nuevo_token
+
         return result if result[0] > 0 else [0]
     except Exception as e:
         print(e)
