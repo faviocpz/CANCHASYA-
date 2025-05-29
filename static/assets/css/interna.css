@@ -36,7 +36,7 @@ html, body {
 
 /* Sidebar */
 .sidebar {
-  position: fixed;
+  position: absolute;
   top: var(--navbar-height);
   left: 0;
   width: var(--sidebar-width);
@@ -77,12 +77,11 @@ html, body {
 /* Contenido principal */
 .content-area {
   position: relative;
-  right: 0;
-  bottom: 0;
   padding: 1rem 1.5rem;
   overflow-y: auto;
   background: var(--color-bg-content);
   transition: left 0.3s ease-in-out;
+  padding-left: 16rem !important;
 }
 
 /* Botón toggle sidebar para móviles */

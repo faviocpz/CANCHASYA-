@@ -120,7 +120,7 @@ Mi Perfil
         {% elif usuario.verificacion_cuenta == 'E' %}
         <span class="text-warning">Aprobación pendiente.</span>
         {% elif usuario.verificacion_cuenta == 'V' %}
-        <span class="text-success">Aliado autorizado.</span>
+        <span class="text-success">{{ session.get('tipo') }} autorizado.</span>
         {% else %}
         <span>Desconocido</span>
         {% endif %}

@@ -16,7 +16,8 @@ def registrar_rutas(app):
     @app.route('/historial_reservas')
     def historial_reservas():
         # Verificamos que el usuario esté logueado y sea deportista
-        if 'id' not in session or session.get('tipo') != 'deportista':
+        print()
+        if 'id' not in session or session.get('tipo') != 'Deportista':
             return redirect(url_for('login'))  # O página de error/permiso
 
         id_usuario = session['id']
