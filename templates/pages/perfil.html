@@ -1,56 +1,134 @@
 {% extends "base_interna.html" %}
 
 {% block titulo_pagina %}
-    Mi Perfil
+Mi Perfil
 {% endblock %}
 
 {% block contenido %}
 <div class="container bg-white rounded shadow p-4">
   <form id="form_perfil" method="POST" action="">
-    <div class="mb-3">
-      <label class="form-label fw-bold text-azulcy fst-italic">Nombre</label>
-      <input type="text" class="form-control" id="nombre" name="nombre" value="{{ usuario.nombre }}" readonly>
+
+    <div class="mb-3 d-flex align-items-center">
+      <label for="nombre-input" class="form-label fw-bold me-3" style="min-width: 70px;">Nombre</label>
+
+      <!-- Texto visible -->
+      <span id="nombre-text" class="flex-grow-1">{{ usuario.nombre }}</span>
+
+      <!-- Input oculto para editar -->
+      <input type="text" id="nombre-input" class="form-control flex-grow-1 d-none" maxlength="100"
+        value="{{ usuario.nombre }}" aria-label="Editar nombre" />
+
+      <!-- Botones -->
+      <div class="btn-group ms-3" role="group" aria-label="Acciones nombre">
+        <button id="edit-nombre-btn" type="button" class="btn btn-outline-primary btn-sm" title="Editar nombre">
+          <i class="bi bi-pencil"></i>
+        </button>
+        <button id="save-nombre-btn" type="button" class="btn btn-outline-success btn-sm d-none" title="Guardar nombre">
+          <i class="bi bi-check"></i>
+        </button>
+        <button id="cancel-nombre-btn" type="button" class="btn btn-outline-danger btn-sm d-none"
+          title="Cancelar edición">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
     </div>
 
-    <div class="mb-3">
-      <label class="form-label fw-bold text-azulcy fst-italic">DNI</label>
-      <input type="text" class="form-control" id="dni" name="dni" value="{{ usuario.dni }}" readonly>
+
+    <div class="mb-3 d-flex align-items-center">
+      <label for="dni-input" class="form-label fw-bold me-3" style="min-width: 70px;">DNI</label>
+
+      <!-- Texto visible -->
+      <span id="dni-text" class="flex-grow-1">{{ usuario.dni }}</span>
+
+      <!-- Input oculto para editar (aunque no se usará) -->
+      <input type="text" id="dni-input" class="form-control flex-grow-1 d-none" maxlength="20" value="{{ usuario.dni }}"
+        aria-label="DNI (no editable)" readonly />
+
+      <!-- Sin botones de edición -->
     </div>
 
-    <div class="mb-3">
-      <label class="form-label fw-bold text-azulcy fst-italic">Correo</label>
-      <input type="email" class="form-control" id="correo" name="correo" value="{{ usuario.correo }}" readonly>
+    <div class="mb-3 d-flex align-items-center">
+      <label for="correo-input" class="form-label fw-bold me-3" style="min-width: 70px;">Correo</label>
+
+      <!-- Texto visible -->
+      <span id="correo-text" class="flex-grow-1">{{ usuario.correo }}</span>
+
+      <!-- Input oculto para editar -->
+      <input type="email" id="correo-input" class="form-control flex-grow-1 d-none" maxlength="100"
+        value="{{ usuario.correo }}" aria-label="Editar correo electrónico" />
+
+      <!-- Botones -->
+      <div class="btn-group ms-3" role="group" aria-label="Acciones correo">
+        <button id="edit-correo-btn" type="button" class="btn btn-outline-primary btn-sm" title="Editar correo">
+          <i class="bi bi-pencil"></i>
+        </button>
+        <button id="save-correo-btn" type="button" class="btn btn-outline-success btn-sm d-none" title="Guardar correo">
+          <i class="bi bi-check"></i>
+        </button>
+        <button id="cancel-correo-btn" type="button" class="btn btn-outline-danger btn-sm d-none"
+          title="Cancelar edición">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
     </div>
 
-    <div class="mb-3">
-      <label class="form-label fw-bold text-azulcy fst-italic">Teléfono</label>
-      <input type="text" class="form-control" id="telefono" name="telefono" value="{{ usuario.telefono }}" readonly>
+    <div class="mb-3 d-flex align-items-center">
+      <label for="telefono-input" class="form-label fw-bold me-3" style="min-width: 70px;">Teléfono</label>
+
+      <!-- Texto visible -->
+      <span id="telefono-text" class="flex-grow-1">{{ usuario.telefono }}</span>
+
+      <!-- Input oculto para editar -->
+      <input type="text" id="telefono-input" class="form-control flex-grow-1 d-none" maxlength="9" pattern="[0-9]{9}"
+        value="{{ usuario.telefono }}" aria-label="Editar teléfono" />
+
+      <!-- Botones -->
+      <div class="btn-group ms-3" role="group" aria-label="Acciones teléfono">
+        <button id="edit-telefono-btn" type="button" class="btn btn-outline-primary btn-sm" title="Editar teléfono">
+          <i class="bi bi-pencil"></i>
+        </button>
+        <button id="save-telefono-btn" type="button" class="btn btn-outline-success btn-sm d-none"
+          title="Guardar teléfono">
+          <i class="bi bi-check"></i>
+        </button>
+        <button id="cancel-telefono-btn" type="button" class="btn btn-outline-danger btn-sm d-none"
+          title="Cancelar edición">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
     </div>
+
 
     <!-- <div class="mb-3">
       <label class="form-label fw-bold text-azulcy fst-italic">Nueva Contraseña</label>
       <input class="form-control" id="nueva_contrasena" name="nueva_contrasena" placeholder="Opcional">
     </div> -->
 
-    {% if usuario.verificacion_cuenta in ['R', 'E', 'V'] %}
-    <div id="estado_verificacion_aliado" class="mt-4 p-3 border rounded">
-      <label class="form-label fw-bold text-azulcy fst-italic">Estado de verificación</label>
 
-      <div id="texto_estado" class="mb-2">
+
+    <div class="mb-3 d-flex align-items-center">
+      <label for="estado-verificacion" class="form-label fw-bold me-3" style="min-width: 120px;">Estado de
+        verificación</label>
+
+      <!-- Texto visible -->
+      <span id="estado-verificacion-text" class="flex-grow-1">
         {% if usuario.verificacion_cuenta == 'R' %}
-          <span class="text-danger">Foto rechazada.</span>
-          <div class="mt-2">
-            <button type="button" id="btn_nuevo_intento" class="btn btn-outline-danger btn-sm">Nuevo intento</button>
-          </div>
+        <span class="text-danger">Foto rechazada.</span>
         {% elif usuario.verificacion_cuenta == 'E' %}
-          <span class="text-warning">Aprobación pendiente.</span>
+        <span class="text-warning">Aprobación pendiente.</span>
         {% elif usuario.verificacion_cuenta == 'V' %}
-          <span class="text-success">Aliado autorizado.</span>
+        <span class="text-success">Aliado autorizado.</span>
+        {% else %}
+        <span>Desconocido</span>
         {% endif %}
-      </div>
+      </span>
+
+      <input type="text" id="estado-verificacion-input" class="form-control flex-grow-1 d-none"
+        value="{{ usuario.verificacion_cuenta }}" readonly aria-label="Estado de verificación (no editable)" />
+
+      <!-- Sin botones de edición -->
     </div>
 
-    {% endif %}
 
     <!-- <div class="mt-4 text-end">
       <button type="submit" class="btn btn-primary fw-bold fst-italic">Guardar Cambios</button>
@@ -69,17 +147,19 @@
           <form id="form_foto" enctype="multipart/form-data" method="POST" action="/actualizar_foto_verificacion">
             <div class="mb-3">
               <label for="foto_perfil" class="form-label">Selecciona una nueva foto</label>
-              <input type="file" class="form-control" id="foto_perfil" name="foto_perfil" accept="image/*" onchange="previewImage(event)" required>
+              <input type="file" class="form-control" id="foto_perfil" name="foto_perfil" accept="image/*"
+                onchange="previewImage(event)" required>
             </div>
             <div class="mb-3">
               <label for="foto_previa" class="form-label">Vista previa</label>
               <img id="foto_previa" class="w-100" src="" alt="Vista previa de la imagen" style="display: none;">
             </div>
-            <input type="hidden" id="correo" name="correo" value="{{ usuario.correo }}"> <!-- Oculto para trabajar con el correo -->
+            <input type="hidden" id="correo" name="correo" value="{{ usuario.correo }}">
+            <!-- Oculto para trabajar con el correo -->
             <div class="mt-3 text-center">
               <button type="submit" class="btn btn-success">Enviar</button>
             </div>
-          </form>          
+          </form>
         </div>
       </div>
     </div>
@@ -91,5 +171,5 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="/static/assets/js/perfil.js"> </script>
+<script src="/static/assets/js/perfil.js"> </script>
 {% endblock %}

@@ -2,6 +2,13 @@ from conexion import obtener_conexion
 import random
 from hashlib import sha256
 from flask import session
+import re
+import random
+import string
+from hashlib import sha256
+
+from enviar_correos import enviar_mensajecorreo
+
 
 def verificar_cuenta(correo, contraseña, tipo):
     conexion = obtener_conexion()
@@ -33,7 +40,6 @@ def verificar_cuenta(correo, contraseña, tipo):
     finally:
         conexion.close()
 
-
 def actualizar_estado_verificacion(id_usuario, nuevo_estado):
     conexion = obtener_conexion()
     try:
@@ -49,8 +55,6 @@ def actualizar_estado_verificacion(id_usuario, nuevo_estado):
         return 0
     finally:
         conexion.close()
-
-
 
 def verificar_dni(dni):
     conexion = obtener_conexion()
@@ -373,8 +377,37 @@ def verificar_usuarioDni(dni):
         conexion.close()
 
 
+def actualizar_campo_perfil(usuario_id, campo, valor):
+    campos_permitidos = ['nombre', 'correo', 'telefono']
 
+    if campo not in campos_permitidos:
+        return False, "Campo no permitido"
+    
+    if campo == 'nombre':
+        if not (3 <= len(valor) <= 100):
+            return False, "El nombre debe tener entre 3 y 100 caracteres"
+    elif campo == 'correo':
+        if not (5 <= len(valor) <= 100):
+            return False, "El correo debe tener entre 5 y 100 caracteres"
+        patron_email = r'^[^\s@]+@[^\s@]+\.[^\s@]+$'
+        if not re.match(patron_email, valor):
+            return False, "Formato de correo inválido"
+    elif campo == 'telefono':
+        if not (len(valor) == 9 and valor.isdigit()):
+            return False, "El teléfono debe tener 9 dígitos numéricos"
 
-
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            query = f"UPDATE usuario SET {campo} = %s WHERE id = %s"
+            cursor.execute(query, (valor, usuario_id))
+        conexion.commit()
+        return True, None
+    except Exception as e:
+        print(f"Error actualizando perfil: {e}")
+        conexion.rollback()
+        return False, "Error interno del servidor"
+    finally:
+        conexion.close()
 
 
