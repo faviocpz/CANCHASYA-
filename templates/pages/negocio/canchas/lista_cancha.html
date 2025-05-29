@@ -1,9 +1,11 @@
 {% extends 'base_interna.html' %}
 {% block estilos %} 
+    <link rel="stylesheet" href="/static/assets/css/interna.css">
     <link rel="stylesheet" href="/static/assets/css/reservas.css">
 {% endblock %}
 {% block contenido %}
 <!-- Loader -->
+<div class="container mt-5"> 
 
     {% if listas_canchas  %}
         <div class=" shadow-lg rounded p-3 bg-white mb-2">
@@ -123,6 +125,7 @@
     {% else%}
         No hay canchas activas, verifique su estado
     {% endif %}
+</div>
 {% endblock %}
 
 {% block scripts %}

@@ -8,7 +8,7 @@
 {% block content %}
 
   <!-- Sidebar -->
-  <aside id="sidebar" class="sidebar bg-azulcy text-white d-flex flex-column" aria-label="Menú lateral">
+  <aside id="sidebar" class="sidebar bg-azulcy text-white d-flex " aria-label="Menú lateral">
     <div class="sidebar-header d-flex align-items-center p-3 border-bottom">
       <img src="/static/assets/img/red.png" alt="Perfil de {{ session.get('nombre') }}" class="rounded-circle me-2" width="48" height="48" />
       <div class="flex-grow-1 text-truncate">
@@ -45,16 +45,18 @@
     <i class="bi bi-list fs-3" aria-hidden="true"></i>
   </button>
 
-<div class="col g-0 position-relative">
+    <div class="col g-0 position-relative">
       <div class="loader d-none">
         <div>
           <span class="spinner-border text-blue load" role="status">
           </span>
         </div>
       </div>
-      <main class="pt-3 px-3 px-lg-4  h-100 g-0 w-100 " >
-        <h2 class="titulo-pagina-cy">{% block titulo_pagina %}{% endblock %}</h2>
-        {% block contenido %}{% endblock %}
+      <main id="mainContent" class="content-area pt-3 px-3 px-lg-4  h-100 g-0 w-100 " >
+        <h2 class="titulo-pagina-cy">{% block titulo_pagina %}{% endblock %} </h2>
+        {% block contenido %}
+        
+        {% endblock %}
       </main>
     </div>
 

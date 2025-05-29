@@ -1,6 +1,7 @@
 {% extends 'base_interna.html' %}
 
 {% block contenido %}
+<div class="container mt-5">
   {% if session.get('tipo') == 'Alquilador' %}
     <h2>Canchas disponibles</h2><br>
     <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
@@ -151,6 +152,7 @@
       
       
   {% endif %}
+</div>
 {% endblock %}
 
 {% block scripts %}

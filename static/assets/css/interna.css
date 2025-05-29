@@ -76,9 +76,7 @@ html, body {
 
 /* Contenido principal */
 .content-area {
-  position: absolute;
-  top: var(--navbar-height);
-  left: var(--sidebar-width);
+  position: relative;
   right: 0;
   bottom: 0;
   padding: 1rem 1.5rem;
