@@ -1,0 +1,17 @@
+{% extends "base_interna.html" %}
+
+{% block titulo_pagina %} Confirmación de Correo {% endblock %}
+
+{% block contenido %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="alert alert-info text-center shadow-sm p-4">
+        <h4 class="fw-bold mb-3">{{ mensaje }}</h4>
+        <p>Ya puedes cerrar esta ventana o continuar navegando.</p>
+        <a href="/perfil" class="btn btn-outline-primary mt-3">Volver al perfil</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -5,7 +5,10 @@ from controladores.usuario import controlador_usuario as cuser
 from enviar_correos import enviar_mensajecorreo
 from hashlib import sha256
 import os
-
+from controladores.usuario import controlador_usuario as cuser
+from enviar_correos import enviar_mensajecorreo
+from conexion import obtener_conexion
+from hashlib import sha256
 
 def registrar_rutas(app):
     @app.route('/login')
@@ -52,7 +55,6 @@ def registrar_rutas(app):
         else:
             return "Usuario no encontrado", 404
 
-
     @app.route('/maestra_interna')
     def maestra_interna():
         return render_template('base_interna.html')
@@ -65,7 +67,6 @@ def registrar_rutas(app):
     @app.route('/registro')
     def registro():
         return render_template('pages/registro.html')
-
 
     @app.route('/registrar_alquilador', methods=['POST'])
     def registrar_alquilador():
@@ -143,7 +144,6 @@ def registrar_rutas(app):
             print(f"Error al procesar la solicitud: {e}")
             return jsonify({'codigo_rpt': 0, 'mensaje': f'Error al procesar la solicitud: {str(e)}'}), 500
 
-
     @app.route('/inicio_sesion', methods=['POST'])
     def inicio_sesion():
         correo = request.form['correo']
@@ -180,7 +180,6 @@ def registrar_rutas(app):
 
         return jsonify(rpt)
 
-
     @app.route('/enviar_correo', methods=['POST'])
     def enviar_correo():
         data = request.get_json()
@@ -204,7 +203,6 @@ def registrar_rutas(app):
         except Exception as e:
             return jsonify({'codigo': 0, 'mensaje': f'Error al procesar la solicitud: {str(e)}'}), 500
         
-    
     @app.route('/verificar_usuarioDni/<int:id>')
     def verificar_usuarioDni(id):
         try:
@@ -223,3 +221,38 @@ def registrar_rutas(app):
         except Exception as e:
             print(f"Error en verificar_usuarioDni: {e}")
             return jsonify({'codigo': 0, 'mensaje': f'Error al procesar la solicitud: {str(e)}'}), 500
+
+    @app.route('/api/perfil/editar', methods=['POST'])
+    def api_perfil_editar():
+        if 'id' not in session:
+            return jsonify({'success': False, 'error': 'No autenticado'}), 401
+
+        usuario_id = session['id']
+        data = request.get_json()
+        campo = data.get('campo')
+        valor = data.get('valor', '').strip()
+
+        campos_permitidos = ['nombre', 'correo', 'telefono']
+        if campo not in campos_permitidos:
+            return jsonify({'success': False, 'error': 'Campo no permitido'}), 400
+        
+        if campo == 'nombre' and not (3 <= len(valor) <= 100):
+            return jsonify({'success': False, 'error': 'El nombre debe tener entre 3 y 100 caracteres'}), 400
+
+        if campo == 'correo':
+            import re
+            patron_email = r'^[^\s@]+@[^\s@]+\.[^\s@]+$'
+            if not (5 <= len(valor) <= 100) or not re.match(patron_email, valor):
+                return jsonify({'success': False, 'error': 'Correo inválido'}), 400
+
+        if campo == 'telefono':
+            if not (len(valor) == 9 and valor.isdigit()):
+                return jsonify({'success': False, 'error': 'Teléfono inválido'}), 400
+
+        exito, error = cuser.actualizar_campo_perfil(usuario_id, campo, valor)
+        if exito:
+            return jsonify({'success': True})
+        else:
+            return jsonify({'success': False, 'error': error}), 500
+
+
