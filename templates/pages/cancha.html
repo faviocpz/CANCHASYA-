@@ -2,6 +2,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/cancha.css') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
 <div class="container">
   <!-- Cabecera mejorada -->
@@ -27,14 +28,25 @@
         <p><strong>Facebook:</strong> ElEsfericoFutbol</p>
         <p><strong>Instagram:</strong> @elesfericofutbol</p>
       </div>-->
-      <div class="social-buttons">
-        <a href="https://www.facebook.com/{{ local_info[0][4] }}" class="facebook" target="_blank">
+       <div class="social-buttons">
+        <a href="{% if local_info[0][4] %}
+                    {{ 'https://www.facebook.com/' + local_info[0][4] if 'facebook.com' not in local_info[0][4] else local_info[0][4] }}
+                  {% else %}
+                    javascript:void(0);
+                  {% endif %}" 
+          class="facebook" target="_blank">
           <i class="bi bi-facebook"></i> Facebook
         </a>
-        <a href="https://www.instagram.com{{ local_info[0][5] }}" class="instagram" target="_blank">
+                <a href="{% if local_info[0][5] %}
+                    {{ 'https://www.instagram.com/' + local_info[0][5] if 'instagram.com' not in local_info[0][5] else local_info[0][5] }}
+                  {% else %}
+                    javascript:void(0);
+                  {% endif %}" 
+          class="instagram" target="_blank">
           <i class="bi bi-instagram"></i> Instagram
         </a>
       </div>
+
       <div class="turno-box">
         <h5>Turnos:</h5>
         {% for turno in turnos_info %}
@@ -128,6 +140,7 @@
           <ul class="listaHorasSeleccionadas" data-id="{{ cancha[0] }}"></ul>
         </div>
 
+         <!--
         <div class="caracteristicas mt-3">
           <button class="btn btn-info" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'">
             Cuenta con:
@@ -137,7 +150,7 @@
               <li>{{ caracteristica }}</li>
             {% endfor %}
           </ul>
-        </div>
+        </div>-->
 
         <div class="mt-auto pt-3 d-grid gap-2">
           <!--<a href="javascript:void(0);" id="whatsappBtn" class="btn btn-whatsapp">
@@ -174,7 +187,7 @@
 <div class="modal fade" id="puntuacionModal3" tabindex="-1" aria-labelledby="puntuacionModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form method="POST" action="{{ url_for('registrar_puntuacion') }}" id="puntuacionForm">
+      <form method="POST" action="{{ url_for('registrar_puntuacion') }}" id="puntuacionForm" class="formulario-puntuacion" >
         <div class="modal-header">
           <h5 class="modal-title" id="puntuacionModalLabel1">Puntuar Cancha</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
@@ -226,8 +239,10 @@
             <label for="fechaSelect">Selecciona la fecha:</label>
             <select class="form-control" id="modalFechaSelect"></select>
           </div> 
-          
+          <div id="cargandoHoras" style="display: none; font-weight: bold; text-align: center; padding: 10px;">⏳ Cargando horas disponibles...</div>
+          <!--<p><strong>Horas Disponibles:</strong></p>-->
         <div id="turnosContainer" class="schedule mt-3">
+          
           <!--{% for turno in turnos_info %}
           <div class="turno">
             <h6>{{ turno[0] }} ({{ turno[1] }} - {{ turno[2] }})</h6>
@@ -259,8 +274,12 @@
     <button class="btn btn-outline-primary mt-2" onclick="window.history.back();">← Regresar</button>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script>
    const numeroWhatsapp = "51{{ local_info[0][3] }}";  // Esto será reemplazado en el servidor por el número real
+
+  const usuarioTelefono = "{{ session.get('telefono', '') }}";
+
 
 document.addEventListener("DOMContentLoaded", function () {
     // 1. Llenar opciones de duración en todos los selects
@@ -360,11 +379,14 @@ function obtenerIdLocalDesdeURL() {
 }
 let horaSeleccionadaInicio = null;
 let horaSeleccionadaFin = null;
+let horasSeleccionadasGlobal = [];
 
 document.getElementById("modalFechaSelect").addEventListener("change", function() {
   let fechaSeleccionada = this.value;
   let idLocal = obtenerIdLocalDesdeURL(); // Este valor debe ser dinámico según el local
-
+ // Mostrar mensaje de carga
+  const cargandoEl = document.getElementById("cargandoHoras");
+  cargandoEl.style.display = "block";
   // Llamada al backend para obtener los horarios disponibles para esa fecha
   fetch(`/obtener_horas_disponibles?fecha=${fechaSeleccionada}&idLocal=${idLocal}&idCancha=${idCanchaSeleccionada}`)
     .then(response => response.json())
@@ -373,6 +395,7 @@ document.getElementById("modalFechaSelect").addEventListener("change", function(
   const hIni = card?.getAttribute('data-hora-inicio');
   const hFin = card?.getAttribute('data-hora-fin');
   mostrarHoras(data.turnos, hIni, hFin);
+  cargandoEl.style.display = "none";
 });
 
 });
@@ -394,10 +417,12 @@ function mostrarHoras(turnos, horaInicioGuardada = null, horaFinGuardada = null)
     hoursContainer.classList.add('hours');
 
     turno.horas.forEach(hora => {
+      
       const button = document.createElement('button');
       button.classList.add('hour');
       button.textContent = hora;
       button.setAttribute('data-time', hora);
+      
 
       // 🔵 Preselección
       if (hora === horaInicioGuardada || hora === horaFinGuardada) {
@@ -525,6 +550,17 @@ document.querySelectorAll('[data-bs-target="#scheduleModal"]').forEach(button =>
     horaSeleccionadaInicio = null;
     horaSeleccionadaFin = null;
     document.getElementById("turnosContainer").innerHTML = "";
+    // Limpiar la lista de horas seleccionadas del frontend
+    const listaHoras = document.querySelector(`.listaHorasSeleccionadas[data-id='${id}']`);
+    if (listaHoras) {
+      listaHoras.innerHTML = '';
+    }
+    const btnWhatsApp = document.querySelector(`.whatsappBtn[data-id='${id}']`);
+    if (btnWhatsApp) {
+      btnWhatsApp.setAttribute("href", "javascript:void(0);");
+    }
+
+
     const fechaSelect = document.getElementById("modalFechaSelect");
     if (fechaSelect) {
       // Si el card tiene datos previos, los usamos
@@ -594,14 +630,28 @@ document.querySelectorAll('[data-bs-target="#scheduleModal"]').forEach(button =>
 
 /**/
 function mostrarCargando(btn) {
+    event.preventDefault(); // ⛔
   const idCancha = btn.getAttribute("data-id");
+  // Validación de sesión
+
   const link = document.querySelector(`.whatsappBtn[data-id='${idCancha}']`).getAttribute("href");
+  if (!link || link === "javascript:void(0);") {
+    alert("Por favor, selecciona una fecha y al menos una hora.");
+    return; // 🚫 detiene redirección
+  }
+  if (!usuarioTelefono) {
+    alert("Por favor, inicia sesión para poder contactar con el local por WhatsApp.");
+    return; // 🚫 NO continuar
+    }
+
   btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Abriendo...';
   setTimeout(() => {
     window.open(link, "_blank");
     btn.innerHTML = '<i class="bi bi-whatsapp me-1"></i> Contactar por WhatsApp';
-  }, 500); // da sensación de respuesta rápida
+  }, 500);
 }
+
+
 
 //calcula el enlace de WhatsApp cuando se seleccione la fecha y las horas
 document.getElementById("confirmarHorario").addEventListener("click", function () {
@@ -616,28 +666,48 @@ document.getElementById("confirmarHorario").addEventListener("click", function (
 
 
 
-  if (horaSeleccionadaInicio && horaSeleccionadaFin && fechaSeleccionada) {
+  if (horaSeleccionadaInicio && fechaSeleccionada) {
     //inputHoraInicio.value = horaSeleccionadaInicio + ":00";
     //inputHoraFin.value = horaSeleccionadaFin + ":00";
-    const horasSeleccionadas = [];
+    horasSeleccionadasGlobal = [];
         const botonesSeleccionados = document.querySelectorAll("#turnosContainer .hour.seleccionado");
         botonesSeleccionados.forEach(btn => {
-          horasSeleccionadas.push(btn.getAttribute("data-time"));
+          horasSeleccionadasGlobal.push(btn.getAttribute("data-time"));
         });
 
         // Ordenamos las horas
-        horasSeleccionadas.sort((a, b) => a.localeCompare(b));
+        horasSeleccionadasGlobal.sort((a, b) => a.localeCompare(b));
 
         // Construimos intervalos
         const lista = document.querySelector(`.listaHorasSeleccionadas[data-id='${idCancha}']`);
         lista.innerHTML = ''; // limpiar anteriores
 
-        horasSeleccionadas.forEach(hora => {
+        horasSeleccionadasGlobal.forEach(hora => {
           const horaInt = parseInt(hora.split(":")[0]);
           const siguiente = (horaInt + 1).toString().padStart(2, "0") + ":00";
           const li = document.createElement("li");
-          li.textContent = `${hora} - ${siguiente}`;
-          lista.appendChild(li);
+li.classList.add("hora-seleccionada-item");
+
+const texto = document.createElement("span");
+texto.textContent = `${hora} - ${siguiente}`;
+
+const eliminarBtn = document.createElement("button");
+eliminarBtn.innerHTML = "❌";
+eliminarBtn.classList.add("btn-eliminar-hora");
+eliminarBtn.style.marginLeft = "8px";
+eliminarBtn.onclick = function () {
+  // Remover hora del arreglo
+  const index = horasSeleccionadasGlobal.indexOf(hora);
+  if (index > -1) {
+    horasSeleccionadasGlobal.splice(index, 1);
+    actualizarHorasSeleccionadas(idCancha); // volver a renderizar la lista
+  }
+};
+
+li.appendChild(texto);
+li.appendChild(eliminarBtn);
+lista.appendChild(li);
+
         });
 
 
@@ -678,7 +748,7 @@ const formatearAMPM = (horaStr) => {
   return `${hora12}:${minutos.toString().padStart(2, "0")} ${ampm}`;
 };
 
-const bloquesTexto = horasSeleccionadas
+const bloquesTexto = horasSeleccionadasGlobal
   .map(hora => {
     const horaInt = parseInt(hora.split(":")[0]);
     const siguiente = (horaInt + 1).toString().padStart(2, "0") + ":00";
@@ -698,12 +768,106 @@ const mensaje = `Hola, deseo reservar la cancha "${descripcionCancha}" para el d
     btnWhatsApp.setAttribute("href", link);
    
     const modal = bootstrap.Modal.getInstance(document.getElementById('scheduleModal'));
-    modal.hide();
+    //modal.hide();
     //btnWhatsApp.setAttribute("href", `https://wa.me/{{ local_info[0][7] }}?text=${mensajeCodificado}`);
   } else {
-    alert("Por favor, selecciona una fecha y un rango de horas.");
+    alert("Por favor, selecciona una fecha y almenos una hora.");
   }
 });
+
+function actualizarHorasSeleccionadas(idCancha) {
+  const lista = document.querySelector(`.listaHorasSeleccionadas[data-id='${idCancha}']`);
+  const fechaSeleccionada = document.getElementById("modalFechaSelect").value;
+  const card = document.querySelector(`.reserva-card[data-id='${idCancha}']`);
+  const descripcionCancha = card.getAttribute("data-descripcion");
+  const btnWhatsApp = document.querySelector(`.whatsappBtn[data-id='${idCancha}']`);
+  
+  lista.innerHTML = '';
+
+  if (horasSeleccionadasGlobal.length === 0) {
+    btnWhatsApp.setAttribute("href", "javascript:void(0);");
+    return;
+  }
+
+  const bloquesTexto = [];
+
+  horasSeleccionadasGlobal.forEach(hora => {
+    const horaInt = parseInt(hora.split(":")[0]);
+    const siguiente = (horaInt + 1).toString().padStart(2, "0") + ":00";
+    const bloque = `${hora} - ${siguiente}`;
+    bloquesTexto.push(bloque);
+
+    const li = document.createElement("li");
+    li.classList.add("hora-seleccionada-item");
+
+    const texto = document.createElement("span");
+    texto.textContent = bloque;
+
+    const eliminarBtn = document.createElement("button");
+    eliminarBtn.innerHTML = "❌";
+    eliminarBtn.classList.add("btn-eliminar-hora");
+    eliminarBtn.style.marginLeft = "8px";
+
+    eliminarBtn.onclick = function () {
+      const index = horasSeleccionadasGlobal.indexOf(hora);
+      if (index > -1) {
+        horasSeleccionadasGlobal.splice(index, 1);
+        actualizarHorasSeleccionadas(idCancha); // Recursivo para actualizar interfaz y href
+      }
+    };
+
+    li.appendChild(texto);
+    li.appendChild(eliminarBtn);
+    lista.appendChild(li);
+  });
+
+  if (fechaSeleccionada && bloquesTexto.length > 0) {
+    const mensaje = `Hola, deseo reservar la cancha "${descripcionCancha}" para el día ${fechaSeleccionada} en los siguientes horarios: ${bloquesTexto.join(', ')}`;
+    const mensajeCodificado = encodeURIComponent(mensaje);
+    const link = `https://wa.me/${numeroWhatsapp}?text=${mensajeCodificado}`;
+    btnWhatsApp.setAttribute("href", link);
+  } else {
+    btnWhatsApp.setAttribute("href", "javascript:void(0);");
+  }
+}
+
+
+
+/*document.querySelectorAll(".formulario-puntuacion").forEach(formulario => {
+  formulario.addEventListener("submit", function (e) {
+    // ... aquí puedes insertar la línea
+    localStorage.setItem("puntuacionExitosa", "true");
+  });
+});*/
+document.querySelectorAll(".formulario-puntuacion").forEach(formulario => {
+  formulario.addEventListener("submit", function () {
+    localStorage.setItem("puntuacionExitosa", "true");
+  });
+});
+/*
+document.addEventListener("DOMContentLoaded", function () {
+  if (localStorage.getItem("puntuacionExitosa") === "true") {
+    alert("¡Puntuación registrada exitosamente!");
+    localStorage.removeItem("puntuacionExitosa");
+  }
+});*/
+document.addEventListener("DOMContentLoaded", function () {
+  if (localStorage.getItem("puntuacionExitosa") === "true") {
+    Toastify({
+      text: "¡Puntuación registrada exitosamente!",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "right",
+      backgroundColor: "#4CAF50",
+    }).showToast();
+
+    localStorage.removeItem("puntuacionExitosa");
+  }
+});
+
+
+
 // Validar que solo se pueda hacer clic si se ha confirmado antes
 document.querySelectorAll(".whatsappBtn").forEach(btn => {
   btn.addEventListener("click", function (event) {
@@ -715,9 +879,12 @@ document.querySelectorAll(".whatsappBtn").forEach(btn => {
   const btnWhatsApp = document.querySelector(`.whatsappBtn[data-id='${idCancha}']`);
   const card = document.querySelector(`.reserva-card[data-id='${idCancha}']`);
 
-    if (!horaSeleccionadaInicio || !horaSeleccionadaFin || !fechaSeleccionada) {
+    if (!horaSeleccionadaInicio || !fechaSeleccionada) {
       event.preventDefault(); // ❌ evita que abra WhatsApp
-      alert("Por favor, selecciona una fecha y un rango de horas.");
+      //alert("Por favor, selecciona una fecha  y al menos una hora.");
+    }
+    if (!usuarioTelefono) {
+     event.preventDefault(); // ❌ evita que abra WhatsApp
     }
   });
 });
