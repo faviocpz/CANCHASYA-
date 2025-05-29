@@ -1,7 +1,7 @@
 {% extends 'base_interna.html' %}
 
 {% block titulo_pagina %}
-  Agregar Cancha
+Agregar Cancha
 {% endblock %}
 
 {% block contenido %}
@@ -22,7 +22,7 @@
         <select class="form-select" id="tipo_cancha" name="tipo_cancha" required>
           <option value="" disabled selected>Seleccione el tipo de cancha</option>
           {% for tipo in canchas %}
-            <option value="{{ tipo.idTipoCancha }}">{{ tipo.nombre }}</option>
+          <option value="{{ tipo.idTipoCancha }}">{{ tipo.nombre }}</option>
           {% endfor %}
         </select>
       </div>
@@ -31,40 +31,40 @@
     <!-- Precio por hora -->
 
     <div class="text-center">
-  <div class="row">
-    <div class="col">
-      <div class="card mb-3">
-      <div class="card-header">Precio por hora en la mañana</div>
-      <div class="card-body">
-        <input type="number" class="form-control" id="precio_cancha" name="precio_cancha_mañana" required>
+      <div class="row">
+        <div class="col">
+          <div class="card mb-3">
+            <div class="card-header">Precio por hora en la mañana</div>
+            <div class="card-body">
+              <input type="number" class="form-control" id="precio_cancha" name="precio_cancha_mañana" required>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card mb-3">
+            <div class="card-header">Precio por hora en la tarde</div>
+            <div class="card-body">
+              <input type="number" class="form-control" id="precio_cancha" name="precio_cancha_tarde" required>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card mb-3">
+            <div class="card-header">Precio por hora en la noche</div>
+            <div class="card-body">
+              <input type="number" class="form-control" id="precio_cancha" name="precio_cancha_noche" required>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    </div>
-    <div class="col">
-      <div class="card mb-3">
-      <div class="card-header">Precio por hora en la tarde</div>
-      <div class="card-body">
-        <input type="number" class="form-control" id="precio_cancha" name="precio_cancha_tarde" required>
-      </div>
-    </div>
-    </div>
-    <div class="col">
-      <div class="card mb-3">
-      <div class="card-header">Precio por hora en la noche</div>
-      <div class="card-body">
-        <input type="number" class="form-control" id="precio_cancha" name="precio_cancha_noche" required>
-      </div>
-    </div>
-    </div>
-  </div>
-</div>
 
 
-    
 
-    
 
-    
+
+
+
     <!-- Puntuación inicial -->
     <!-- <div class="card mb-3">
       <div class="card-header">Puntuación inicial</div>
@@ -119,14 +119,9 @@
       <div class="card-body">
         <div id="imagesContainer" class="d-flex align-items-start">
           <div class="image-upload me-3" id="imageUpload1">
-            <input type="file" accept="image/*"
-                   id="foto_cancha_1"
-                   name="foto_cancha"
-                   onchange="previewImage(1)"
-                   hidden>
-            <label for="foto_cancha_1"
-                   class="d-flex justify-content-center align-items-center border rounded"
-                   style="width:100px; height:100px; cursor:pointer;">
+            <input type="file" accept="image/*" id="foto_cancha_1" name="foto_cancha" onchange="previewImage(1)" hidden>
+            <label for="foto_cancha_1" class="d-flex justify-content-center align-items-center border rounded"
+              style="width:100px; height:100px; cursor:pointer;">
               <span class="text-muted">+</span>
             </label>
             <div id="foto_preview_1" class="mt-2"></div>
@@ -149,7 +144,7 @@
     </div>
   </div>
 </div>
-{% endblock %} 
+{% endblock %}
 
 {% block scripts %}
 <script>
@@ -177,7 +172,7 @@
         `;
 
         // al cargar imagen, auto-agregar siguiente input si cabe
-        if (imageCount < 3 && !document.getElementById(`foto_cancha_${imageCount+1}`)) {
+        if (imageCount < 3 && !document.getElementById(`foto_cancha_${imageCount + 1}`)) {
           addMoreImages();
         }
       };
@@ -215,14 +210,14 @@
 
   // “Seleccionar todos” para los checkboxes de días
   document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('dia_todos').addEventListener('change', function() {
+    document.getElementById('dia_todos').addEventListener('change', function () {
       document.querySelectorAll('.dia-checkbox')
-              .forEach(ch => ch.checked = this.checked);
+        .forEach(ch => ch.checked = this.checked);
     });
 
     // Validación personalizada antes de submit
     document.getElementById('insertarCanchaForm')
-      .addEventListener('submit', function(e) {
+      .addEventListener('submit', function (e) {
         const fileInputs = Array.from(
           document.querySelectorAll('input[type="file"][name="foto_cancha"]')
         );

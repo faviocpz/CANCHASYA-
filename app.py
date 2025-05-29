@@ -6,7 +6,7 @@ from flask import session, redirect, url_for
 import Routes.local.router_local as Rlocal
 import Routes.canchas.rutas_canchas as Rcanchas
 import Routes.deportista.deportistas as Rdeportista
-
+import Routes.local.suscripcion as Rsuscripcion
 
 app = Flask(__name__)
 app.secret_key = 'clavesegura'
@@ -35,16 +35,13 @@ def dashboard_ventas():
     return render_template('pages/negocio/negocio/dashboard_ventas.html')
 
 
-@app.route('/pagos_suscripcion')
-def pagos_suscripcion():
-    return render_template('pages/negocio/negocio/pagos.html')
 
 Rcanchas.registrar_rutas(app)
 Rlocal.registrar_rutas(app)
 Rpresentacion.registrar_rutas(app)
 Rseguridad.registrar_rutas(app)
 Rdeportista.registrar_rutas(app)
-
+Rsuscripcion.registrar_rutas(app)
 
 if __name__ == '__main__':
     app.run(debug=True)

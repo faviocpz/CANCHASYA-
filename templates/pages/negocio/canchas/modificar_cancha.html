@@ -32,26 +32,35 @@
       </div>
       
     <!-- Precio por hora -->
-    <div class="card mb-3">
-      <div class="card-header">Precio por hora en la mañana</div>
-      <div class="card-body">
-        <input type="number" class="form-control" id="precio_cancha" name="precio_cancha_mañana" required value="{{ datos.precio_manana }}">
+    <div class="text-center">
+      <div class="row">
+        <div class="col">
+          <div class="card mb-3">
+            <div class="card-header">Precio por hora en la mañana</div>
+            <div class="card-body">
+              <input type="number" class="form-control" id="precio_cancha" name="precio_cancha_mañana" required>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card mb-3">
+            <div class="card-header">Precio por hora en la tarde</div>
+            <div class="card-body">
+              <input type="number" class="form-control" id="precio_cancha" name="precio_cancha_tarde" required>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card mb-3">
+            <div class="card-header">Precio por hora en la noche</div>
+            <div class="card-body">
+              <input type="number" class="form-control" id="precio_cancha" name="precio_cancha_noche" required>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="card mb-3">
-      <div class="card-header">Precio por hora en la tarde</div>
-      <div class="card-body">
-        <input type="number" class="form-control" id="precio_cancha" name="precio_cancha_tarde" required value="{{ datos.precio_tarde }}">
-      </div>
-    </div>
-
-    <div class="card mb-3">
-      <div class="card-header">Precio por hora en la noche</div>
-      <div class="card-body">
-        <input type="number" class="form-control" id="precio_cancha" name="precio_cancha_noche" required value="{{ datos.precio_noche }}">
-      </div>
-    </div>
 
     
     <!-- Fotos de la cancha -->

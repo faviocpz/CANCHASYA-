@@ -1,0 +1,98 @@
+{% extends 'base_interna.html' %}
+
+{% block titulo_pagina %}
+Registrar Nueva Suscripción
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5" >
+  <div class="row justify-content-center" >
+    <div class="col-md-8 col-lg-6" style="margin-top: 50px;">
+      <div class="card border-0 shadow-lg">
+        <div class="card-header bg-gradient bg-success text-white d-flex align-items-center" >
+          <i class="bi bi-card-checklist me-2 fs-4"></i>
+          <h5 class="mb-0">Formulario de Suscripción</h5>
+        </div>
+        <div class="card-body">
+
+          <!-- Alerta de éxito (se muestra tras el envío del formulario si lo implementas con JS o backend) -->
+          {% if success %}
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            ¡Suscripción registrada con éxito!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+          </div>
+          {% endif %}
+
+          <form 
+                action="{% if id == 1 %}{{ url_for('insertar_suscripcion_gratuita') }}{% elif id == 2 %}{{ url_for('insertar_suscripcion_paga') }}{% else %}# {% endif %}" 
+                method="POST">
+
+            <!-- Tipo de Suscripción -->
+            <div class="mb-3">
+              <label class="form-label">Tipo de Suscripción</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-tag-fill"></i></span>
+                <input 
+                  type="text" 
+                  class="form-control bg-light" 
+                  value="{{ 'Gratuita' if id == 1 else 'Paga' }}" 
+                  disabled>
+              </div>
+            </div>
+
+            <!-- Fecha de Inicio -->
+            <div class="mb-3">
+              <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
+                <input 
+                  type="text" 
+                  id="fechaInicio" 
+                  class="form-control bg-light" 
+                  value="{{ fecha_inicio.strftime('%d/%m/%Y') }}" 
+                  disabled 
+                  data-bs-toggle="tooltip" 
+                  title="Fecha en la que inicia la suscripción">
+              </div>
+            </div>
+
+            <!-- Fecha de Fin -->
+            <div class="mb-3">
+              <label for="fechaFin" class="form-label">Fecha de Fin</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-calendar-x"></i></span>
+                <input 
+                  type="text" 
+                  id="fechaFin" 
+                  class="form-control bg-light" 
+                  value="{{ fecha_fin.strftime('%d/%m/%Y') }}" 
+                  disabled 
+                  data-bs-toggle="tooltip" 
+                  title="Fecha en la que finaliza la suscripción">
+              </div>
+            </div>
+
+            <!-- Botón de Confirmar -->
+            <button type="submit" class="btn btn-success w-100 mt-3 shadow-sm">
+              <i class="bi bi-check2-circle me-1"></i>
+              Confirmar Suscripción
+            </button>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tooltip Init -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  });
+</script>
+{% endblock %}

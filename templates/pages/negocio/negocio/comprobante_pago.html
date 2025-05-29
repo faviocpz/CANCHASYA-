@@ -1,0 +1,168 @@
+{% extends 'base_interna.html' %}
+
+{% block titulo_pagina %}
+Registrar Nueva Suscripción
+{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 150px;">
+  <div class="row justify-content-center">
+    <div class="col-lg-9">
+      <div class="card shadow border-0">
+        <div class="card-header bg-success text-white text-center py-4 ">
+          <h3 class="fw-bold mb-0">Comprobante de Suscripción: <span class="text-uppercase">{{ tipo_suscripcion }}</span></h3>
+        </div>
+        <div class="card-body row p-4">
+          <!-- Detalles Suscripción -->
+          <div class="col-md-8 border-md-end">
+            <h5 class="fw-semibold mb-4">Detalles de la Suscripción</h5>
+            <dl class="row mb-4">
+              <dt class="col-sm-5 fw-semibold">Nombre del Local:</dt>
+              <dd class="col-sm-7">{{ nombre_local }}</dd>
+
+              <dt class="col-sm-5 fw-semibold">Dirección:</dt>
+              <dd class="col-sm-7">{{ direccion }}</dd>
+
+              <dt class="col-sm-5 fw-semibold">Teléfono:</dt>
+              <dd class="col-sm-7">{{ telefono }}</dd>
+
+              <dt class="col-sm-5 fw-semibold">Correo:</dt>
+              <dd class="col-sm-7">{{ correo }}</dd>
+
+              <dt class="col-sm-5 fw-semibold">Fecha:</dt>
+              <dd class="col-sm-7">{{ fecha_actual }}</dd>
+            </dl>
+
+            <table class="table table-striped " style="border-radius: 0 !important;">
+              <tbody>
+                <tr>
+                  <td class="fw-semibold text-uppercase">Subtotal</td>
+                  <td class="text-end">S/ {{ '%.2f'|format(subtotal) }}</td>
+                </tr>
+                <tr>
+                  <td class="fw-semibold text-uppercase">IGV (18%)</td>
+                  <td class="text-end">S/ {{ '%.2f'|format(igv) }}</td>
+                </tr>
+                <tr class="table-danger fs-5">
+                  <td class="fw-bold text-uppercase">Total</td>
+                  <td class="fw-bold text-end">S/ {{ '%.2f'|format(total) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Método de Pago -->
+          <div class="col-md-4 d-flex flex-column align-items-center justify-content-center">
+            {% if total > 0 %}
+              <p class="fw-semibold mb-3 fs-5">Método de Pago</p>
+              <button
+                class="btn btn-outline-success d-flex align-items-center gap-2 shadow-sm px-4 py-2 rounded-3"
+                data-bs-toggle="modal" data-bs-target="#modalYape"
+                aria-label="Pagar con Yape"
+              >
+                <img
+                  src="/static/assets/img/Icono_de_la_aplicación_Yape.png"
+                  alt="Yape"
+                  width="36"
+                  height="36"
+                  style="filter: drop-shadow(0 0 0.25rem #198754);"
+                >
+                <span class="fs-5">Pagar con Yape</span>
+              </button>
+            {% else %}
+              <div class="alert alert-info rounded-3 shadow-sm text-center fs-6 py-3">
+                Esta es una suscripción gratuita.<br>No requiere pago.
+                <button
+                    class="btn btn-success"
+                    onclick="confirmarSuscripcionGratuita({{ resultado }})"
+                    >
+                    Confirmar suscripción gratuita
+                </button>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Yape -->
+<div class="modal fade" id="modalYape" tabindex="-1" aria-labelledby="modalYapeLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-ms">
+    <form
+      action="/insertar_comprobante_pago"
+      method="POST"
+      enctype="multipart/form-data"
+      class="modal-content rounded-4 shadow"
+      novalidate
+    >
+      <div class="modal-header bg-success text-white rounded-top-4">
+        <h5 class="modal-title fw-bold" id="modalYapeLabel">Pago por Yape</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <input type="text" name="id_suscripcion" value="{{ resultado }}" id="">
+      <div class="modal-body text-center px-4">
+        <p class="mb-3 fs-6">Escanea el código QR para realizar tu pago:</p>
+        <img
+          src="/static/assets/img/qr_yape.jpeg"
+          alt="QR Yape"
+          class="img-fluid rounded-3 shadow-sm mb-4"
+          style="max-width: 280px;"
+        >
+        <div class="mb-4 text-start">
+          <label for="comprobante" class="form-label fw-semibold">Sube el comprobante de pago</label>
+          <input
+            type="file"
+            name="comprobante"
+            id="comprobante"
+            accept="image/*"
+            class="form-control"
+            required
+          >
+          <div class="invalid-feedback">Por favor, sube el comprobante de pago.</div>
+        </div>
+        <input type="hidden" name="subtotal" value="{{ subtotal }}">
+        <input type="hidden" name="igv" value="{{ igv }}">
+        <input type="hidden" name="total" value="{{ total }}">
+
+        <input type="hidden" name="idUsuario" value="{{ session.get('id') }}">
+      </div>
+      <div class="modal-footer justify-content-center pb-4">
+        <button type="submit" class="btn btn-success px-4 fw-semibold">Confirmar Pago</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<script>
+  function confirmarSuscripcionGratuita(idSuscripcion) {
+    if (!idSuscripcion) {
+      alert("ID de suscripción no disponible.");
+      return;
+    }
+
+    if (confirm("¿Estás seguro de que deseas confirmar la suscripción gratuita?")) {
+      fetch('/confirmar_suscripcion_gratuita', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idSuscripcion: idSuscripcion })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Error en el servidor");
+        return res.json();
+      })
+      .then(data => {
+        alert(data.message || "Suscripción gratuita confirmada.");
+        window.location.href = "/pagos_suscripcion";
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Ocurrió un error al confirmar la suscripción. Intenta nuevamente.");
+      });
+    }
+  }
+</script>
+
+{% endblock %}
