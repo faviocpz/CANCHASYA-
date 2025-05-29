@@ -1,0 +1,40 @@
+{% extends 'base_interna.html' %}
+
+{% block titulo_pagina %}
+    Detalle de Reserva
+{% endblock %}
+
+{% block contenido %}
+<div class="container mt-4">
+    <h2 class="mb-4">Detalle de Reserva #{{ reserva.idReserva }}</h2>
+
+    <div class="card">
+        <div class="card-header">
+            Información de la Reserva
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    {% if reserva.logo %}
+                    <img src="{{ url_for('static', filename='assets/img_locales/logos/' ~ reserva.logo) }}" alt="Logo del Local" class="img-fluid rounded">
+                    {% else %}
+                    <img src="{{ url_for('static', filename='assets/img_locales/logos/default_logo.png') }}" alt="Logo predeterminado" class="img-fluid rounded">
+                    {% endif %}
+
+                </div>
+                <div class="col-md-9">
+                    <h4>{{ reserva.nombre_local }}</h4>
+                    <p><strong>Dirección:</strong> {{ reserva.direccion }}</p>
+                    <p><strong>Deporte:</strong> {{ reserva.deporte }}</p>
+                    <p><strong>Descripción de la Cancha:</strong> {{ reserva.descripcion_cancha }}</p>
+                    <p><strong>Fecha:</strong> {{ reserva.fecha }}</p>
+                    <p><strong>Hora Inicio:</strong> {{ reserva.hora_inicio }}</p>
+                    <p><strong>Hora Fin:</strong> {{ reserva.hora_fin }}</p>
+                    <p><strong>Precio:</strong> S/. {{ "%.2f"|format(reserva.precio) }}</p>
+                </div>
+            </div>
+            <a href="{{ url_for('historial_reservas') }}" class="btn btn-secondary mt-3">Volver</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
