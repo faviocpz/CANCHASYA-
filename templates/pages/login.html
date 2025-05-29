@@ -40,7 +40,7 @@
           </label>
         </div>
     
-        <form  id="frm_iniciosesion">
+        <form  id="frm_iniciosesion" >
           <div class="mb-3">
             <label for="correo" class="form-label">Correo electrónico</label>
             <input type="email" name="correo" onkeydown="if (event.keyCode === 13) iniciar_sesion()" class="form-control" id="correo" placeholder="usuario@correo.com" required>
@@ -48,7 +48,13 @@
 
           <div class="mb-3">
             <label for="clave" class="form-label">Contraseña</label>
-            <input type="password" name="password" onkeydown="if (event.keyCode === 13) iniciar_sesion()" class="form-control" id="clave" placeholder="********" required>
+            <div class="d-flex">
+            <input type="password"  name="password" onkeydown="if (event.keyCode === 13) iniciar_sesion()" class="form-control" id="clave" placeholder="********" required>
+            <button type="button" class="ms-2 btn btn-outline-secondary" onclick="vercontraseña()">
+              <i class="bi bi-eye" id="icon_ver"></i>
+            </button>
+            </div>
+
           </div>
 
           <div class="d-grid gap-2">
@@ -56,7 +62,6 @@
             <span id="carga-ingresar" class="carga"></span>
           </div>
         </form>
-
 
         <div class="text-center mt-4">
           <p>

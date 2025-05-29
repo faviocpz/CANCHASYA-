@@ -70,45 +70,47 @@ def registrar_rutas(app):
     @app.route('/registrar_alquilador', methods=['POST'])
     def registrar_alquilador():
         try:
+            nombres = request.form['nombres']
             dni = request.form['dni']
             correo = request.form['correo']
-            codigos = []
+            telefono = request.form['telefono']
+            password = sha256(request.form['password'].encode('utf-8')).hexdigest()
             foto = request.files['foto_r']
             foto_renombrada = f"verificar_img_{correo}.png"
 
+            campos_duplicados = cuser.verificar_campos_existentes(correo, dni, telefono)
+
+            if campos_duplicados:
+                return jsonify({
+                    'codigo_rpt': 2,
+                    'rpt_duplicados': campos_duplicados
+                })
+            foto_path = os.path.join("static/assets/img_usuario/alquilador", foto_renombrada)
+            foto.save(foto_path)
+
             data = {
                 'foto': foto_renombrada,
-                'nombre': request.form['nombres'],
+                'nombre': nombres,
                 'dni': dni,
                 'correo': correo,
-                'telefono': request.form['telefono'],
-                'password': sha256(str(request.form['password']).encode('utf-8')).hexdigest()
+                'telefono': telefono,
+                'password': password
             }
 
-            respuesta_correo = cuser.verificar_correo(correo)
-            respuesta_dni = cuser.verificar_dni(dni)
-            
-            if respuesta_correo or respuesta_dni:
-                if respuesta_correo:
-                    codigos.append('correo')
-                elif respuesta_dni:
-                    codigos.append('dni')
-                codigo = 2 
+            resultado = cuser.crear_usuario_alquilador(data)
+
+            if resultado:
+                return jsonify({'codigo_rpt': 1})
             else:
-                foto_path = os.path.join("static/assets/img_usuario/alquilador", foto_renombrada)
-                foto.save(foto_path)
-                
-                usuario_id = cuser.crear_usuario_alquilador(data)
-
-                if usuario_id:
-                    codigo = 1
-                else:
-                    codigo = 0  
-
-            return jsonify({'codigo_rpt': codigo, 'rpt_duplicados': codigos})
+                return jsonify({'codigo_rpt': 0, 'mensaje': 'Error al crear el usuario'})
 
         except Exception as e:
-            return jsonify({'codigo_rpt': 0, 'mensaje': f'Error al procesar la solicitud: {str(e)}'}), 500
+            return jsonify({
+                'codigo_rpt': 0,
+                'mensaje': f'Error al procesar la solicitud: {str(e)}'
+            }), 500
+
+
 
     @app.route('/actualizar_foto_verificacion', methods=['POST'])
     def actualizar_foto_verificacion():
@@ -151,12 +153,16 @@ def registrar_rutas(app):
         tipo = request.form.get('tipo')
         id_tipo = 3 if tipo == 'deportista' else 2
         respuesta = cuser.verificar_cuenta(correo,password, id_tipo)
+        print(tipo)
         rpt = {}
         if (respuesta[0] > 0):
             session['usuario'] = correo
             if(tipo == 'deportista'):
+                print("entro")
+                session['tipo'] = "Deportista"
+                session['nombre'] = respuesta[3]
                 rpt['codigo'] = 1
-                rpt['ruta'] = '/'
+                rpt['ruta'] = '/maestra_interna'
             elif(tipo == 'aliado'):
                 if(respuesta[2] == 1):
                     session['id'] = respuesta[5]

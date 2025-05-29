@@ -4,6 +4,7 @@ import Routes.seguridad as Rseguridad
 import os
 import Routes.local.router_local as Rlocal
 import Routes.canchas.rutas_canchas as Rcanchas
+import Routes.deportista.deportistas as Rdeportista
 
 
 app = Flask(__name__)
@@ -33,7 +34,7 @@ Rcanchas.registrar_rutas(app)
 Rlocal.registrar_rutas(app)
 Rpresentacion.registrar_rutas(app)
 Rseguridad.registrar_rutas(app)
-
+Rdeportista.registrar_rutas(app)
 
 
 if __name__ == '__main__':

@@ -86,7 +86,6 @@ def creador_token():
 def crear_usuario_alquilador(data):
     conexion = obtener_conexion()
     try:
-        print("entro")
         with conexion.cursor() as cursor:
             query = '''INSERT INTO usuario (nombre, dni, correo, telefono, foto_verificacion, contraseña, token, estado_cuenta, verificacion_cuenta, idTipoUsuario)
                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'''
@@ -100,6 +99,65 @@ def crear_usuario_alquilador(data):
         return 0
     finally:
         conexion.close()
+
+
+def verificar_campos_existentes(correo, dni, telefono):
+    conexion = obtener_conexion()
+    campos_duplicados = []
+
+    try:
+        with conexion.cursor() as cursor:
+            # Verifica correo
+            cursor.execute("SELECT 1 FROM usuario WHERE correo = %s", (correo,))
+            if cursor.fetchone():
+                campos_duplicados.append("correo")
+
+            # Verifica DNI
+            cursor.execute("SELECT 1 FROM usuario WHERE dni = %s", (dni,))
+            if cursor.fetchone():
+                campos_duplicados.append("dni")
+
+            # Verifica teléfono
+            cursor.execute("SELECT 1 FROM usuario WHERE telefono = %s", (telefono,))
+            if cursor.fetchone():
+                campos_duplicados.append("telefono")
+
+        return campos_duplicados
+    finally:
+        conexion.close()
+
+
+def crear_usuario_deportista(nombres, correo, contraseña, celular, dni):
+    campos_duplicados = verificar_campos_existentes(correo, dni, celular)
+
+    if campos_duplicados:
+        return {"codigo_rpt": 0, "campos_duplicados": campos_duplicados}
+
+    conexion = obtener_conexion()
+    try:
+        password_enc = sha256(contraseña.encode('utf-8')).hexdigest()
+        with conexion.cursor() as cursor:
+            query = '''
+                INSERT INTO usuario (nombre, correo, telefono, contraseña, estado_cuenta, idTipoUsuario, dni, foto_verificacion, token, verificacion_cuenta)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            '''
+            valores = (nombres, correo, celular, password_enc, 1, 3, dni, '', '', 'V')
+            cursor.execute(query, valores)
+        conexion.commit()
+        return {"codigo_rpt": 1}
+    except Exception as e:
+        conexion.rollback()
+        print(e)
+        return {"codigo_rpt": -1, "error": str(e)}
+    finally:
+        conexion.close()
+
+
+
+
+
+
+
 
 def retornar_usuario():
     conexion = obtener_conexion()
