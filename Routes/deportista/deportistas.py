@@ -15,10 +15,6 @@ def registrar_rutas(app):
 
     @app.route('/historial_reservas')
     def historial_reservas():
-        # Verificamos que el usuario esté logueado y sea deportista
-        print()
-        if 'id' not in session or session.get('tipo') != 'Deportista':
-            return redirect(url_for('login'))  # O página de error/permiso
 
         id_usuario = session['id']
         page = request.args.get('page', default=1, type=int)
@@ -34,8 +30,6 @@ def registrar_rutas(app):
 
     @app.route('/detalle_reserva/<int:id_reserva>')
     def detalle_reserva(id_reserva):
-        if 'id' not in session or session.get('tipo') != 'deportista':
-            return redirect(url_for('login'))
 
         id_usuario = session['id']
         reserva = controlador_deportista.obtener_detalle_reserva(id_reserva, id_usuario)

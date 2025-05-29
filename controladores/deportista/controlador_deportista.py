@@ -73,7 +73,8 @@ def obtener_detalle_reserva(id_reserva, id_usuario):
                   l.logo,
                   d.nombre AS deporte,
                   c.descripcion AS descripcion_cancha,
-                  c.preciom AS precio
+                  c.preciom AS precio,
+                  l.idLocal
                 FROM RESERVA r
                 JOIN CANCHA c ON r.idCancha = c.idCancha
                 JOIN LOCAL l ON c.idLocal = l.idLocal
@@ -94,7 +95,8 @@ def obtener_detalle_reserva(id_reserva, id_usuario):
                     'logo': row[6],
                     'deporte': row[7],
                     'descripcion_cancha': row[8],
-                    'precio': float(row[9])
+                    'precio': float(row[9]),
+                    'idLocal' : row[10]
                 }
             else:
                 return None
