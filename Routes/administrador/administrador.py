@@ -1,6 +1,7 @@
 from flask import render_template, request
 from controladores.administrador import controlador_admin as controlador_admin
 
+from flask import jsonify
 from datetime import datetime
 
 def registrar_rutas_dashboard(app):
@@ -30,3 +31,29 @@ def registrar_rutas_dashboard(app):
                                alertas=alertas,
                                fecha_inicio=fecha_inicio,
                                fecha_fin=fecha_fin)
+        
+    @app.route('/registro_pagos')
+    def registro_pagos():
+        
+        return render_template('pages/administrador/registro_pagos.html')
+    
+    @app.route('/api_obtener_suscripciones', methods=['GET'])
+    def obtener_suscripciones():
+        nota = controlador_admin.obtener_suscripciones_activas()
+        return jsonify({
+            'suscripciones': nota
+        })
+    
+    @app.route('/dar_baja_suscripcion', methods=['POST'])
+    def dar_baja_suscripcion():
+        id_suscripcion = request.form.get('idSuscripcion')
+        if not id_suscripcion:
+            return jsonify({'error': 'ID de suscripción no proporcionado'}), 400
+        
+        resultado = controlador_admin.dar_baja_suscripcion(id_suscripcion)
+        if resultado:
+            return jsonify({'success': 'Suscripción dada de baja correctamente'})
+        else:
+            return jsonify({'error': 'Error al dar de baja la suscripción'}), 500
+        
+        

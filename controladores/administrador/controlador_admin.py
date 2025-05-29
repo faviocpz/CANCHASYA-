@@ -177,3 +177,58 @@ def obtener_proximos_vencimientos(dias=7):
         return []
     finally:
         conexion.close()
+
+
+def obtener_suscripciones_activas():
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            query = '''
+                SELECT 
+                lo.nombre, lo.tel, lo.correo, 
+                su.fecha_ini, su.fecha_fin, 
+                con.foto_confirmacion, su.idSuscripcion
+                FROM 
+                SUSCRIPCION su
+                INNER JOIN usuario us ON us.id = su.idUsuario
+                INNER JOIN COMPROBANTE con ON con.idSuscripcion = su.idSuscripcion
+                INNER JOIN LOCAL lo ON lo.idUsuario = us.id
+                WHERE su.estado = 'A' AND su.idPlan = 2;
+            '''
+            cursor.execute(query)
+            resultados = cursor.fetchall()
+            suscripciones = []
+            for row in resultados:
+                suscripciones.append({
+                    'nombre': row[0],
+                    'telefono': row[1],
+                    'correo': row[2],
+                    'fecha_inicio': row[3].strftime('%Y-%m-%d'),
+                    'fecha_fin': row[4].strftime('%Y-%m-%d'),
+                    'foto_confirmacion': row[5],
+                    'idSuscripcion': row[6]
+                })
+            return suscripciones
+    except Exception as e:
+        print(f"Error al obtener suscripciones activas: {e}")
+        return []
+    finally:
+        conexion.close()
+        
+def dar_baja_suscripcion(id_suscripcion):
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            query = '''
+                UPDATE SUSCRIPCION
+                SET estado = 'I'
+                WHERE idSuscripcion = %s;
+            '''
+            cursor.execute(query, (id_suscripcion,))
+            conexion.commit()
+            return True
+    except Exception as e:
+        print(f"Error al dar de baja la suscripción: {e}")
+        return False
+    finally:
+        conexion.close()

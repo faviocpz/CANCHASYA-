@@ -1,0 +1,168 @@
+{% extends 'base_interna.html' %}
+
+{% block estilos %}
+<style>
+  /* Mejoras visuales personalizadas */
+  .btn-ver {
+    background-color: #0d6efd;
+    color: white;
+  }
+  .btn-ver:hover {
+    background-color: #0b5ed7;
+  }
+  .btn-dar-baja {
+    background-color: #dc3545;
+    color: white;
+  }
+  .btn-dar-baja:hover {
+    background-color: #bb2d3b;
+  }
+  #modalComprobante .modal-body {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+  }
+  #imagenComprobante {
+    max-height: 70vh;
+    border-radius: 8px;
+  }
+</style>
+{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5">
+  <h3 class="mb-4 text-primary">Suscripciones Activas</h3>
+
+  <table id="table_pagos" class="table table-striped table-bordered table-hover align-middle w-100">
+    <thead class="table-dark">
+      <tr>
+        <th>Empresa</th>
+        <th>Teléfono</th>
+        <th>Correo electrónico</th>
+        <th>Fecha de inicio</th>
+        <th>Fecha de fin</th>
+        <th class="text-center">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Se carga dinámicamente -->
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal para mostrar la imagen del comprobante -->
+<div class="modal fade" id="modalComprobante" tabindex="-1" aria-labelledby="modalComprobanteLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content shadow">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="modalComprobanteLabel">Comprobante de pago</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img id="imagenComprobante" src="" alt="Comprobante de pago" class="img-fluid">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- DataTables -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<script>
+  $(document).ready(function () {
+    const tablaPagos = $('#table_pagos').DataTable({
+      ajax: {
+        url: '/api_obtener_suscripciones',
+        dataSrc: 'suscripciones'
+      },
+      columns: [
+        { data: 'nombre' },
+        { data: 'telefono' },
+        { data: 'correo' },
+        { data: 'fecha_inicio' },
+        { data: 'fecha_fin' },
+        {
+          data: null,
+          className: 'text-center',
+          render: function (data, type, row) {
+            return `
+              <button class="btn btn-ver btn-sm me-2 ver-comprobante" title="Ver comprobante" data-foto="${row.foto_confirmacion}">
+                <i class="bi bi-eye-fill"></i>
+              </button>
+              <button class="btn btn-dar-baja btn-sm dar-baja" title="Dar de baja" data-id="${row.idSuscripcion}">
+                <i class="bi bi-x-circle-fill"></i>
+              </button>
+            `;
+          },
+          orderable: false,
+          searchable: false
+        }
+      ],
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+      },
+      responsive: true
+    });
+
+    // Mostrar comprobante en el modal
+    $('#table_pagos').on('click', '.ver-comprobante', function () {
+      const rutaImagen = $(this).data('foto');
+      $('#imagenComprobante').attr('src', `/${rutaImagen}`);
+      const modal = new bootstrap.Modal(document.getElementById('modalComprobante'));
+      modal.show();
+    });
+
+    // Dar de baja la suscripción
+    $('#table_pagos').on('click', '.dar-baja', function () {
+    const id = $(this).data('id');
+
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción dará de baja la suscripción.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sí, dar de baja',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+        $.ajax({
+            url: '/dar_baja_suscripcion',
+            type: 'POST',
+            data: { idSuscripcion: id }, // Se envía como formulario
+            success: function (response) {
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: response.success || 'Suscripción dada de baja con éxito.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+            $('#table_pagos').DataTable().ajax.reload(null, false); // Recarga la tabla
+            },
+            error: function (xhr) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: xhr.responseJSON?.error || 'Ocurrió un error al dar de baja la suscripción.'
+            });
+            }
+        });
+        }
+    });
+    });
+
+
+  });
+</script>
+{% endblock %}
