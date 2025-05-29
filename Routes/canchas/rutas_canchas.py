@@ -7,12 +7,29 @@ from datetime import datetime, timedelta
 def registrar_rutas(app):
     @app.route('/canchass')
     def canchass():
-        if session.get('tipo') == "Alquilador":
-            data = controlador_cancha_admin.consultar_cancha_x_persona(session.get('id'))
-        
-            return render_template('pages/negocio/canchas/cancha.html', data=data)
-        
-        return render_template('pages/negocio/canchas/cancha.html')
+        if session.get('tipo') != "Alquilador":
+            return render_template('pages/negocio/canchas/cancha.html')  # Para otros tipos de usuarios
+
+        id_usuario = session.get('id')
+        data = controlador_cancha_admin.consultar_cancha_x_persona(id_usuario)
+        cantidad_canchas = controlador_cancha_admin.cantidad_canchas(id_usuario)
+        tipo_suscripcion = controlador_cancha_admin.tipo_suscripcion(id_usuario)
+
+        print(tipo_suscripcion, cantidad_canchas, data)
+
+        # Deshabilitar canchas si excede el límite
+        if (tipo_suscripcion == 'Gratuita' and cantidad_canchas >= 2) or \
+        (tipo_suscripcion == 'Paga' and cantidad_canchas >= 4):
+            controlador_cancha_admin.desabilitar_canchas(id_usuario)
+
+        # Determinar si se debe activar bloqueo de nuevas canchas
+        bloqueo = False
+        if (tipo_suscripcion == 'Gratuita' and cantidad_canchas == 1) or \
+        (tipo_suscripcion == 'Paga' and cantidad_canchas == 3):
+            bloqueo = True
+
+        return render_template('pages/negocio/canchas/cancha.html', data=data, bloqueo=bloqueo, tipo_suscripcion=tipo_suscripcion)
+
 
 
     @app.route('/api/cancha/<int:id_cancha>')

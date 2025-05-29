@@ -194,12 +194,16 @@
             <li class="list-group-item">Soporte por correo electrónico</li>
             <li class="list-group-item">Registrar 1 cancha deportiva</li>
           </ul>
+          {% if suscripcion_paga %}
+          <p class="text-success">¡Ya tienes una suscripción Premium activa!</p>
+          {% else %}
           {% if suscripcion_gratuita %}
           <p class="text-success">¡Ya tienes una suscripción Básica activa!</p>
           <p class="dias-restantes">Días restantes: {{ dias_restantes }}</p>
           <button class="btn btn-secondary" onclick="anular_suscripcion({{ idSuscripcion }})">Anular Suscripción</button>
           {% else %}
           <a href="/ir_a_registrar_suscripcion_gratuita" class="btn btn-subscribe subscription-basic mt-auto">Seleccionar Básica</a>
+          {% endif %}
           {% endif %}
         </div>
       </div>

@@ -63,7 +63,7 @@ def consultar_cancha_x_persona(id_usuario):
         FROM CANCHA AS ca
         INNER JOIN LOCAL AS lo ON lo.idLocal = ca.idLocal
         LEFT JOIN FOTO AS fo ON fo.idCancha = ca.idCancha
-        WHERE lo.idUsuario = %s
+        WHERE lo.idUsuario = %s AND ca.estado = "A"
         GROUP BY
             ca.idCancha,
             ca.descripcion,
@@ -385,3 +385,55 @@ def eliminar_reserva(id_reserva):
         return 0
     finally:
         conn.close()
+        
+        
+def cantidad_canchas(id_usuario):
+    sql = """
+    SELECT COUNT(*) FROM CANCHA AS ca
+    INNER JOIN LOCAL AS lo ON lo.idLocal = ca.idLocal
+    WHERE lo.idUsuario = %s AND ca.estado = "A"
+    """
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            cursor.execute(sql, (id_usuario,))
+            cantidad = cursor.fetchone()[0]
+        return cantidad
+    finally:
+        conexion.close()
+        
+def tipo_suscripcion(id_usuario):
+    sql = """
+    SELECT pl.nombre FROM SUSCRIPCION AS su
+    INNER JOIN usuario us ON us.id = su.idUsuario
+    INNER JOIN PLAN pl ON pl.idPlan = su.idPlan
+    WHERE us.id = %s AND su.estado = "A"
+    """
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            cursor.execute(sql, (id_usuario,))
+            tipo = cursor.fetchone()
+        return tipo[0] if tipo else None
+    finally:
+        conexion.close()
+        
+def desabilitar_canchas(id_usuario):
+    sql = """
+    UPDATE CANCHA AS ca
+    INNER JOIN LOCAL AS lo ON lo.idLocal = ca.idLocal
+    SET ca.estado = 'I'
+    WHERE lo.idUsuario = %s
+    """
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            cursor.execute(sql, (id_usuario,))
+            conexion.commit()
+        return True
+    except Exception as e:
+        print("Error al deshabilitar canchas:", e)
+        conexion.rollback()
+        return False
+    finally:
+        conexion.close()

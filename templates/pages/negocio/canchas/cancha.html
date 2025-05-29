@@ -4,8 +4,10 @@
 <div class="container mt-5">
   {% if session.get('tipo') == 'Alquilador' %}
     <h2>Canchas disponibles</h2><br>
+    <h2>Tipo de suscripcion: {{ tipo_suscripcion }}</h2>
+    
     <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-      
+
       {# Para cada cancha en data #}
       {% for cancha in data %}
         <div class="col">
@@ -58,6 +60,9 @@
       {% endfor %}
 
       {# Tarjeta para agregar nueva cancha #}
+      {% if bloqueo %}
+      
+      {% else %}
       <div class="col">
         <div class="card h-100 text-center" style="cursor:pointer;"
              onclick="location.href='/agregar_cancha'">
@@ -68,6 +73,7 @@
           </div>
         </div>
       </div>
+      {% endif %}
 
     </div>
 
