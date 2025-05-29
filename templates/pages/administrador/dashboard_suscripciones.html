@@ -1,0 +1,200 @@
+{% extends 'base_interna.html' %}
+
+{% block titulo_pagina %}
+    Dashboard de Suscripciones
+{% endblock %}
+
+{% block contenido %}
+<div class="container mt-4">
+    <h2 class="mb-4">Dashboard de Suscripciones</h2>
+
+    <!-- Formulario de filtros -->
+    <div class="card mb-4">
+        <div class="card-header">Filtros</div>
+        <div class="card-body">
+            <form method="get" action="{{ url_for('dashboard_suscripciones') }}">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="fechaInicio" class="form-label">Fecha Inicio</label>
+                        <input type="date" id="fechaInicio" name="fechaInicio" class="form-control" value="{{ fecha_inicio }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="fechaFin" class="form-label">Fecha Fin</label>
+                        <input type="date" id="fechaFin" name="fechaFin" class="form-control" value="{{ fecha_fin }}">
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">Aplicar Filtros</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- KPIs resumen -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Suscripciones Activas</h5>
+                    <p class="card-text display-4">{{ suscripciones.activas }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Suscripciones Vencidas</h5>
+                    <p class="card-text display-4">{{ suscripciones.vencidas }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Aliados Activos</h5>
+                    <p class="card-text display-4">{{ aliados }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ingresos mensuales -->
+    <div class="card mb-4">
+        <div class="card-header">Ingresos por Mes</div>
+        <div class="card-body">
+            {% if ingresos %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Mes</th>
+                            <th>Ingresos Totales</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ingreso in ingresos %}
+                        <tr>
+                            <td>{{ ingreso.mes }}</td>
+                            <td>${{ "%.2f"|format(ingreso.total) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No hay ingresos registrados en este período.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Historial de pagos recientes -->
+    <div class="card mb-4">
+        <div class="card-header">Historial de Pagos Recientes</div>
+        <div class="card-body">
+            {% if historial %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th># Comprobante</th>
+                            <th>Fecha</th>
+                            <th>Subtotal</th>
+                            <th>IGV</th>
+                            <th>Total</th>
+                            <th>Usuario</th>
+                            <th>Plan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pago in historial %}
+                        <tr>
+                            <td>{{ pago.numComprobante }}</td>
+                            <td>{{ pago.fecha }}</td>
+                            <td>${{ "%.2f"|format(pago.subtotal) }}</td>
+                            <td>${{ "%.2f"|format(pago.igv) }}</td>
+                            <td>${{ "%.2f"|format(pago.total) }}</td>
+                            <td>{{ pago.usuario }}</td>
+                            <td>{{ pago.plan }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No hay pagos recientes.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Suscripciones filtradas -->
+    <div class="card mb-4">
+        <div class="card-header">Suscripciones en el Período Seleccionado</div>
+        <div class="card-body">
+            {% if suscripciones_filtro %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Fin</th>
+                            <th>Estado</th>
+                            <th>Usuario</th>
+                            <th>Plan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for suscripcion in suscripciones_filtro %}
+                        <tr>
+                            <td>{{ suscripcion.idSuscripcion }}</td>
+                            <td>{{ suscripcion.fecha_ini }}</td>
+                            <td>{{ suscripcion.fecha_fin }}</td>
+                            <td>
+                                {% if suscripcion.estado == 'A' %}
+                                    Activo
+                                {% elif suscripcion.estado == 'I' %}
+                                    Inactivo
+                                {% else %}
+                                    {{ suscripcion.estado }}
+                                {% endif %}
+                            </td>
+                            <td>{{ suscripcion.usuario }}</td>
+                            <td>{{ suscripcion.plan }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No hay suscripciones en este período.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Alertas de próximos vencimientos -->
+    <div class="card mb-4">
+        <div class="card-header">Suscripciones Próximas a Vencer (7 días)</div>
+        <div class="card-body">
+            {% if alertas %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha Fin</th>
+                            <th>Usuario</th>
+                            <th>Plan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for alerta in alertas %}
+                        <tr>
+                            <td>{{ alerta.idSuscripcion }}</td>
+                            <td>{{ alerta.fecha_fin }}</td>
+                            <td>{{ alerta.usuario }}</td>
+                            <td>{{ alerta.plan }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No hay suscripciones próximas a vencer.</p>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}
