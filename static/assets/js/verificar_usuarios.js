@@ -85,7 +85,7 @@ function actualizar_fila_estado(id, estado) {
                 tdEstado.innerHTML = '<span class="text-danger">Foto rechazada.</span>';
                 btnVerificar.disabled = true;  // Deshabilitar el botón de verificar si fue rechazada
             } else if (estado === 'V') {
-                tdEstado.innerHTML = '<span class="text-success">Aliado autorizado.</span>';
+                tdEstado.innerHTML = '<span class="text-success fw-bold">Aliado autorizado.</span>';
                 btnVerificar.disabled = true;  // Deshabilitar el botón de verificar si fue autorizado
             }
             break;  // Salir del loop una vez que hemos encontrado la fila correcta
